@@ -1,7 +1,9 @@
 package ui.chat;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ChatDialog extends JDialog {
     private JPanel contentPane;
@@ -11,9 +13,9 @@ public class ChatDialog extends JDialog {
     private JButton sendButton;
 
     public ChatDialog() {
+        setTitle("Super Pac-Man Chat");
         setContentPane(contentPane);
         setModal(true);
-        setResizable(false);
         getRootPane().setDefaultButton(sendButton);
 
         // call onCancel() when cross is clicked
@@ -24,23 +26,18 @@ public class ChatDialog extends JDialog {
             }
         });
 
-        inputTextField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onSend();
-            }
-        });
+        inputTextField.addActionListener(e -> onSend());
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        pack();
+        setResizable(false);
     }
 
     public static void main(String[] args) {
-        ChatDialog dialog = new ChatDialog();
+        var dialog = new ChatDialog();
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
@@ -54,9 +51,5 @@ public class ChatDialog extends JDialog {
 
     private void onCancel() {
         dispose();
-    }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
     }
 }
