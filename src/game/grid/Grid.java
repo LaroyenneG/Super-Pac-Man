@@ -1,10 +1,10 @@
-package game;
+package game.grid;
 
-public class TheGrid {
+public class Grid {
 
     private final Square[][] square;
 
-    public TheGrid() {
+    public Grid() {
         this.square = null;
     }
 }
