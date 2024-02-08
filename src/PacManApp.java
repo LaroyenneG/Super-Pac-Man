@@ -1,3 +1,4 @@
+import ui.chat.ChatForm;
 
 public final class PacManApp {
 
@@ -40,5 +41,7 @@ public final class PacManApp {
     public static void main(String[] args) {
         System.out.println(LOGO);
         System.out.println("Pac-Man  v" + VERSION + " started !");
+
+
     }
 }

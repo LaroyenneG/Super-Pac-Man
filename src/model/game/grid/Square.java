@@ -1,4 +1,4 @@
-package game.grid;
+package model.game.grid;
 
 public abstract class Square {
 }

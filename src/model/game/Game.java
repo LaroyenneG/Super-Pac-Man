@@ -1,6 +1,6 @@
-package game;
+package model.game;
 
-import game.grid.Grid;
+import model.game.grid.Grid;
 
 public final class Game {
 
