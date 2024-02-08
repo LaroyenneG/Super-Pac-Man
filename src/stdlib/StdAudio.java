@@ -9,25 +9,13 @@ package stdlib;
  *
  ******************************************************************************/
 
-import javax.sound.sampled.Clip;
-
-import java.io.File;
+import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.File;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.net.URL;
-
 import java.util.LinkedList;
-
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * The {@code StdAudio} class provides static methods for
@@ -207,6 +195,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * <em>Computer Science: An Interdisciplinary Approach</em>
  * by Robert Sedgewick and Kevin Wayne.
  * <p>
+ *
  * @author Robert Sedgewick
  * @author Kevin Wayne
  */
@@ -241,13 +230,13 @@ public final class StdAudio {
     private static QueueOfDoubles recordedSamples = null;
     private static boolean isRecording = false;
 
-    private StdAudio() {
-        // can not instantiate
-    }
-
     // static initializer
     static {
         init();
+    }
+
+    private StdAudio() {
+        // can not instantiate
     }
 
     // open up an audio stream
@@ -506,7 +495,7 @@ public final class StdAudio {
         for (int i = 0; i < samples.length; i++) {
             int temp = (short) (samples[i] * MAX_16_BIT);
             if (samples[i] == 1.0) temp = Short.MAX_VALUE;   // special case since 32768 not a short
-            data[2 * i + 0] = (byte) temp;
+            data[2 * i] = (byte) temp;
             data[2 * i + 1] = (byte) (temp >> 8);   // little endian
         }
 
@@ -564,9 +553,107 @@ public final class StdAudio {
         backgroundRunnables.add(runnable);
     }
 
+    /**
+     * Loops an audio file (in WAVE, AU, AIFF, or MIDI format) in its
+     * own background thread.
+     *
+     * @param filename the name of the audio file
+     * @throws IllegalArgumentException if {@code filename} is {@code null}
+     * @deprecated to be removed in a future update, as it doesn't interact
+     * well with {@link #playInBackground(String filename)} or
+     * {@link #stopInBackground()}.
+     */
+    @Deprecated
+    public static synchronized void loopInBackground(String filename) {
+        if (filename == null) throw new IllegalArgumentException();
+
+        final AudioInputStream ais = getAudioInputStreamFromFile(filename);
+
+        try {
+            Clip clip = AudioSystem.getClip();
+            // Clip clip = (Clip) AudioSystem.getLine(new Line.Info(Clip.class));
+            clip.open(ais);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+
+        // keep JVM open
+        new Thread(new Runnable() {
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * Turns on audio recording.
+     */
+    public static void startRecording() {
+        if (!isRecording) {
+            recordedSamples = new QueueOfDoubles();
+            isRecording = true;
+        } else {
+            throw new IllegalStateException("startRecording() must not be called twice in a row");
+        }
+    }
+
+    /**
+     * Turns off audio recording and returns the recorded samples.
+     *
+     * @return the array of recorded samples
+     */
+    public static double[] stopRecording() {
+        if (isRecording) {
+            double[] results = recordedSamples.toArray();
+            isRecording = false;
+            recordedSamples = null;
+            return results;
+        } else {
+            throw new IllegalStateException("stopRecording() must be called after calling startRecording()");
+        }
+    }
+
+    /**
+     * Test client - plays some sound files and concert A.
+     *
+     * @param args the command-line arguments (none should be specified)
+     */
+    public static void main(String[] args) {
+        // 440 Hz for 1 sec
+        double freq = 440.0;
+        for (int i = 0; i <= StdAudio.SAMPLE_RATE; i++) {
+            StdAudio.play(0.5 * Math.sin(2 * Math.PI * freq * i / StdAudio.SAMPLE_RATE));
+        }
+
+
+        String base = "https://introcs.cs.princeton.edu/java/stdlib/";
+
+        // play some sound files
+        StdAudio.play(base + "test.wav");          // helicopter
+        StdAudio.play(base + "test-22050.wav");    // twenty-four
+        StdAudio.play(base + "test.midi");         // a Mozart measure
+
+        // a sound loop
+        for (int i = 0; i < 10; i++) {
+            StdAudio.play(base + "BaseDrum.wav");
+            StdAudio.play(base + "SnareDrum.wav");
+        }
+
+        // need to call this in non-interactive stuff so the program doesn't terminate
+        // until all the sound leaves the speaker.
+        StdAudio.drain();
+    }
+
     private static class BackgroundRunnable implements Runnable {
-        private volatile boolean exit = false;
         private final String filename;
+        private volatile boolean exit = false;
 
         public BackgroundRunnable(String filename) {
             this.filename = filename;
@@ -607,76 +694,6 @@ public final class StdAudio {
         }
     }
 
-
-    /**
-     * Loops an audio file (in WAVE, AU, AIFF, or MIDI format) in its
-     * own background thread.
-     *
-     * @param filename the name of the audio file
-     * @throws IllegalArgumentException if {@code filename} is {@code null}
-     * @deprecated to be removed in a future update, as it doesn't interact
-     * well with {@link #playInBackground(String filename)} or
-     * {@link #stopInBackground()}.
-     */
-    @Deprecated
-    public static synchronized void loopInBackground(String filename) {
-        if (filename == null) throw new IllegalArgumentException();
-
-        final AudioInputStream ais = getAudioInputStreamFromFile(filename);
-
-        try {
-            Clip clip = AudioSystem.getClip();
-            // Clip clip = (Clip) AudioSystem.getLine(new Line.Info(Clip.class));
-            clip.open(ais);
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        } catch (IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-
-        // keep JVM open
-        new Thread(new Runnable() {
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-    }
-
-
-    /**
-     * Turns on audio recording.
-     */
-    public static void startRecording() {
-        if (!isRecording) {
-            recordedSamples = new QueueOfDoubles();
-            isRecording = true;
-        } else {
-            throw new IllegalStateException("startRecording() must not be called twice in a row");
-        }
-    }
-
-    /**
-     * Turns off audio recording and returns the recorded samples.
-     *
-     * @return the array of recorded samples
-     */
-    public static double[] stopRecording() {
-        if (isRecording) {
-            double[] results = recordedSamples.toArray();
-            isRecording = false;
-            recordedSamples = null;
-            return results;
-        } else {
-            throw new IllegalStateException("stopRecording() must be called after calling startRecording()");
-        }
-    }
-
-
     /***************************************************************************
      * Helper class for reading and recording audio.
      ***************************************************************************/
@@ -695,8 +712,7 @@ public final class StdAudio {
         private void resize(int capacity) {
             assert capacity >= n;
             double[] temp = new double[capacity];
-            for (int i = 0; i < n; i++)
-                temp[i] = a[i];
+            if (n >= 0) System.arraycopy(a, 0, temp, 0, n);
             a = temp;
         }
 
@@ -715,42 +731,9 @@ public final class StdAudio {
         // return the items as an array of length n
         public double[] toArray() {
             double[] result = new double[n];
-            for (int i = 0; i < n; i++)
-                result[i] = a[i];
+            System.arraycopy(a, 0, result, 0, n);
             return result;
         }
 
-    }
-
-
-    /**
-     * Test client - plays some sound files and concert A.
-     *
-     * @param args the command-line arguments (none should be specified)
-     */
-    public static void main(String[] args) {
-        // 440 Hz for 1 sec
-        double freq = 440.0;
-        for (int i = 0; i <= StdAudio.SAMPLE_RATE; i++) {
-            StdAudio.play(0.5 * Math.sin(2 * Math.PI * freq * i / StdAudio.SAMPLE_RATE));
-        }
-
-
-        String base = "https://introcs.cs.princeton.edu/java/stdlib/";
-
-        // play some sound files
-        StdAudio.play(base + "test.wav");          // helicopter
-        StdAudio.play(base + "test-22050.wav");    // twenty-four
-        StdAudio.play(base + "test.midi");         // a Mozart measure
-
-        // a sound loop
-        for (int i = 0; i < 10; i++) {
-            StdAudio.play(base + "BaseDrum.wav");
-            StdAudio.play(base + "SnareDrum.wav");
-        }
-
-        // need to call this in non-interactive stuff so the program doesn't terminate
-        // until all the sound leaves the speaker.
-        StdAudio.drain();
     }
 }

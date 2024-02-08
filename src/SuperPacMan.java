@@ -4,15 +4,9 @@ import stdlib.StdOut;
 public final class SuperPacMan {
 
     public static final String APPLICATION_TITLE = "Super Pac-Man";
-
     private static final String MODE_SERVER = "server";
     private static final String MODE_DRAWINGS = "drawings";
-
-    private SuperPacMan() {
-    }
-
     private static final String VERSION = "0.0.0";
-
     private static final String LOGO = """
                                     .#@@@@@@&,                \s
                             .@@&,.................#@@(        \s
@@ -39,6 +33,8 @@ public final class SuperPacMan {
                                 %@@@@#,,,,,,(@@@@@            \s
             """;
 
+    private SuperPacMan() {
+    }
 
     private static void usage() {
         System.err.println("Invalid usage : java " + SuperPacMan.class.getSimpleName());

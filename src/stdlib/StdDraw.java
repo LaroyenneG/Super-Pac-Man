@@ -30,53 +30,19 @@ package stdlib;
  *
  ******************************************************************************/
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FileDialog;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import java.awt.geom.Arc2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.*;
 import java.awt.image.BufferedImage;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.LinkedList;
-import java.util.TreeSet;
 import java.util.NoSuchElementException;
-import javax.imageio.ImageIO;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import java.util.TreeSet;
 
 /**
  * The {@code StdDraw} class provides static methods for creating drawings
@@ -597,30 +563,12 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
     // default colors
     private static final Color DEFAULT_PEN_COLOR = BLACK;
     private static final Color DEFAULT_CLEAR_COLOR = WHITE;
-
-    // current pen color
-    private static Color penColor;
-
     // default title of standard drawing window
     private static final String DEFAULT_WINDOW_TITLE = "Standard Draw";
-
-    // current title of standard drawing window
-    private static String windowTitle = DEFAULT_WINDOW_TITLE;
-
     // default canvas size is DEFAULT_SIZE-by-DEFAULT_SIZE
     private static final int DEFAULT_SIZE = 512;
-    private static int width = DEFAULT_SIZE;
-    private static int height = DEFAULT_SIZE;
-
     // default pen radius
     private static final double DEFAULT_PEN_RADIUS = 0.002;
-
-    // current pen radius
-    private static double penRadius;
-
-    // show we draw immediately or wait until next show?
-    private static boolean defer = false;
-
     // boundary of drawing canvas, 0% border
     // private static final double BORDER = 0.05;
     private static final double BORDER = 0.00;
@@ -628,15 +576,22 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
     private static final double DEFAULT_XMAX = 1.0;
     private static final double DEFAULT_YMIN = 0.0;
     private static final double DEFAULT_YMAX = 1.0;
-    private static double xmin, ymin, xmax, ymax;
-
     // for synchronization
     private static final Object MOUSE_LOCK = new Object();
     private static final Object KEY_LOCK = new Object();
-
     // default font
     private static final Font DEFAULT_FONT = new Font("SansSerif", Font.PLAIN, 16);
-
+    // current pen color
+    private static Color penColor;
+    // current title of standard drawing window
+    private static String windowTitle = DEFAULT_WINDOW_TITLE;
+    private static int width = DEFAULT_SIZE;
+    private static int height = DEFAULT_SIZE;
+    // current pen radius
+    private static double penRadius;
+    // show we draw immediately or wait until next show?
+    private static boolean defer = false;
+    private static double xmin, ymin, xmax, ymax;
     // current font
     private static Font font;
 
@@ -645,7 +600,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
     private static Graphics2D offscreen, onscreen;
 
     // singleton for callbacks: avoids generation of extra .class files
-    private static StdDraw std = new StdDraw();
+    private static final StdDraw std = new StdDraw();
 
     // the frame for drawing to the screen
     private static JFrame frame;
@@ -661,14 +616,14 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
     // set of key codes currently pressed down
     private static TreeSet<Integer> keysDown;
 
-    // singleton pattern: client can't instantiate
-    private StdDraw() {
-    }
-
-
     // static initializer
     static {
         init();
+    }
+
+
+    // singleton pattern: client can't instantiate
+    private StdDraw() {
     }
 
     /**
@@ -962,16 +917,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
     }
 
     /**
-     * Sets the pen size to the default size (0.002).
-     * The pen is circular, so that lines have rounded ends, and when you set the
-     * pen radius and draw a point, you get a circle of the specified radius.
-     * The pen radius is not affected by coordinate scaling.
-     */
-    public static void setPenRadius() {
-        setPenRadius(DEFAULT_PEN_RADIUS);
-    }
-
-    /**
      * Sets the radius of the pen to the specified size.
      * The pen is circular, so that lines have rounded ends, and when you set the
      * pen radius and draw a point, you get a circle of the specified radius.
@@ -992,19 +937,22 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
     }
 
     /**
+     * Sets the pen size to the default size (0.002).
+     * The pen is circular, so that lines have rounded ends, and when you set the
+     * pen radius and draw a point, you get a circle of the specified radius.
+     * The pen radius is not affected by coordinate scaling.
+     */
+    public static void setPenRadius() {
+        setPenRadius(DEFAULT_PEN_RADIUS);
+    }
+
+    /**
      * Returns the current pen color.
      *
      * @return the current pen color
      */
     public static Color getPenColor() {
         return penColor;
-    }
-
-    /**
-     * Sets the pen color to the default color (black).
-     */
-    public static void setPenColor() {
-        setPenColor(DEFAULT_PEN_COLOR);
     }
 
     /**
@@ -1024,6 +972,13 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
         validateNotNull(color, "color");
         penColor = color;
         offscreen.setColor(penColor);
+    }
+
+    /**
+     * Sets the pen color to the default color (black).
+     */
+    public static void setPenColor() {
+        setPenColor(DEFAULT_PEN_COLOR);
     }
 
     /**
@@ -1052,13 +1007,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
     }
 
     /**
-     * Sets the font to the default font (sans serif, 16 point).
-     */
-    public static void setFont() {
-        setFont(DEFAULT_FONT);
-    }
-
-    /**
      * Sets the font to the specified value.
      *
      * @param font the font
@@ -1067,6 +1015,13 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
     public static void setFont(Font font) {
         validateNotNull(font, "font");
         StdDraw.font = font;
+    }
+
+    /**
+     * Sets the font to the default font (sans serif, 16 point).
+     */
+    public static void setFont() {
+        setFont(DEFAULT_FONT);
     }
 
 
@@ -1889,26 +1844,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
         }
     }
 
-
-    /**
-     * This method cannot be called directly.
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        FileDialog chooser = new FileDialog(StdDraw.frame, "Use a .png or .jpg extension", FileDialog.SAVE);
-        chooser.setVisible(true);
-        String selectedDirectory = chooser.getDirectory();
-        String selectedFilename = chooser.getFile();
-        if (selectedDirectory != null && selectedFilename != null) {
-            StdDraw.save(selectedDirectory + selectedFilename);
-        }
-    }
-
-
-    /***************************************************************************
-     *  Mouse interactions.
-     ***************************************************************************/
-
     /**
      * Returns true if the mouse is being pressed.
      *
@@ -1919,6 +1854,11 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
             return isMousePressed;
         }
     }
+
+
+    /***************************************************************************
+     *  Mouse interactions.
+     ***************************************************************************/
 
     /**
      * Returns true if the mouse is being pressed.
@@ -1954,80 +1894,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
             return mouseY;
         }
     }
-
-
-    /**
-     * This method cannot be called directly.
-     */
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // this body is intentionally left empty
-    }
-
-    /**
-     * This method cannot be called directly.
-     */
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // this body is intentionally left empty
-    }
-
-    /**
-     * This method cannot be called directly.
-     */
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // this body is intentionally left empty
-    }
-
-    /**
-     * This method cannot be called directly.
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-        synchronized (MOUSE_LOCK) {
-            mouseX = StdDraw.userX(e.getX());
-            mouseY = StdDraw.userY(e.getY());
-            isMousePressed = true;
-        }
-    }
-
-    /**
-     * This method cannot be called directly.
-     */
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        synchronized (MOUSE_LOCK) {
-            isMousePressed = false;
-        }
-    }
-
-    /**
-     * This method cannot be called directly.
-     */
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        synchronized (MOUSE_LOCK) {
-            mouseX = StdDraw.userX(e.getX());
-            mouseY = StdDraw.userY(e.getY());
-        }
-    }
-
-    /**
-     * This method cannot be called directly.
-     */
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        synchronized (MOUSE_LOCK) {
-            mouseX = StdDraw.userX(e.getX());
-            mouseY = StdDraw.userY(e.getY());
-        }
-    }
-
-
-    /***************************************************************************
-     *  Keyboard interactions.
-     ***************************************************************************/
 
     /**
      * Returns true if the user has typed a key (that has not yet been processed).
@@ -2081,6 +1947,120 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
         }
     }
 
+    /**
+     * Test client.
+     *
+     * @param args the command-line arguments
+     */
+    public static void main(String[] args) {
+        StdDraw.square(0.2, 0.8, 0.1);
+        StdDraw.filledSquare(0.8, 0.8, 0.2);
+        StdDraw.circle(0.8, 0.2, 0.2);
+
+        StdDraw.setPenColor(StdDraw.BOOK_RED);
+        StdDraw.setPenRadius(0.02);
+        StdDraw.arc(0.8, 0.2, 0.1, 200, 45);
+
+        // draw a blue diamond
+        StdDraw.setPenRadius();
+        StdDraw.setPenColor(StdDraw.BOOK_BLUE);
+        double[] x = {0.1, 0.2, 0.3, 0.2};
+        double[] y = {0.2, 0.3, 0.2, 0.1};
+        StdDraw.filledPolygon(x, y);
+
+        // text
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.text(0.2, 0.5, "black text");
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.text(0.8, 0.8, "white text");
+    }
+
+    /**
+     * This method cannot be called directly.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        FileDialog chooser = new FileDialog(StdDraw.frame, "Use a .png or .jpg extension", FileDialog.SAVE);
+        chooser.setVisible(true);
+        String selectedDirectory = chooser.getDirectory();
+        String selectedFilename = chooser.getFile();
+        if (selectedDirectory != null && selectedFilename != null) {
+            StdDraw.save(selectedDirectory + selectedFilename);
+        }
+    }
+
+    /**
+     * This method cannot be called directly.
+     */
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // this body is intentionally left empty
+    }
+
+    /**
+     * This method cannot be called directly.
+     */
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // this body is intentionally left empty
+    }
+
+    /**
+     * This method cannot be called directly.
+     */
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // this body is intentionally left empty
+    }
+
+
+    /***************************************************************************
+     *  Keyboard interactions.
+     ***************************************************************************/
+
+    /**
+     * This method cannot be called directly.
+     */
+    @Override
+    public void mousePressed(MouseEvent e) {
+        synchronized (MOUSE_LOCK) {
+            mouseX = StdDraw.userX(e.getX());
+            mouseY = StdDraw.userY(e.getY());
+            isMousePressed = true;
+        }
+    }
+
+    /**
+     * This method cannot be called directly.
+     */
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        synchronized (MOUSE_LOCK) {
+            isMousePressed = false;
+        }
+    }
+
+    /**
+     * This method cannot be called directly.
+     */
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        synchronized (MOUSE_LOCK) {
+            mouseX = StdDraw.userX(e.getX());
+            mouseY = StdDraw.userY(e.getY());
+        }
+    }
+
+    /**
+     * This method cannot be called directly.
+     */
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        synchronized (MOUSE_LOCK) {
+            mouseX = StdDraw.userX(e.getX());
+            mouseY = StdDraw.userY(e.getY());
+        }
+    }
 
     /**
      * This method cannot be called directly.
@@ -2111,7 +2091,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
             keysDown.remove(e.getKeyCode());
         }
     }
-
 
     /***************************************************************************
      *  For improved resolution on Mac Retina displays.
@@ -2145,35 +2124,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
             super.paintIcon(c, g2, x * 2, y * 2);
             g2.dispose();
         }
-    }
-
-
-    /**
-     * Test client.
-     *
-     * @param args the command-line arguments
-     */
-    public static void main(String[] args) {
-        StdDraw.square(0.2, 0.8, 0.1);
-        StdDraw.filledSquare(0.8, 0.8, 0.2);
-        StdDraw.circle(0.8, 0.2, 0.2);
-
-        StdDraw.setPenColor(StdDraw.BOOK_RED);
-        StdDraw.setPenRadius(0.02);
-        StdDraw.arc(0.8, 0.2, 0.1, 200, 45);
-
-        // draw a blue diamond
-        StdDraw.setPenRadius();
-        StdDraw.setPenColor(StdDraw.BOOK_BLUE);
-        double[] x = {0.1, 0.2, 0.3, 0.2};
-        double[] y = {0.2, 0.3, 0.2, 0.1};
-        StdDraw.filledPolygon(x, y);
-
-        // text
-        StdDraw.setPenColor(StdDraw.BLACK);
-        StdDraw.text(0.2, 0.5, "black text");
-        StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.text(0.8, 0.8, "white text");
     }
 
 }
