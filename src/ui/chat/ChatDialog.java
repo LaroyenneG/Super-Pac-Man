@@ -1,0 +1,62 @@
+package ui.chat;
+
+import javax.swing.*;
+import java.awt.event.*;
+
+public class ChatDialog extends JDialog {
+    private JPanel contentPane;
+    private JTextArea conversationTextArea;
+    private JTextField inputTextField;
+    private JLabel infoLabel;
+    private JButton sendButton;
+
+    public ChatDialog() {
+        setContentPane(contentPane);
+        setModal(true);
+        setResizable(false);
+        getRootPane().setDefaultButton(sendButton);
+
+        // call onCancel() when cross is clicked
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                onCancel();
+            }
+        });
+
+        inputTextField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onSend();
+            }
+        });
+
+        // call onCancel() on ESCAPE
+        contentPane.registerKeyboardAction(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onCancel();
+            }
+        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    }
+
+    public static void main(String[] args) {
+        ChatDialog dialog = new ChatDialog();
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
+    }
+
+    private void onSend() {
+        var text = inputTextField.getText();
+        inputTextField.setText("");
+        conversationTextArea.setText(conversationTextArea.getText() + "\n" + text);
+    }
+
+    private void onCancel() {
+        dispose();
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
+}

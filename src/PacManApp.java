@@ -1,5 +1,3 @@
-import ui.chat.ChatForm;
-
 public final class PacManApp {
 
     private PacManApp() {
