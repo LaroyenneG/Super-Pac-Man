@@ -1,14 +1,14 @@
 import stdlib.StdDraw;
 import stdlib.StdOut;
 
-public final class SuperPacManApp {
+public final class SuperPacMan {
 
     public static final String APPLICATION_TITLE = "Super Pac-Man";
 
     private static final String MODE_SERVER = "server";
     private static final String MODE_DRAWINGS = "drawings";
 
-    private SuperPacManApp() {
+    private SuperPacMan() {
     }
 
     private static final String VERSION = "0.0.0";
@@ -41,7 +41,7 @@ public final class SuperPacManApp {
 
 
     private static void usage() {
-        System.err.println("Invalid usage : java " + SuperPacManApp.class.getSimpleName());
+        System.err.println("Invalid usage : java " + SuperPacMan.class.getSimpleName());
         System.exit(-1);
     }
 
