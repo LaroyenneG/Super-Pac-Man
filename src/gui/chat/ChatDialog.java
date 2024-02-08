@@ -1,4 +1,4 @@
-package ui.chat;
+package gui.chat;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
