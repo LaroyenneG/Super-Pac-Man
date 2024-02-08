@@ -60,9 +60,13 @@ public final class SuperPacMan {
     }
 
     private static void game() {
-        StdOut.println("Game mode is started !");
-
-        StdDraw.setCanvasSize(800, 800);
+        StdOut.println("Game mode selected");
+        StdDraw.setTitle(APPLICATION_TITLE);
+        StdDraw.setCanvasSize(600, 600);
+        StdDraw.setScale(0, 100);
+        StdDraw.setPenColor(StdDraw.BLACK);
+        //StdDraw.setPenRadius(1);
+        StdDraw.rectangle(50, 50, 10, 10);
     }
 
 
@@ -70,11 +74,6 @@ public final class SuperPacMan {
 
         StdOut.println(LOGO);
         StdOut.println(APPLICATION_TITLE + " v" + VERSION + " started !");
-        StdDraw.setTitle(APPLICATION_TITLE);
-        StdDraw.setVisible(false);
-
-        StdDraw.setCanvasSize(800, 800);
-        //StdDraw.show();
 
         switch (args.length) {
             case 0:
