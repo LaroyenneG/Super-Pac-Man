@@ -1,4 +1,4 @@
-package game.characters;
+package game.character;
 
 public abstract class Ghost extends Character {
 }
