@@ -62,10 +62,9 @@ public final class SuperPacMan {
     private static void game() {
         StdOut.println("Game mode selected");
         StdDraw.setTitle(APPLICATION_TITLE);
-        StdDraw.setCanvasSize(600, 600);
+        StdDraw.setCanvasSize(800, 800);
         StdDraw.setScale(0, 100);
         StdDraw.setPenColor(StdDraw.BLACK);
-        //StdDraw.setPenRadius(1);
         StdDraw.rectangle(50, 50, 10, 10);
     }
 
