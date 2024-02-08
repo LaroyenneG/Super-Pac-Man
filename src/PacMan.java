@@ -34,7 +34,7 @@ public final class PacMan {
 
 
     private static void usage() {
-
+        System.err.println("Invalid usage : java PacMan");
     }
 
     public static void main(String[] args) {
