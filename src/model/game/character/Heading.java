@@ -1,6 +1,6 @@
 package model.game.character;
 
-public enum Direction {
+public enum Heading {
     UP,
     DOWN,
     RIGHT,
