@@ -4,13 +4,9 @@ import model.game.grid.Square;
 
 public abstract class Character extends Square {
 
-    private final boolean moving;
+    private Heading heading;
 
-    private final Heading heading;
+    private boolean moving;
 
 
-    public Character() {
-        moving = false;
-        heading = null;
-    }
 }
