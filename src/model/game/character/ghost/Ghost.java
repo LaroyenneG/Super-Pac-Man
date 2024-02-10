@@ -6,4 +6,6 @@ public abstract class Ghost extends Character {
 
     private boolean frozen;
 
+    private boolean scared;
+
 }
