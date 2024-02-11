@@ -6,6 +6,7 @@ public final class SuperPacMan {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
     private static final String MODE_SERVER = "server";
     private static final String MODE_DRAWINGS = "drawings";
+    private static final String MODE_TESTS = "tests";
     private static final String VERSION = "0.0.0";
     private static final String LOGO = """
                                     .#@@@@@@&,                \s
@@ -43,6 +44,10 @@ public final class SuperPacMan {
 
     private static void server() {
         StdOut.println("Server mode is started !");
+
+    }
+
+    private static void tests() {
 
     }
 
@@ -85,6 +90,9 @@ public final class SuperPacMan {
                         break;
                     case MODE_DRAWINGS:
                         drawings();
+                        break;
+                    case MODE_TESTS:
+                        tests();
                         break;
                     default:
                         usage();

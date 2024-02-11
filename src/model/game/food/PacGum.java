@@ -1,4 +1,4 @@
 package model.game.food;
 
-public final class PacGum extends Food {
+public class PacGum extends Food {
 }

@@ -11,6 +11,7 @@ public final class Game {
 
     private final Grid grid;
 
+
     public Game() {
         players = null;
         grid = null;
