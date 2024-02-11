@@ -1,5 +1,6 @@
 package model.game.character;
 
+import model.game.food.Food;
 import model.game.grid.Square;
 
 import java.awt.*;
@@ -20,4 +21,6 @@ public abstract class GameCharacter extends Square {
     public abstract boolean isHero();
 
     public abstract boolean eats(GameCharacter character);
+
+    public abstract boolean eats(Food food);
 }

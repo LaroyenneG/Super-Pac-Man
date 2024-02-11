@@ -1,6 +1,7 @@
 package model.game.character.pac.person;
 
 import model.game.character.GameCharacter;
+import model.game.food.Food;
 
 
 public abstract class PacPerson extends GameCharacter {
@@ -24,6 +25,12 @@ public abstract class PacPerson extends GameCharacter {
         return false;
     }
 
+    @Override
+    public final boolean eats(Food food) {
+        return true;
+    }
+
+
     public final boolean pushes(PacPerson pacPerson) {
         return pacPerson.weight < weight;
     }
@@ -31,6 +38,4 @@ public abstract class PacPerson extends GameCharacter {
     public final boolean isGiant() {
         return weight >= MAX_WEIGHT;
     }
-
-
 }

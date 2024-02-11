@@ -2,13 +2,19 @@ package model.game.character.ghost;
 
 import model.game.character.GameCharacter;
 import model.game.character.pac.person.PacPerson;
+import model.game.food.Food;
 
 public abstract class Ghost extends GameCharacter {
 
-    private boolean frozen;
-
     private boolean scared;
 
+    public void terrify() {
+        scared = true;
+    }
+
+    public void reassure() {
+        scared = false;
+    }
 
     @Override
     public final boolean isHero() {
@@ -20,7 +26,7 @@ public abstract class Ghost extends GameCharacter {
     }
 
     @Override
-    public boolean eats(GameCharacter character) {
+    public final boolean eats(GameCharacter character) {
 
         if(!character.isHero()) return false;
 
@@ -31,6 +37,11 @@ public abstract class Ghost extends GameCharacter {
         }
          */
 
+        return false;
+    }
+
+    @Override
+    public final boolean eats(Food food) {
         return false;
     }
 }

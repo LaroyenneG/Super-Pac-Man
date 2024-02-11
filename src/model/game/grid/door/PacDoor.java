@@ -12,6 +12,6 @@ public final class PacDoor extends Door {
 
         var pacPerson = (PacPerson) character;
 
-        return pacPerson.getWeight() < 4;
+        return !pacPerson.isGiant();
     }
 }
