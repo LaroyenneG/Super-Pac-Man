@@ -19,5 +19,5 @@ public abstract class GameCharacter extends Square {
 
     public abstract boolean isHero();
 
-    public abstract boolean eat(GameCharacter character);
+    public abstract boolean eats(GameCharacter character);
 }

@@ -4,24 +4,33 @@ import model.game.character.GameCharacter;
 
 
 public abstract class PacPerson extends GameCharacter {
+    public static final int MAX_WEIGHT = 10;
 
-    private final int score = 0;
-
-    private final int size = 0;
+    private final int weight = 0;
 
 
-    public int getSize() {
+    public int getWeight() {
 
-        return size;
+        return weight;
     }
 
     @Override
-    public boolean isHero() {
+    public final boolean isHero() {
         return true;
     }
 
     @Override
-    public boolean eat(GameCharacter character) {
+    public boolean eats(GameCharacter character) {
         return false;
     }
+
+    public final boolean pushes(PacPerson pacPerson) {
+        return pacPerson.weight < weight;
+    }
+
+    public final boolean isGiant() {
+        return weight >= MAX_WEIGHT;
+    }
+
+
 }

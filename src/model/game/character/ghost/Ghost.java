@@ -11,7 +11,7 @@ public abstract class Ghost extends GameCharacter {
 
 
     @Override
-    public boolean isHero() {
+    public final boolean isHero() {
         return true;
     }
 
@@ -20,7 +20,7 @@ public abstract class Ghost extends GameCharacter {
     }
 
     @Override
-    public boolean eat(GameCharacter character) {
+    public boolean eats(GameCharacter character) {
 
         if(!character.isHero()) return false;
 
