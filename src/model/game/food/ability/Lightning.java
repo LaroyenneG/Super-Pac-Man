@@ -8,8 +8,11 @@ import java.util.Set;
 
 public final class Lightning extends Food implements Ability {
 
+    public static final int POINTS = 0;
+    public static final double PROBABILITY = 1.0 / 15.0;
+
     public Lightning() {
-        super();
+        super(POINTS, PROBABILITY);
     }
 
     @Override

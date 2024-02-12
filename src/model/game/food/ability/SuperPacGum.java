@@ -7,9 +7,10 @@ import model.game.food.PacGum;
 import java.util.Set;
 
 public final class SuperPacGum extends PacGum implements Ability {
+    public static final double PROBABILITY = 1.0 / 2.0;
 
     public SuperPacGum() {
-        super();
+        super(PROBABILITY);
     }
 
     @Override

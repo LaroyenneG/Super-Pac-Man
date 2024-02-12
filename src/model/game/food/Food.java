@@ -3,15 +3,21 @@ package model.game.food;
 import model.game.Entity;
 
 public abstract class Food extends Entity {
-    private static final int DEFAULT_SCORE = 0;
 
-    private final int score;
+    private final int points;
+    private final double probability;
 
-    public Food(int score) {
-        this.score = score;
+    public Food(int points, double probability) {
+        this.points = points;
+        this.probability = probability;
     }
 
-    public Food() {
-        this(DEFAULT_SCORE);
+
+    public int getPoints() {
+        return points;
+    }
+
+    public double getProbability() {
+        return probability;
     }
 }
