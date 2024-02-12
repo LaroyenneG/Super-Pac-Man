@@ -11,4 +11,9 @@ public abstract class Door extends Square {
     public String toString() {
         return "~";
     }
+
+    @Override
+    public boolean isImpassable() {
+        return false;
+    }
 }

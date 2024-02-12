@@ -21,4 +21,9 @@ public abstract class GameCharacter extends Square {
     public abstract boolean eats(GameCharacter character);
 
     public abstract boolean eats(Food food);
+
+    @Override
+    public boolean isImpassable() {
+        return false;
+    }
 }

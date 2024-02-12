@@ -6,4 +6,9 @@ public final class Wall extends Square {
     public String toString() {
         return "+";
     }
+
+    @Override
+    public boolean isImpassable() {
+        return true;
+    }
 }
