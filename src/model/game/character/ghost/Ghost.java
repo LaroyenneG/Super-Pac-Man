@@ -8,7 +8,7 @@ public abstract class Ghost extends GameCharacter {
 
     private boolean scared;
 
-    public void terrify() {
+    public void scareOff() {
         scared = true;
     }
 
