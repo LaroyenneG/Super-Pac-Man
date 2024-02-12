@@ -1,13 +1,11 @@
 package model.game.character;
 
 import model.game.food.Food;
-import model.game.grid.Square;
+import model.game.grid.square.Square;
 
 import java.awt.*;
 
 public abstract class GameCharacter extends Square {
-
-    private double vitality;
 
     private Heading heading;
 

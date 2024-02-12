@@ -1,4 +1,4 @@
-package model.game.grid.door;
+package model.game.grid.square.door;
 
 import model.game.character.GameCharacter;
 

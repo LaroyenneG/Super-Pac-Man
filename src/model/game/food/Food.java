@@ -1,6 +1,6 @@
 package model.game.food;
 
-import model.game.grid.Square;
+import model.game.grid.square.Square;
 
 public abstract class Food extends Square {
 

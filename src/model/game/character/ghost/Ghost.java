@@ -44,4 +44,9 @@ public abstract class Ghost extends GameCharacter {
     public final boolean eats(Food food) {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "^";
+    }
 }

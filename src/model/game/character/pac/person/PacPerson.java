@@ -38,4 +38,9 @@ public abstract class PacPerson extends GameCharacter {
     public final boolean isGiant() {
         return weight >= MAX_WEIGHT;
     }
+
+    @Override
+    public String toString() {
+        return "C";
+    }
 }

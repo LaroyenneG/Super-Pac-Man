@@ -1,9 +1,14 @@
-package model.game.grid.door;
+package model.game.grid.square.door;
 
 import model.game.character.GameCharacter;
-import model.game.grid.Square;
+import model.game.grid.square.Square;
 
 public abstract class Door extends Square {
 
     public abstract boolean authorize(GameCharacter character);
+
+    @Override
+    public String toString() {
+        return "~";
+    }
 }
