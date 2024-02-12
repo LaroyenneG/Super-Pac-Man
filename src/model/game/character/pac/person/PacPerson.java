@@ -7,12 +7,15 @@ import java.awt.*;
 
 
 public abstract class PacPerson extends Character {
+
+    public static final Color DEFAULT_COLOR = Color.YELLOW;
+
     public static final int MAX_WEIGHT = 10;
 
     private final int weight = 0;
 
-    public PacPerson() {
-        super(Color.YELLOW);
+    public PacPerson(Color color) {
+        super(color);
     }
 
 
