@@ -1,12 +1,12 @@
 package model.game.grid.square.door;
 
-import model.game.character.GameCharacter;
+import model.game.character.Character;
 import model.game.character.pac.person.PacPerson;
 
 public final class PacDoor extends Door {
 
     @Override
-    public boolean authorize(GameCharacter character) {
+    public boolean authorize(Character character) {
 
         if (!character.isHero()) return false;
 

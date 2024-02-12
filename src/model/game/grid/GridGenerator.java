@@ -23,7 +23,7 @@ public final class GridGenerator {
 
     private static Square[][] buildAreas(int size) {
 
-        var result = buildEmpty(size, size - 1);
+        var result = buildEmpty(size, size / 2 + 1);
 
         for (var i = 0; i < result.length; i++) {
             for (var j = 0; j < result[i].length; j++) {
@@ -98,9 +98,7 @@ public final class GridGenerator {
 
     private static boolean inMiddleArea(int x, int y, int size) {
 
-        var area = buildAreas(size);
-
-        var max = size * 1 / 3;
+        var max = size / 3;
         var min = size * 2 / 3;
 
         return x > max && x < min && y > max && y < min;
@@ -123,7 +121,7 @@ public final class GridGenerator {
                 var origin = result[i][j];
                 if (origin instanceof Wall) {
                     labyrinth[i][j] = 0;
-                } else if (origin instanceof Door || inMiddleArea(j, i, size) || (i % 2 == 0 && j % 2 == 0 && StdRandom.bernoulli(0.5))) {
+                } else if (origin instanceof Door || inMiddleArea(j, i, size) || (i % 2 == 0 && j % 2 == 0 && StdRandom.bernoulli(0.4))) {
                     labyrinth[i][j] = counter++;
                 } else {
                     labyrinth[i][j] = -1;
@@ -184,9 +182,9 @@ public final class GridGenerator {
             } while (!novelized);
 
             values.clear();
-            for (int[] line : labyrinth) {
-                for (var v : line) {
-                    values.add(v);
+            for (var l : labyrinth) {
+                for (var c : l) {
+                    values.add(c);
                 }
             }
         } while (values.size() > 3);
@@ -203,7 +201,7 @@ public final class GridGenerator {
     }
 
     public static void main(String[] args) {
-        System.out.println(new Grid(buildKernel(20)));
-        System.out.println(generate(25));
+        System.out.println(new Grid(buildKernel(30)));
+        System.out.println(generate(30));
     }
 }

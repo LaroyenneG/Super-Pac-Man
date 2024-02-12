@@ -19,6 +19,7 @@ public class Grid {
         for (var line : squares) {
             for (var colum : line) {
                 result.append(colum);
+                result.append(' ');
             }
             result.append("\n");
         }

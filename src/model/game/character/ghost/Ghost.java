@@ -1,10 +1,10 @@
 package model.game.character.ghost;
 
-import model.game.character.GameCharacter;
+import model.game.character.Character;
 import model.game.character.pac.person.PacPerson;
 import model.game.food.Food;
 
-public abstract class Ghost extends GameCharacter {
+public abstract class Ghost extends Character {
 
     private boolean scared;
 
@@ -26,7 +26,7 @@ public abstract class Ghost extends GameCharacter {
     }
 
     @Override
-    public final boolean eats(GameCharacter character) {
+    public final boolean eats(Character character) {
 
         if(!character.isHero()) return false;
 

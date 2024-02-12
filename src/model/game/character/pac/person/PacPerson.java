@@ -1,10 +1,10 @@
 package model.game.character.pac.person;
 
-import model.game.character.GameCharacter;
+import model.game.character.Character;
 import model.game.food.Food;
 
 
-public abstract class PacPerson extends GameCharacter {
+public abstract class PacPerson extends Character {
     public static final int MAX_WEIGHT = 10;
 
     private final int weight = 0;
@@ -21,7 +21,7 @@ public abstract class PacPerson extends GameCharacter {
     }
 
     @Override
-    public boolean eats(GameCharacter character) {
+    public boolean eats(Character character) {
         return false;
     }
 

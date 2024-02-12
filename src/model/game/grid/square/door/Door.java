@@ -1,11 +1,11 @@
 package model.game.grid.square.door;
 
-import model.game.character.GameCharacter;
+import model.game.character.Character;
 import model.game.grid.square.Square;
 
 public abstract class Door extends Square {
 
-    public abstract boolean authorize(GameCharacter character);
+    public abstract boolean authorize(Character character);
 
     @Override
     public String toString() {
