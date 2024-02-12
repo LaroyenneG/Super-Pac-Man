@@ -8,6 +8,10 @@ import java.util.Set;
 
 public final class SuperPacGum extends PacGum implements Ability {
 
+    public SuperPacGum() {
+        super();
+    }
+
     @Override
     public void apply(PacPerson owner, Set<Ghost> ghosts, Set<PacPerson> others) {
 

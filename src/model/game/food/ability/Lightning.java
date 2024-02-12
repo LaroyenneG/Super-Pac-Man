@@ -8,6 +8,10 @@ import java.util.Set;
 
 public final class Lightning extends Food implements Ability {
 
+    public Lightning() {
+        super();
+    }
+
     @Override
     public void apply(PacPerson owner, Set<Ghost> ghosts, Set<PacPerson> others) {
 
