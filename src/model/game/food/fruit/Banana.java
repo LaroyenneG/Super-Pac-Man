@@ -1,6 +1,6 @@
-package model.game.food;
+package model.game.food.fruit;
 
-public final class Banana extends Food {
+public final class Banana extends Fruit {
     public static final int POINTS = 50000;
     public static final double PROBABILITY = 1.0 / 100.0;
 
