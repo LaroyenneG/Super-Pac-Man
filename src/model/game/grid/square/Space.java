@@ -1,6 +1,6 @@
 package model.game.grid.square;
 
-public final class Space extends Square {
+public final class Space extends Passable {
 
     @Override
     public String toString() {

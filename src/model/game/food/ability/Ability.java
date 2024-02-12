@@ -15,8 +15,4 @@ public interface Ability {
     default double duration() {
         return DEFAULT_DURATION;
     }
-
-    default boolean multiplayerOnly() {
-        return false;
-    }
 }
