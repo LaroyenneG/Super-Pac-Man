@@ -12,4 +12,9 @@ public final class Space extends Square {
     public boolean isImpassable() {
         return false;
     }
+
+    @Override
+    public boolean isFree() {
+        return true;
+    }
 }

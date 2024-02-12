@@ -3,15 +3,20 @@ package model.game.character.pac.person;
 import model.game.character.Character;
 import model.game.food.Food;
 
+import java.awt.*;
+
 
 public abstract class PacPerson extends Character {
     public static final int MAX_WEIGHT = 10;
 
     private final int weight = 0;
 
+    public PacPerson() {
+        super(Color.YELLOW);
+    }
+
 
     public int getWeight() {
-
         return weight;
     }
 

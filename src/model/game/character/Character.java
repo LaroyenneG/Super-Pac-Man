@@ -11,9 +11,13 @@ public abstract class Character extends Entity {
 
     private boolean moving;
 
-    private boolean speed;
+    private final Color color;
+    private double speed;
 
-    private Color color;
+
+    protected Character(Color color) {
+        this.color = color;
+    }
 
 
     public abstract boolean isHero();

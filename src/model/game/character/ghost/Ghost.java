@@ -4,9 +4,18 @@ import model.game.character.Character;
 import model.game.character.pac.person.PacPerson;
 import model.game.food.Food;
 
+import java.awt.*;
+
 public abstract class Ghost extends Character {
 
     private boolean scared;
+
+
+    public Ghost(Color color) {
+        super(color);
+        scared = false;
+    }
+
 
     public void scareOff() {
         scared = true;

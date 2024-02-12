@@ -1,5 +1,9 @@
 package model.game.character.ghost;
 
-public final class Blinky extends Ghost {
+import java.awt.*;
 
+public final class Blinky extends Ghost {
+    public Blinky() {
+        super(Color.RED);
+    }
 }
