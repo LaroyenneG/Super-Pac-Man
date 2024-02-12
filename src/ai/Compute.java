@@ -37,7 +37,7 @@ public final class Compute {
 
         if (from.equals(to)) return travel;
 
-        if (travel.size() > squares.length * squares.length) return null;
+        if (travel.size() > squares.length * 4) return null;
 
         for (var nextPosition : theoreticalNextPositions(from)) {
 

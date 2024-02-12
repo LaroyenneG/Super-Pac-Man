@@ -9,6 +9,9 @@ import model.game.grid.square.door.PacDoor;
 import stdlib.StdRandom;
 
 import java.awt.*;
+import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class GridGenerator {
 
@@ -116,12 +119,13 @@ public final class GridGenerator {
 
                 result[i][j] = new Wall();
 
+                var isValid = new AtomicBoolean(true);
+                var todo = new AtomicInteger(0);
+                var threads = new HashSet<Thread>();
 
-
-                try {
-                    for (var k = 0; k < result.length; k++) {
-                        for (var l = 0; l < result[k].length; l++) {
-                            var from = result[k][l];
+                for (var k = 0; k < result.length; k++) {
+                    for (var l = 0; l < result[k].length; l++) {
+                        var from = result[k][l];
                             if (from.isImpassable()) {
                                 continue;
                             }
@@ -133,21 +137,40 @@ public final class GridGenerator {
                                         continue;
                                     }
 
-                                    System.out.println(new Grid(result));
-                                    System.out.println(new Point(k, l));
-                                    System.out.println(new Point(m, n));
-                                    var way = Compute.findWay(result, new Point(l, k), new Point(n, m));
-                                    System.out.println(way);
-                                    if (way == null) {
-                                        throw new InvalidGridException();
-                                    }
+                                    var fromPoint = new Point(l, k);
+                                    var toPoint = new Point(n, m);
+
+                                    var thread = new Thread(() -> {
+                                        todo.incrementAndGet();
+
+                                        var way = Compute.findWay(result, fromPoint, toPoint);
+                                        if (way == null) {
+                                            isValid.set(false);
+                                        }
+
+                                        System.out.println("Done : (" + todo.decrementAndGet() + " todo)");
+                                    });
+
+                                    threads.add(thread);
+                                    thread.start();
                                 }
                             }
                         }
+                }
+
+                for (var thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (InvalidGridException e) {
+                }
+
+                if (!isValid.get()) {
                     result[i][j] = origin;
                 }
+
+                System.out.println(new Grid(result));
             }
         }
 
