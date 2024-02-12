@@ -9,11 +9,10 @@ import model.game.grid.square.door.PacDoor;
 import stdlib.StdRandom;
 
 import java.awt.*;
-import java.util.HashSet;
 
 public final class GridGenerator {
 
-    private static final int MIN_GRID_SIZE = 30;
+    private static final int MIN_GRID_SIZE = 15;
 
     private static class InvalidGridException extends Exception {
         public InvalidGridException() {
@@ -117,10 +116,11 @@ public final class GridGenerator {
 
                 result[i][j] = new Wall();
 
+
+
                 try {
                     for (var k = 0; k < result.length; k++) {
                         for (var l = 0; l < result[k].length; l++) {
-
                             var from = result[k][l];
                             if (from.isImpassable()) {
                                 continue;
@@ -128,13 +128,16 @@ public final class GridGenerator {
 
                             for (var m = 0; m < result.length; m++) {
                                 for (var n = 0; n < result[m].length; n++) {
-
                                     var to = result[m][n];
                                     if (to.isImpassable()) {
                                         continue;
                                     }
 
-                                    var way = Compute.findWay(result, new Point(k, l), new Point(m, n));
+                                    System.out.println(new Grid(result));
+                                    System.out.println(new Point(k, l));
+                                    System.out.println(new Point(m, n));
+                                    var way = Compute.findWay(result, new Point(l, k), new Point(n, m));
+                                    System.out.println(way);
                                     if (way == null) {
                                         throw new InvalidGridException();
                                     }
@@ -152,7 +155,7 @@ public final class GridGenerator {
     }
 
     public static void main(String[] args) {
-        System.out.println(new Grid(buildKernel(30)));
-        System.out.println(generate(40));
+        System.out.println(new Grid(buildKernel(15)));
+        System.out.println(generate(15));
     }
 }

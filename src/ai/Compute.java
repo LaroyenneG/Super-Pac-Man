@@ -3,8 +3,10 @@ package ai;
 import model.game.grid.square.Square;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.*;
+import java.util.Set;
 
 public final class Compute {
 
@@ -17,24 +19,28 @@ public final class Compute {
 
         var result = new HashSet<Point>();
 
-        for (var i = -1; i <= 1; i++) {
-            for (var j = -1; j <= 1; j++) {
-                if (i != 0 || j != 0) {
-                    result.add(new Point(position.x + j, position.y + i));
-                }
-            }
-        }
+        result.add(new Point(position.x + 1, position.y));
+        result.add(new Point(position.x - 1, position.y));
+        result.add(new Point(position.x, position.y + 1));
+        result.add(new Point(position.x, position.y - 1));
 
         return result;
     }
 
     public static List<Point> findWay(Square[][] squares, Point from, Point to, List<Point> travel) {
 
+        assert squares.length >= 1;
+        assert !squares[from.y][from.x].isImpassable();
+        assert !squares[to.y][to.x].isImpassable();
+
+        travel.add(from);
 
         if (from.equals(to)) return travel;
 
-        var nextPositions = theoreticalNextPositions(from);
-        for (var nextPosition : nextPositions) {
+        if (travel.size() > squares.length * squares.length) return null;
+
+        for (var nextPosition : theoreticalNextPositions(from)) {
+
             if (travel.contains(nextPosition)) {
                 continue;
             }
@@ -42,18 +48,13 @@ public final class Compute {
             if (nextPosition.y >= 0 && nextPosition.y < squares.length
                     && nextPosition.x >= 0 && nextPosition.x < squares[0].length) {
 
-                var square = squares[nextPosition.y][nextPosition.x];
-                if (square.isImpassable()) {
+                if (squares[nextPosition.y][nextPosition.x].isImpassable()) {
                     continue;
                 }
 
-                var newTravel = new ArrayList<Point>();
-                newTravel.addAll(travel);
-                newTravel.add(from);
-
-                var result = findWay(squares, nextPosition, to, newTravel);
-                if (result != null) {
-                    return result;
+                var subTravel = findWay(squares, nextPosition, to, new ArrayList<>(travel));
+                if (subTravel != null) {
+                    return subTravel;
                 }
             }
         }
@@ -63,7 +64,6 @@ public final class Compute {
 
 
     public static List<Point> findWay(Square[][] squares, Point from, Point to) {
-
         return findWay(squares, from, to, new ArrayList<>());
     }
 }
