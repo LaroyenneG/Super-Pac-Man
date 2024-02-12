@@ -1,27 +1,20 @@
 package model.game.grid;
 
-import ai.Compute;
 import model.game.grid.square.Space;
 import model.game.grid.square.Square;
 import model.game.grid.square.Wall;
+import model.game.grid.square.door.Door;
 import model.game.grid.square.door.HauntedDoor;
 import model.game.grid.square.door.PacDoor;
 import stdlib.StdRandom;
 
 import java.awt.*;
 import java.util.HashSet;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public final class GridGenerator {
 
-    private static final int MIN_GRID_SIZE = 15;
+    private static final int MIN_GRID_SIZE = 20;
 
-    private static class InvalidGridException extends Exception {
-        public InvalidGridException() {
-            super("Not available grid");
-        }
-    }
 
 
     private GridGenerator() {
@@ -103,6 +96,15 @@ public final class GridGenerator {
         return result;
     }
 
+    private static boolean inMiddleArea(int x, int y, int size) {
+
+        var area = buildAreas(size);
+
+        var max = size * 1 / 3;
+        var min = size * 2 / 3;
+
+        return x > max && x < min && y > max && y < min;
+    }
 
     public static Grid generate(int size) {
 
@@ -110,67 +112,90 @@ public final class GridGenerator {
 
         var result = buildKernel(size);
 
+        var labyrinth = new int[size][size];
+        assert labyrinth.length == result.length;
+        assert labyrinth[0].length == result[0].length;
+
+        var counter = 1;
+
         for (var i = 0; i < result.length; i++) {
             for (var j = 0; j < result[i].length; j++) {
                 var origin = result[i][j];
-                if (origin.isImpassable() || StdRandom.bernoulli()) {
-                    continue;
+                if (origin instanceof Wall) {
+                    labyrinth[i][j] = 0;
+                } else if (origin instanceof Door || inMiddleArea(j, i, size) || (i % 2 == 0 && j % 2 == 0 && StdRandom.bernoulli(0.5))) {
+                    labyrinth[i][j] = counter++;
+                } else {
+                    labyrinth[i][j] = -1;
                 }
+            }
+        }
 
-                result[i][j] = new Wall();
+        var values = new HashSet<>();
 
-                var isValid = new AtomicBoolean(true);
-                var todo = new AtomicInteger(0);
-                var threads = new HashSet<Thread>();
+        do {
+            var y = StdRandom.uniformInt(labyrinth.length);
+            var x = StdRandom.uniformInt(labyrinth[y].length);
 
-                for (var k = 0; k < result.length; k++) {
-                    for (var l = 0; l < result[k].length; l++) {
-                        var from = result[k][l];
-                            if (from.isImpassable()) {
+            var value = labyrinth[y][x];
+            if (value < 0) {
+                labyrinth[y][x] = counter++;
+            } else if (value > 0 && !inMiddleArea(x, y, size) && StdRandom.bernoulli(0.4)) {
+                labyrinth[y][x] = -1;
+            }
+
+            var novelized = false;
+
+            do {
+                novelized = true;
+
+                for (var i = 0; i < labyrinth.length; i++) {
+                    for (var j = 0; j < labyrinth[i].length; j++) {
+
+                        var position = new Point(j, i);
+
+                        if (labyrinth[position.y][position.x] <= 0) continue;
+
+                        var neighbors = new HashSet<Point>();
+                        neighbors.add(new Point(position.x + 1, position.y));
+                        neighbors.add(new Point(position.x - 1, position.y));
+                        neighbors.add(new Point(position.x, position.y + 1));
+                        neighbors.add(new Point(position.x, position.y - 1));
+
+                        for (var neighbor : neighbors) {
+                            if (!(neighbor.y >= 0 && neighbor.y < labyrinth.length &&
+                                    neighbor.x >= 0 && neighbor.x < labyrinth[i].length)) {
                                 continue;
                             }
 
-                            for (var m = 0; m < result.length; m++) {
-                                for (var n = 0; n < result[m].length; n++) {
-                                    var to = result[m][n];
-                                    if (to.isImpassable()) {
-                                        continue;
-                                    }
+                            if (labyrinth[neighbor.y][neighbor.x] <= 0) continue;
 
-                                    var fromPoint = new Point(l, k);
-                                    var toPoint = new Point(n, m);
+                            var max = Math.max(labyrinth[position.y][position.x], labyrinth[neighbor.y][neighbor.x]);
 
-                                    var thread = new Thread(() -> {
-                                        todo.incrementAndGet();
-
-                                        var way = Compute.findWay(result, fromPoint, toPoint);
-                                        if (way == null) {
-                                            isValid.set(false);
-                                        }
-
-                                        System.out.println("Done : (" + todo.decrementAndGet() + " todo)");
-                                    });
-
-                                    threads.add(thread);
-                                    thread.start();
-                                }
+                            if (labyrinth[neighbor.y][neighbor.x] != max || labyrinth[position.y][position.x] != max) {
+                                labyrinth[neighbor.y][neighbor.x] = max;
+                                labyrinth[position.y][position.x] = max;
+                                novelized = false;
+                                break;
                             }
                         }
-                }
-
-                for (var thread : threads) {
-                    try {
-                        thread.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
+            } while (!novelized);
 
-                if (!isValid.get()) {
-                    result[i][j] = origin;
+            values.clear();
+            for (int[] line : labyrinth) {
+                for (var v : line) {
+                    values.add(v);
                 }
+            }
+        } while (values.size() > 3);
 
-                System.out.println(new Grid(result));
+        for (var i = 0; i < result.length; i++) {
+            for (var j = 0; j < result[i].length; j++) {
+                if (labyrinth[i][j] < 0) {
+                    result[i][j] = new Wall();
+                }
             }
         }
 
@@ -178,7 +203,7 @@ public final class GridGenerator {
     }
 
     public static void main(String[] args) {
-        System.out.println(new Grid(buildKernel(15)));
-        System.out.println(generate(15));
+        System.out.println(new Grid(buildKernel(20)));
+        System.out.println(generate(25));
     }
 }
