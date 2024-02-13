@@ -4,6 +4,7 @@ import model.game.character.Character;
 import model.game.character.pac.person.PacPerson;
 
 public final class PacDoor extends Door {
+    private boolean open;
 
     @Override
     public boolean authorize(Character character) {

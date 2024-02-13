@@ -1,5 +1,6 @@
 package model.game.grid;
 
+import gui.GridDraftsman;
 import model.game.grid.square.Space;
 import model.game.grid.square.Square;
 import model.game.grid.square.Wall;
@@ -201,7 +202,14 @@ public final class GridGenerator {
     }
 
     public static void main(String[] args) {
-        System.out.println(new Grid(buildKernel(30)));
-        System.out.println(generate(30));
+       // System.out.println(new Grid(buildKernel(30)));
+
+        var grid = generate(35);
+
+        System.out.println(grid);
+
+        var gridDraftsman = new GridDraftsman(grid.getSquares().length);
+
+        gridDraftsman.drawGrid(grid);
     }
 }

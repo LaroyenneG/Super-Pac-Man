@@ -8,15 +8,12 @@ import java.awt.*;
 public abstract class Character extends Entity {
 
     private Heading heading;
-
     private boolean moving;
-
-    private final Color color;
     private double speed;
 
 
-    protected Character(Color color) {
-        this.color = color;
+    protected Character() {
+
     }
 
 

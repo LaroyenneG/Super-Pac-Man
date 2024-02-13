@@ -3,7 +3,6 @@ package model.game.food;
 import model.game.Entity;
 
 public abstract class Food extends Entity {
-
     private final int points;
     private final double probability;
     private final boolean unique;

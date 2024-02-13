@@ -12,7 +12,6 @@ import java.util.Map;
 public class Grid {
     private final Map<Passable, Character> characters;
     private final Map<Space, Food> foods;
-
     private final Square[][] squares;
 
     public Grid(Square[][] squares) {
@@ -35,5 +34,9 @@ public class Grid {
         }
 
         return result.toString();
+    }
+
+    public Square[][] getSquares() {
+        return squares;
     }
 }

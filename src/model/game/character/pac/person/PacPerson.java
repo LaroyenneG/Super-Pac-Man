@@ -14,8 +14,8 @@ public abstract class PacPerson extends Character {
 
     private final int weight = 0;
 
-    public PacPerson(Color color) {
-        super(color);
+    public PacPerson() {
+        super();
     }
 
 

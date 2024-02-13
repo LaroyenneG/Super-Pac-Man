@@ -8,11 +8,12 @@ import java.awt.*;
 
 public abstract class Ghost extends Character {
 
+    private final Color color;
     private boolean scared;
 
 
     public Ghost(Color color) {
-        super(color);
+        this.color = color;
         scared = false;
     }
 
@@ -57,5 +58,9 @@ public abstract class Ghost extends Character {
     @Override
     public String toString() {
         return "^";
+    }
+
+    public Color getColor() {
+        return this.color;
     }
 }
