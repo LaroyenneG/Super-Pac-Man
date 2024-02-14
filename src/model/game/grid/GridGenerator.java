@@ -297,7 +297,6 @@ public final class GridGenerator {
             for (var thread : threads) {
                 thread.start();
             }
-
             for (var thread : threads) {
                 try {
                     thread.join();
@@ -314,6 +313,9 @@ public final class GridGenerator {
             }
 
             StdOut.println("Iteration " + i + " done (" + i * 100 / ITERATIONS + "%)");
+
+            var gridDraftsman = new GridDraftsman(result.getSquares().length);
+            gridDraftsman.drawGrid(result);
         }
 
 
@@ -322,15 +324,8 @@ public final class GridGenerator {
 
     public static void main(String[] args) throws InterruptedException {
 
-        var grid = generate(20);
+        var grid = generateHyperGrid(35);
 
         System.out.println(grid);
-
-        var gridDraftsman = new GridDraftsman(grid.getSquares().length);
-
-        while (true) {
-            gridDraftsman.drawGrid(grid);
-            Thread.sleep(500);
-        }
     }
 }

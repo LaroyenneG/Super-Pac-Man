@@ -1,8 +1,6 @@
-import stdlib.StdDraw;
 import stdlib.StdOut;
 
 public final class SuperPacMan {
-
     public static final String APPLICATION_TITLE = "Super Pac-Man";
     private static final String MODE_SERVER = "server";
     private static final String MODE_DRAWINGS = "drawings";
@@ -44,7 +42,6 @@ public final class SuperPacMan {
 
     private static void server() {
         StdOut.println("Server mode is started !");
-
     }
 
     private static void tests() {
