@@ -7,15 +7,21 @@ import model.game.grid.square.Wall;
 import model.game.grid.square.door.Door;
 import model.game.grid.square.door.HauntedDoor;
 import model.game.grid.square.door.PacDoor;
+import stdlib.StdOut;
 import stdlib.StdRandom;
 
 import java.awt.*;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public final class GridGenerator {
 
     private static final int MIN_GRID_SIZE = 20;
 
+    private static final int ITERATIONS = 100;
+
+    private static final int THREADS = Runtime.getRuntime().availableProcessors();
 
 
     private GridGenerator() {
@@ -155,11 +161,7 @@ public final class GridGenerator {
 
                         if (labyrinth[position.y][position.x] <= 0) continue;
 
-                        var neighbors = new HashSet<Point>();
-                        neighbors.add(new Point(position.x + 1, position.y));
-                        neighbors.add(new Point(position.x - 1, position.y));
-                        neighbors.add(new Point(position.x, position.y + 1));
-                        neighbors.add(new Point(position.x, position.y - 1));
+                        var neighbors = findNeighbors(position, false);
 
                         for (var neighbor : neighbors) {
                             if (!(neighbor.y >= 0 && neighbor.y < labyrinth.length &&
@@ -201,10 +203,130 @@ public final class GridGenerator {
         return new Grid(result);
     }
 
-    public static void main(String[] args) {
-       // System.out.println(new Grid(buildKernel(30)));
+    private static HashSet<Point> findNeighbors(Point position, boolean diagonal) {
+        var result = new HashSet<Point>();
+        result.add(new Point(position.x + 1, position.y));
+        result.add(new Point(position.x - 1, position.y));
+        result.add(new Point(position.x, position.y + 1));
+        result.add(new Point(position.x, position.y - 1));
+        if (diagonal) {
+            result.add(new Point(position.x - 1, position.y - 1));
+            result.add(new Point(position.x + 1, position.y + 1));
+        }
 
-        var grid = generate(20);
+        return result;
+    }
+
+    private static int countBlocks(Square[][] squares) {
+
+        var result = 0;
+
+        for (var line : squares) {
+            for (var value : line) {
+                if (value.isImpassable()) {
+                    result++;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private static int countHyperBlocks(Square[][] squares) {
+
+        var result = 0;
+
+        for (var i = 0; i < squares.length; i++) {
+            for (var j = 0; j < squares[i].length; j++) {
+
+                var neighborsCount = 0;
+
+                var square = squares[i][j];
+                if (!square.isImpassable()) {
+                    continue;
+                }
+
+                var neighbors = findNeighbors(new Point(j, i), true);
+                for (var neighbor : neighbors) {
+                    if (!(neighbor.y >= 0 && neighbor.y < squares.length &&
+                            neighbor.x >= 0 && neighbor.x < squares[i].length)) {
+                        continue;
+                    }
+
+                    var nextSquare = squares[neighbor.y][neighbor.x];
+
+                    if (!nextSquare.isImpassable()) {
+                        continue;
+                    }
+
+                    neighborsCount++;
+                }
+
+                if (neighborsCount >= 4) {
+                    result++;
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+    private static Grid generateHyperGrid(int size) {
+
+        Grid result = null;
+
+        var gridScoreMap = Collections.synchronizedMap(new HashMap<Integer, Grid>());
+
+        for (var i = 0; i < ITERATIONS; i++) {
+
+            StdOut.println("Start iteration " + i);
+
+            var threads = new HashSet<Thread>();
+            for (var j = 0; j < THREADS; j++) {
+                var thread = new Thread(() -> {
+
+                    var grid = generate(size);
+
+                    var block = countBlocks(grid.getSquares());
+                    var hyperBlocks = countHyperBlocks(grid.getSquares());
+
+                    var score = block - hyperBlocks;
+
+                    gridScoreMap.put(score, grid);
+                });
+                threads.add(thread);
+            }
+
+            for (var thread : threads) {
+                thread.start();
+            }
+
+            for (var thread : threads) {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            result = gridScoreMap.get(Collections.max(gridScoreMap.keySet()));
+
+            while (gridScoreMap.size() > 1) {
+                var minScore = Collections.min(gridScoreMap.keySet());
+                gridScoreMap.remove(minScore);
+            }
+
+            StdOut.println("Iteration " + i + " done (" + i * 100 / ITERATIONS + "%)");
+        }
+
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        var grid = generateHyperGrid(35);
 
         System.out.println(grid);
 
