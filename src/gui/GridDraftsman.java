@@ -42,6 +42,8 @@ public class GridDraftsman {
     private static final int PACMAN_SHAPE_POINTS = 50;
     private static final int GHOSTS_SHAPE_POINTS = 70;
 
+    private static final Map<Heading, Double> HEADING_ANGLE_MAP = Map.of(Heading.UP, Math.PI / 2.0, Heading.DOWN, -Math.PI / 2.0, Heading.RIGHT, 0.0, Heading.LEFT, Math.PI);
+
 
     private final int gridSize;
     private final double squareHalfHeight;
@@ -260,15 +262,13 @@ public class GridDraftsman {
 
         StdDraw.setPenColor(Color.YELLOW);
 
-        var angles = Map.of(Heading.UP, Math.PI / 2.0, Heading.DOWN, -Math.PI / 2.0, Heading.RIGHT, 0.0, Heading.LEFT, Math.PI);
-
         var heading = pacPerson.getHeading();
         var position = pacPerson.getPosition();
 
         drawFilledPolygon(
                 translatePoints(
                         rotatePoints(
-                                pacmanShape(0.5, true), angles.get(heading)),
+                                pacmanShape(0.5, true), HEADING_ANGLE_MAP.get(heading)),
                         centerX(position.x), centerY(position.y)
                 )
         );
