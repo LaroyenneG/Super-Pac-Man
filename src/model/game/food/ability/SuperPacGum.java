@@ -16,7 +16,6 @@ public final class SuperPacGum extends PacGum implements Ability {
 
     @Override
     public void apply(PacPerson owner, Set<Ghost> ghosts, Set<PacPerson> others) {
-
         for (var ghost : ghosts) {
             ghost.scareOff();
         }

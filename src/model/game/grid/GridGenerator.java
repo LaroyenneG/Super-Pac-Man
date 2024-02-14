@@ -313,9 +313,6 @@ public final class GridGenerator {
             }
 
             StdOut.println("Iteration " + i + " done (" + i * 100 / ITERATIONS + "%)");
-
-            var gridDraftsman = new GridDraftsman(result.getSquares().length);
-            gridDraftsman.drawGrid(result);
         }
 
 
@@ -324,7 +321,10 @@ public final class GridGenerator {
 
     public static void main(String[] args) throws InterruptedException {
 
-        var grid = generateHyperGrid(35);
+        var grid = generate(25);
+
+        var gridDraftsman = new GridDraftsman(grid.getSquares().length);
+        gridDraftsman.drawGrid(grid);
 
         System.out.println(grid);
     }

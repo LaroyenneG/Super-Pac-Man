@@ -1,8 +1,10 @@
 package gui;
 
-import model.game.character.ghost.*;
-import model.game.character.pac.person.PacMan;
+import model.game.character.ghost.Ghost;
 import model.game.character.pac.person.PacPerson;
+import model.game.food.PacGum;
+import model.game.food.ability.Star;
+import model.game.food.ability.SuperPacGum;
 import model.game.grid.Grid;
 import model.game.grid.square.Space;
 import model.game.grid.square.Square;
@@ -10,14 +12,11 @@ import model.game.grid.square.Wall;
 import model.game.grid.square.door.HauntedDoor;
 import model.game.grid.square.door.PacDoor;
 import stdlib.StdDraw;
-import stdlib.StdRandom;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Thread.sleep;
 
 public class GridDraftsman {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
@@ -29,6 +28,8 @@ public class GridDraftsman {
     private static final Color DOOR_COLOR = Color.GRAY;
     private static final Color GHOST_SCARED_COLOR = Color.BLUE;
     private static final Color SPACE_BORDERS_COLOR = Color.DARK_GRAY;
+    private static final double SUPER_PAC_GUM_SIZE = 0.5;
+    private static final double PAC_GUM_SIZE = 0.2;
 
     private static final int PACMAN_SHAPE_POINTS = 50;
     private static final int GHOSTS_SHAPE_POINTS = 70;
@@ -231,7 +232,6 @@ public class GridDraftsman {
 
             var x = Math.cos(angle) * rayon;
             var y = Math.sin(angle) * rayon;
-
             result.add(new Point2D.Double(x, y));
 
             if (angle == endAngle) {
@@ -255,6 +255,48 @@ public class GridDraftsman {
                         squareHalfWidth, squareHalfHeight
                 )
         );
+    }
+
+
+    public void drawPacGum(PacGum pacGum, double size) {
+
+        StdDraw.setPenColor(Color.ORANGE);
+
+        var position = pacGum.getPosition();
+
+        var radius = Math.min(squareHalfWidth, squareHalfHeight) * size;
+
+        StdDraw.filledCircle(centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight), radius);
+    }
+
+
+    public void drawPacGum(PacGum pacGum) {
+        drawPacGum(pacGum, PAC_GUM_SIZE);
+    }
+
+    public void drawSuperPacGum(SuperPacGum supePacGum) {
+        drawPacGum(supePacGum, SUPER_PAC_GUM_SIZE);
+    }
+
+
+    public void drawStar(Star star) {
+
+        StdDraw.setPenColor(Color.YELLOW);
+
+        var points = new ArrayList<Point2D.Double>();
+
+        var position = star.getPosition();
+
+        var alternate = false;
+        for (var angle = 0.0; angle <= 2.0 * Math.PI; angle += Math.PI / 5.0) {
+            var rayon = Math.min(squareHalfWidth, squareHalfHeight) * (alternate ? 0.6 : 0.3);
+            var x = Math.cos(angle) * rayon;
+            var y = Math.sin(angle) * rayon;
+            points.add(new Point2D.Double(x, y));
+            alternate = !alternate;
+        }
+
+        drawFilledPolygon(translatePoints(points, centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight)));
     }
 
 
@@ -289,6 +331,6 @@ public class GridDraftsman {
             }
         }
 
-        drawGhost(new Blinky());
+        drawStar(new Star());
     }
 }
