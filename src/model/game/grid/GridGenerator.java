@@ -285,14 +285,10 @@ public final class GridGenerator {
             var threads = new HashSet<Thread>();
             for (var j = 0; j < THREADS; j++) {
                 var thread = new Thread(() -> {
-
                     var grid = generate(size);
-
                     var block = countBlocks(grid.getSquares());
                     var hyperBlocks = countHyperBlocks(grid.getSquares());
-
                     var score = block - hyperBlocks;
-
                     gridScoreMap.put(score, grid);
                 });
                 threads.add(thread);
