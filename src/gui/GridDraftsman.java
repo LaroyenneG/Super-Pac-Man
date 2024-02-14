@@ -1,5 +1,6 @@
 package gui;
 
+import model.game.character.Heading;
 import model.game.character.ghost.Ghost;
 import model.game.character.ghost.Inky;
 import model.game.character.pac.person.PacMan;
@@ -21,6 +22,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GridDraftsman {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
@@ -35,8 +37,8 @@ public class GridDraftsman {
     private static final double SUPER_PAC_GUM_SIZE = 0.4;
     private static final double PAC_GUM_SIZE = 0.2;
     private static final double STAR_SIZE = 0.6;
-    private static final double TRIDENT_SIZE = 0.7;
-    private static final double LIGHTING_SIZE = 0.6;
+    private static final double TRIDENT_SIZE = 0.5;
+    private static final double LIGHTING_SIZE = 0.4;
     private static final int PACMAN_SHAPE_POINTS = 50;
     private static final int GHOSTS_SHAPE_POINTS = 70;
 
@@ -258,13 +260,16 @@ public class GridDraftsman {
 
         StdDraw.setPenColor(Color.YELLOW);
 
+        var angles = Map.of(Heading.UP, Math.PI / 2.0, Heading.DOWN, -Math.PI / 2.0, Heading.RIGHT, 0.0, Heading.LEFT, Math.PI);
+
+        var heading = pacPerson.getHeading();
         var position = pacPerson.getPosition();
 
         drawFilledPolygon(
                 translatePoints(
                         rotatePoints(
-                                pacmanShape(1.0, true), Math.PI / 2.0),
-                        squareHalfWidth, squareHalfHeight
+                                pacmanShape(0.5, true), angles.get(heading)),
+                        centerX(position.x), centerY(position.y)
                 )
         );
     }
@@ -360,20 +365,22 @@ public class GridDraftsman {
         var position = lightning.getPosition();
 
         var width = Math.min(squareHalfWidth, squareHalfHeight) * LIGHTING_SIZE;
-
         var blockSize = width / 5.0;
 
         StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize, blockSize, blockSize);
         StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize * 2.0, blockSize, blockSize);
         StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize * 3.0, blockSize, blockSize);
         StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize * 4.0, blockSize, blockSize);
-        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 5.0, centerY(position.y) + width - blockSize * 4.0, blockSize, blockSize);
-        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 5.0, centerY(position.y) + width - blockSize * 5.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize * 5.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize * 6.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 4.0, centerY(position.y) + width - blockSize * 6.0, blockSize, blockSize);
         StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 5.0, centerY(position.y) + width - blockSize * 6.0, blockSize, blockSize);
-        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 5.0, centerY(position.y) + width - blockSize * 7.0, blockSize, blockSize);
-        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 7.0, centerY(position.y) + width - blockSize * 7.0, blockSize, blockSize);
-        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 7.0, centerY(position.y) + width - blockSize * 8.0, blockSize, blockSize);
-        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 7.0, centerY(position.y) + width - blockSize * 9.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 6.0, centerY(position.y) + width - blockSize * 6.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 6.0, centerY(position.y) + width - blockSize * 7.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 6.0, centerY(position.y) + width - blockSize * 8.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 6.0, centerY(position.y) + width - blockSize * 9.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 6.0, centerY(position.y) + width - blockSize * 10.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 6.0, centerY(position.y) + width - blockSize * 11.0, blockSize, blockSize);
     }
 
 
