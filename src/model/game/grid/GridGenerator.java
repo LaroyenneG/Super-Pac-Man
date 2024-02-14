@@ -326,7 +326,7 @@ public final class GridGenerator {
 
     public static void main(String[] args) throws InterruptedException {
 
-        var grid = generate(25);
+        var grid = generate(20);
 
         System.out.println(grid);
 

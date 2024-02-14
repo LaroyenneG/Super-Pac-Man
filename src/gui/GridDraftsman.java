@@ -168,7 +168,7 @@ public class GridDraftsman {
         StdDraw.filledCircle(centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight), rayon);
         drawFilledPolygon(
                 translatePoints(
-                        ghostFeetShape(halfWidth, halfHeight / 2.0, StdRandom.bernoulli()),
+                        ghostFeetShape(halfWidth, halfHeight / 2.0, ghost.isMoving()),
                         centerX(position.x, squareHalfWidth),
                         centerY(position.y, squareHalfHeight) - halfHeight / 2.0
                 )
@@ -225,7 +225,6 @@ public class GridDraftsman {
         var endAngle = 2.0 * Math.PI - mouthAngle;
 
         for (var angle = startAngle; angle <= endAngle; angle += (Math.PI / PACMAN_SHAPE_POINTS)) {
-
             if (angle == startAngle) {
                 result.add(new Point2D.Double(0.0, 0.0));
             }
