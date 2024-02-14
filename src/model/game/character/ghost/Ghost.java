@@ -3,18 +3,18 @@ package model.game.character.ghost;
 import model.game.character.Character;
 import model.game.character.pac.person.PacPerson;
 import model.game.food.Food;
+import stdlib.StdRandom;
 
 import java.awt.*;
 
 public abstract class Ghost extends Character {
 
     private final Color color;
-    private boolean scared;
+    private boolean scared = StdRandom.bernoulli();
 
 
     public Ghost(Color color) {
         this.color = color;
-        scared = false;
     }
 
 

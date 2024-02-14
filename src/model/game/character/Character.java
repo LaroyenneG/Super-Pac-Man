@@ -6,10 +6,8 @@ import stdlib.StdRandom;
 
 public abstract class Character extends Entity {
 
-    static int count = 0;
-
     private Heading heading = Heading.values()[StdRandom.uniformInt(Heading.values().length)];
-    private boolean moving = count++ % 2 == 0;
+    private final boolean moving = StdRandom.bernoulli();
     private double speed;
 
 
