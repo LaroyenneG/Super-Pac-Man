@@ -9,7 +9,7 @@ public abstract class Entity {
     private final Point position;
 
     public Entity() {
-        position = new Point(5, 5);
+        position = new Point(StdRandom.uniformInt(15), StdRandom.uniformInt(15));
     }
 
     public Point getPosition() {

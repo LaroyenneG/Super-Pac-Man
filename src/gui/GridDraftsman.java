@@ -1,10 +1,13 @@
 package gui;
 
 import model.game.character.ghost.Ghost;
+import model.game.character.ghost.Inky;
+import model.game.character.pac.person.PacMan;
 import model.game.character.pac.person.PacPerson;
 import model.game.food.PacGum;
 import model.game.food.ability.Star;
 import model.game.food.ability.SuperPacGum;
+import model.game.food.ability.Trident;
 import model.game.grid.Grid;
 import model.game.grid.square.Space;
 import model.game.grid.square.Square;
@@ -28,11 +31,13 @@ public class GridDraftsman {
     private static final Color DOOR_COLOR = Color.GRAY;
     private static final Color GHOST_SCARED_COLOR = Color.BLUE;
     private static final Color SPACE_BORDERS_COLOR = Color.DARK_GRAY;
-    private static final double SUPER_PAC_GUM_SIZE = 0.5;
+    private static final double SUPER_PAC_GUM_SIZE = 0.4;
     private static final double PAC_GUM_SIZE = 0.2;
-
+    private static final double STAR_SIZE = 0.6;
+    private static final double TRIDENT_SIZE = 0.7;
     private static final int PACMAN_SHAPE_POINTS = 50;
     private static final int GHOSTS_SHAPE_POINTS = 70;
+
 
     private final int gridSize;
     private final double squareHalfHeight;
@@ -54,9 +59,16 @@ public class GridDraftsman {
         StdDraw.clear(BACKGROUND_COLOR);
     }
 
+    private double centerX(int x) {
+        return centerX(x, squareHalfWidth);
+    }
 
     private double centerX(int x, double halfWidth) {
         return x * 1.0 / gridSize + halfWidth;
+    }
+
+    private double centerY(int y) {
+        return centerY(y, squareHalfHeight);
     }
 
     private double centerY(int y, double halfHeight) {
@@ -67,14 +79,14 @@ public class GridDraftsman {
 
         StdDraw.setPenColor(DOOR_COLOR);
 
-        StdDraw.filledRectangle(centerX(x, squareHalfWidth), centerY(y, squareHalfHeight), squareHalfWidth, squareHalfHeight / 3.0);
+        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
     }
 
     public void drawHauntedDoor(int x, int y, HauntedDoor hauntedDoor) {
 
         StdDraw.setPenColor(DOOR_COLOR);
 
-        StdDraw.filledRectangle(centerX(x, squareHalfWidth), centerY(y, squareHalfHeight), squareHalfWidth, squareHalfHeight / 3.0);
+        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
     }
 
     private static List<Point2D.Double> translatePoints(List<Point2D.Double> points, double tx, double ty) {
@@ -94,7 +106,7 @@ public class GridDraftsman {
 
         StdDraw.setPenColor(WALL_COLOR);
 
-        StdDraw.filledRectangle(centerX(x, squareHalfWidth), centerY(y, squareHalfHeight), squareHalfWidth, squareHalfHeight);
+        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
     }
 
     private static List<Point2D.Double> rotatePoints(List<Point2D.Double> points, double angle) {
@@ -147,10 +159,8 @@ public class GridDraftsman {
 
 
     public void drawSpace(int x, int y, Space space) {
-
         StdDraw.setPenColor(SPACE_BORDERS_COLOR);
-
-        StdDraw.rectangle(centerX(x, squareHalfWidth), centerY(y, squareHalfHeight), squareHalfWidth, squareHalfHeight);
+        StdDraw.rectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
     }
 
     public void drawGhost(Ghost ghost) {
@@ -166,12 +176,12 @@ public class GridDraftsman {
         var halfHeight = squareHalfHeight * size;
         var rayon = Math.min(halfHeight, halfWidth);
 
-        StdDraw.filledCircle(centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight), rayon);
+        StdDraw.filledCircle(centerX(position.x), centerY(position.y), rayon);
         drawFilledPolygon(
                 translatePoints(
                         ghostFeetShape(halfWidth, halfHeight / 2.0, ghost.isMoving()),
-                        centerX(position.x, squareHalfWidth),
-                        centerY(position.y, squareHalfHeight) - halfHeight / 2.0
+                        centerX(position.x),
+                        centerY(position.y) - halfHeight / 2.0
                 )
         );
 
@@ -182,8 +192,8 @@ public class GridDraftsman {
         var whiteEyesOffsetY = squareHalfHeight / 3.5;
         var whiteEyesOffsetX = squareHalfWidth / 4.0;
 
-        StdDraw.filledCircle(centerX(position.x, squareHalfWidth) + whiteEyesOffsetX, centerY(position.y, squareHalfHeight) + whiteEyesOffsetY, rayon * whiteEyesSize);
-        StdDraw.filledCircle(centerX(position.x, squareHalfWidth) - whiteEyesOffsetX, centerY(position.y, squareHalfHeight) + whiteEyesOffsetY, rayon * whiteEyesSize);
+        StdDraw.filledCircle(centerX(position.x) + whiteEyesOffsetX, centerY(position.y) + whiteEyesOffsetY, rayon * whiteEyesSize);
+        StdDraw.filledCircle(centerX(position.x) - whiteEyesOffsetX, centerY(position.y) + whiteEyesOffsetY, rayon * whiteEyesSize);
 
         StdDraw.setPenColor(Color.BLACK);
 
@@ -210,8 +220,8 @@ public class GridDraftsman {
                 break;
         }
 
-        StdDraw.filledCircle(centerX(position.x, squareHalfWidth) + blackEyesOffsetLeftX, centerY(position.y, squareHalfHeight) + blackEyesOffsetY, rayon * blackEyesSize);
-        StdDraw.filledCircle(centerX(position.x, squareHalfWidth) - blackEyesOffsetRightX, centerY(position.y, squareHalfHeight) + blackEyesOffsetY, rayon * blackEyesSize);
+        StdDraw.filledCircle(centerX(position.x) + blackEyesOffsetLeftX, centerY(position.y) + blackEyesOffsetY, rayon * blackEyesSize);
+        StdDraw.filledCircle(centerX(position.x) - blackEyesOffsetRightX, centerY(position.y) + blackEyesOffsetY, rayon * blackEyesSize);
     }
 
     private List<Point2D.Double> pacmanShape(double size, boolean mouthOpen) {
@@ -266,7 +276,7 @@ public class GridDraftsman {
 
         var radius = Math.min(squareHalfWidth, squareHalfHeight) * size;
 
-        StdDraw.filledCircle(centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight), radius);
+        StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius);
     }
 
 
@@ -289,14 +299,14 @@ public class GridDraftsman {
 
         var alternate = false;
         for (var angle = 0.0; angle <= 2.0 * Math.PI; angle += Math.PI / 5.0) {
-            var rayon = Math.min(squareHalfWidth, squareHalfHeight) * (alternate ? 0.6 : 0.3);
+            var rayon = Math.min(squareHalfWidth, squareHalfHeight) * (alternate ? STAR_SIZE : STAR_SIZE / 2.0);
             var x = Math.cos(angle) * rayon;
             var y = Math.sin(angle) * rayon;
             points.add(new Point2D.Double(x, y));
             alternate = !alternate;
         }
 
-        drawFilledPolygon(translatePoints(points, centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight)));
+        drawFilledPolygon(translatePoints(points, centerX(position.x), centerY(position.y)));
     }
 
 
@@ -331,6 +341,29 @@ public class GridDraftsman {
             }
         }
 
+
         drawStar(new Star());
+        drawSuperPacGum(new SuperPacGum());
+        drawPacGum(new PacGum());
+        drawGhost(new Inky());
+        drawPacPerson(new PacMan());
+        drawTrident(new Trident());
+    }
+
+    private void drawTrident(Trident trident) {
+
+        StdDraw.setPenColor(Color.RED);
+
+        var position = trident.getPosition();
+
+        var halfHeight = squareHalfHeight * TRIDENT_SIZE;
+        var halfWidth = squareHalfWidth * TRIDENT_SIZE / 2.0;
+        var tridentWidth = squareHalfWidth * TRIDENT_SIZE / 10.0;
+        var tridentHeight = squareHalfHeight * TRIDENT_SIZE / 10.0;
+
+        StdDraw.filledRectangle(centerX(position.x), centerY(position.y), tridentWidth, halfHeight);
+        StdDraw.filledRectangle(centerX(position.x), centerY(position.y) + tridentHeight, halfWidth, tridentHeight);
+        StdDraw.filledRectangle(centerX(position.x) - halfWidth, centerY(position.y) + halfHeight / 2.0, tridentWidth, halfHeight / 2.0);
+        StdDraw.filledRectangle(centerX(position.x) + halfWidth, centerY(position.y) + halfHeight / 2.0, tridentWidth, halfHeight / 2.0);
     }
 }
