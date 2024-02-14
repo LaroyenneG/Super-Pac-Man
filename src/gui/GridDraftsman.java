@@ -5,6 +5,7 @@ import model.game.character.ghost.Inky;
 import model.game.character.pac.person.PacMan;
 import model.game.character.pac.person.PacPerson;
 import model.game.food.PacGum;
+import model.game.food.ability.Lightning;
 import model.game.food.ability.Star;
 import model.game.food.ability.SuperPacGum;
 import model.game.food.ability.Trident;
@@ -35,6 +36,7 @@ public class GridDraftsman {
     private static final double PAC_GUM_SIZE = 0.2;
     private static final double STAR_SIZE = 0.6;
     private static final double TRIDENT_SIZE = 0.7;
+    private static final double LIGHTING_SIZE = 0.6;
     private static final int PACMAN_SHAPE_POINTS = 50;
     private static final int GHOSTS_SHAPE_POINTS = 70;
 
@@ -348,7 +350,32 @@ public class GridDraftsman {
         drawGhost(new Inky());
         drawPacPerson(new PacMan());
         drawTrident(new Trident());
+        drawLightning(new Lightning());
     }
+
+    private void drawLightning(Lightning lightning) {
+
+        StdDraw.setPenColor(Color.YELLOW);
+
+        var position = lightning.getPosition();
+
+        var width = Math.min(squareHalfWidth, squareHalfHeight) * LIGHTING_SIZE;
+
+        var blockSize = width / 5.0;
+
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize * 2.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize * 3.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 3.0, centerY(position.y) + width - blockSize * 4.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 5.0, centerY(position.y) + width - blockSize * 4.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 5.0, centerY(position.y) + width - blockSize * 5.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 5.0, centerY(position.y) + width - blockSize * 6.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 5.0, centerY(position.y) + width - blockSize * 7.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 7.0, centerY(position.y) + width - blockSize * 7.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 7.0, centerY(position.y) + width - blockSize * 8.0, blockSize, blockSize);
+        StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 7.0, centerY(position.y) + width - blockSize * 9.0, blockSize, blockSize);
+    }
+
 
     private void drawTrident(Trident trident) {
 
