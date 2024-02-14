@@ -10,11 +10,14 @@ import model.game.grid.square.Wall;
 import model.game.grid.square.door.HauntedDoor;
 import model.game.grid.square.door.PacDoor;
 import stdlib.StdDraw;
+import stdlib.StdRandom;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 public class GridDraftsman {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
@@ -119,6 +122,29 @@ public class GridDraftsman {
         StdDraw.filledPolygon(x, y);
     }
 
+    private static List<Point2D.Double> ghostFeetShape(double halfWidth, double halfHeight, boolean moving) {
+
+        var result = new ArrayList<Point2D.Double>();
+
+        result.add(new Point2D.Double(halfWidth, -halfHeight));
+        result.add(new Point2D.Double(halfWidth, halfHeight));
+
+        result.add(new Point2D.Double(-halfWidth, halfHeight));
+
+        var angleMax = 8.0 * Math.PI;
+
+        for (var angle = 0.0; angle <= angleMax; angle += (angleMax / GHOSTS_SHAPE_POINTS)) {
+            var x = -halfWidth + (2.0 * halfWidth) * angle / angleMax;
+            var y = -halfHeight + halfHeight / 4.0 * (moving ? Math.cos(angle) : Math.sin(angle));
+            result.add(new Point2D.Double(x, y));
+        }
+
+
+
+        return result;
+    }
+
+
     public void drawSpace(int x, int y, Space space) {
 
         StdDraw.setPenColor(SPACE_BORDERS_COLOR);
@@ -140,7 +166,13 @@ public class GridDraftsman {
         var rayon = Math.min(halfHeight, halfWidth);
 
         StdDraw.filledCircle(centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight), rayon);
-        StdDraw.filledRectangle(centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight) - halfHeight / 2.0, halfWidth, halfHeight / 2.0);
+        drawFilledPolygon(
+                translatePoints(
+                        ghostFeetShape(halfWidth, halfHeight / 2.0, StdRandom.bernoulli()),
+                        centerX(position.x, squareHalfWidth),
+                        centerY(position.y, squareHalfHeight) - halfHeight / 2.0
+                )
+        );
 
         StdDraw.setPenColor(Color.WHITE);
 
@@ -259,9 +291,5 @@ public class GridDraftsman {
         }
 
         drawGhost(new Blinky());
-        drawGhost(new Pinky());
-        drawGhost(new Inky());
-        drawGhost(new Clyde());
-        drawPacPerson(new PacMan());
     }
 }

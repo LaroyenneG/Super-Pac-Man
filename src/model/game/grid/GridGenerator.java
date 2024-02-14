@@ -324,14 +324,17 @@ public final class GridGenerator {
         return result;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        var grid = generateHyperGrid(35);
+        var grid = generate(25);
 
         System.out.println(grid);
 
         var gridDraftsman = new GridDraftsman(grid.getSquares().length);
 
-        gridDraftsman.drawGrid(grid);
+        while (true) {
+            gridDraftsman.drawGrid(grid);
+            Thread.sleep(500);
+        }
     }
 }

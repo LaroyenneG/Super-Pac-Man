@@ -6,8 +6,10 @@ import stdlib.StdRandom;
 
 public abstract class Character extends Entity {
 
+    static int count = 0;
+
     private Heading heading = Heading.values()[StdRandom.uniformInt(Heading.values().length)];
-    private boolean moving;
+    private boolean moving = count++ % 2 == 0;
     private double speed;
 
 
@@ -24,5 +26,9 @@ public abstract class Character extends Entity {
 
     public Heading getHeading() {
         return heading;
+    }
+
+    public boolean isMoving() {
+        return moving;
     }
 }
