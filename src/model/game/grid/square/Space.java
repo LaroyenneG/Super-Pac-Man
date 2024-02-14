@@ -17,4 +17,9 @@ public final class Space extends Passable {
     public boolean isFree() {
         return true;
     }
+
+
+    public boolean isVisited() {
+        return true;
+    }
 }

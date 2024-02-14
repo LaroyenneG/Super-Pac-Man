@@ -204,7 +204,7 @@ public final class GridGenerator {
     public static void main(String[] args) {
        // System.out.println(new Grid(buildKernel(30)));
 
-        var grid = generate(35);
+        var grid = generate(20);
 
         System.out.println(grid);
 

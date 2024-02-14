@@ -1,10 +1,10 @@
 package gui;
 
-import model.game.character.ghost.Blinky;
-import model.game.character.ghost.Ghost;
-import model.game.character.ghost.Pinky;
+import model.game.character.ghost.*;
+import model.game.character.pac.person.PacMan;
 import model.game.character.pac.person.PacPerson;
 import model.game.grid.Grid;
+import model.game.grid.square.Space;
 import model.game.grid.square.Square;
 import model.game.grid.square.Wall;
 import model.game.grid.square.door.HauntedDoor;
@@ -12,6 +12,9 @@ import model.game.grid.square.door.PacDoor;
 import stdlib.StdDraw;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GridDraftsman {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
@@ -22,6 +25,10 @@ public class GridDraftsman {
     private static final Color WALL_COLOR = Color.BLUE;
     private static final Color DOOR_COLOR = Color.GRAY;
     private static final Color GHOST_SCARED_COLOR = Color.BLUE;
+    private static final Color SPACE_BORDERS_COLOR = Color.DARK_GRAY;
+
+    private static final int PACMAN_SHAPE_POINTS = 50;
+    private static final int GHOSTS_SHAPE_POINTS = 70;
 
     private final int gridSize;
     private final double squareHalfHeight;
@@ -66,12 +73,57 @@ public class GridDraftsman {
         StdDraw.filledRectangle(centerX(x, squareHalfWidth), centerY(y, squareHalfHeight), squareHalfWidth, squareHalfHeight / 3.0);
     }
 
+    private static List<Point2D.Double> translatePoints(List<Point2D.Double> points, double tx, double ty) {
+
+        var result = new ArrayList<Point2D.Double>();
+
+        for (var point : points) {
+            var x = point.x + tx;
+            var y = point.y + ty;
+            result.add(new Point2D.Double(x, y));
+        }
+
+        return result;
+    }
 
     public void drawWall(int x, int y, Wall wall) {
 
         StdDraw.setPenColor(WALL_COLOR);
 
         StdDraw.filledRectangle(centerX(x, squareHalfWidth), centerY(y, squareHalfHeight), squareHalfWidth, squareHalfHeight);
+    }
+
+    private static List<Point2D.Double> rotatePoints(List<Point2D.Double> points, double angle) {
+
+        var result = new ArrayList<Point2D.Double>();
+
+        for (var point : points) {
+            var x = point.x * Math.cos(angle) - point.y * Math.sin(angle);
+            var y = point.x * Math.sin(angle) + point.y * Math.cos(angle);
+            result.add(new Point2D.Double(x, y));
+        }
+
+        return result;
+    }
+
+    private static void drawFilledPolygon(List<Point2D.Double> points) {
+
+        var x = new double[points.size()];
+        var y = new double[points.size()];
+
+        for (var i = 0; i < points.size(); i++) {
+            x[i] = points.get(i).x;
+            y[i] = points.get(i).y;
+        }
+
+        StdDraw.filledPolygon(x, y);
+    }
+
+    public void drawSpace(int x, int y, Space space) {
+
+        StdDraw.setPenColor(SPACE_BORDERS_COLOR);
+
+        StdDraw.rectangle(centerX(x, squareHalfWidth), centerY(y, squareHalfHeight), squareHalfWidth, squareHalfHeight);
     }
 
     public void drawGhost(Ghost ghost) {
@@ -82,12 +134,81 @@ public class GridDraftsman {
 
         var position = ghost.getPosition();
 
-        StdDraw.filledCircle(centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight), Math.min(squareHalfWidth, squareHalfHeight));
+        var size = 0.8;
+        var halfWidth = squareHalfWidth * size;
+        var halfHeight = squareHalfHeight * size;
+        var rayon = Math.min(halfHeight, halfWidth);
+
+        StdDraw.filledCircle(centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight), rayon);
+        StdDraw.filledRectangle(centerX(position.x, squareHalfWidth), centerY(position.y, squareHalfHeight) - halfHeight / 2.0, halfWidth, halfHeight / 2.0);
+
+        StdDraw.setPenColor(Color.WHITE);
+
+
+        var whiteEyesSize = 1.0 / 4.0;
+        var whiteEyesOffsetY = squareHalfHeight / 3.5;
+        var whiteEyesOffsetX = squareHalfWidth / 4.0;
+
+        StdDraw.filledCircle(centerX(position.x, squareHalfWidth) + whiteEyesOffsetX, centerY(position.y, squareHalfHeight) + whiteEyesOffsetY, rayon * whiteEyesSize);
+        StdDraw.filledCircle(centerX(position.x, squareHalfWidth) - whiteEyesOffsetX, centerY(position.y, squareHalfHeight) + whiteEyesOffsetY, rayon * whiteEyesSize);
+
+        StdDraw.setPenColor(Color.BLACK);
+
+        var blackEyesSize = 1.0 / 10.0;
+        var blackEyesOffsetY = whiteEyesOffsetY;
+        var blackEyesOffsetLeftX = whiteEyesOffsetX;
+        var blackEyesOffsetRightX = whiteEyesOffsetX;
+
+        var heading = ghost.getHeading();
+        switch (heading) {
+            case UP:
+                blackEyesOffsetY += rayon * blackEyesSize;
+                break;
+            case DOWN:
+                blackEyesOffsetY -= rayon * blackEyesSize;
+                break;
+            case RIGHT:
+                blackEyesOffsetLeftX += rayon * blackEyesSize;
+                blackEyesOffsetRightX -= rayon * blackEyesSize;
+                break;
+            case LEFT:
+                blackEyesOffsetLeftX -= rayon * blackEyesSize;
+                blackEyesOffsetRightX += rayon * blackEyesSize;
+                break;
+        }
+
+        StdDraw.filledCircle(centerX(position.x, squareHalfWidth) + blackEyesOffsetLeftX, centerY(position.y, squareHalfHeight) + blackEyesOffsetY, rayon * blackEyesSize);
+        StdDraw.filledCircle(centerX(position.x, squareHalfWidth) - blackEyesOffsetRightX, centerY(position.y, squareHalfHeight) + blackEyesOffsetY, rayon * blackEyesSize);
     }
 
+    private List<Point2D.Double> pacmanShape(double size, boolean mouthOpen) {
 
-    private static void pacmanShape(int x, int y, int size) {
+        var result = new ArrayList<Point2D.Double>();
 
+        var rayon = Math.min(squareHalfWidth, squareHalfHeight) * size;
+
+        var mouthAngle = (mouthOpen) ? Math.PI / 4.0 : 0.0;
+
+        var startAngle = 0.0 + mouthAngle;
+        var endAngle = 2.0 * Math.PI - mouthAngle;
+
+        for (var angle = startAngle; angle <= endAngle; angle += (Math.PI / PACMAN_SHAPE_POINTS)) {
+
+            if (angle == startAngle) {
+                result.add(new Point2D.Double(0.0, 0.0));
+            }
+
+            var x = Math.cos(angle) * rayon;
+            var y = Math.sin(angle) * rayon;
+
+            result.add(new Point2D.Double(x, y));
+
+            if (angle == endAngle) {
+                result.add(new Point2D.Double(0.0, 0.0));
+            }
+        }
+
+        return result;
     }
 
     public void drawPacPerson(PacPerson pacPerson) {
@@ -96,7 +217,13 @@ public class GridDraftsman {
 
         var position = pacPerson.getPosition();
 
-        //StdDraw.filledPolygon();
+        drawFilledPolygon(
+                translatePoints(
+                        rotatePoints(
+                                pacmanShape(1.0, true), Math.PI / 2.0),
+                        squareHalfWidth, squareHalfHeight
+                )
+        );
     }
 
 
@@ -121,6 +248,8 @@ public class GridDraftsman {
                 var square = squares[i][j];
                 if (square instanceof Wall) { // change me
                     drawWall(j, i, (Wall) square);
+                } else if (square instanceof Space) {
+                    drawSpace(j, i, (Space) square);
                 } else if (square instanceof HauntedDoor) {
                     drawHauntedDoor(j, i, (HauntedDoor) square);
                 } else if (square instanceof PacDoor) {
@@ -130,5 +259,9 @@ public class GridDraftsman {
         }
 
         drawGhost(new Blinky());
+        drawGhost(new Pinky());
+        drawGhost(new Inky());
+        drawGhost(new Clyde());
+        drawPacPerson(new PacMan());
     }
 }
