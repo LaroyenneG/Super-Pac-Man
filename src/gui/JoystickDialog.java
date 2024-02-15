@@ -1,16 +1,16 @@
-package gui.controller;
+package gui;
 
 import javax.swing.*;
 import java.awt.event.*;
 
-public class ControllerDialog extends JDialog {
+public class JoystickDialog extends JDialog {
     private JPanel contentPane;
 
-    public ControllerDialog() {
+    public JoystickDialog() {
+        setTitle("Super Pac-Man Joystick");
         setContentPane(contentPane);
         setModal(true);
         setResizable(false);
-        setUndecorated(true);
         pack();
         setVisible(true);
 
@@ -41,7 +41,7 @@ public class ControllerDialog extends JDialog {
     }
 
     public static void main(String[] args) {
-        ControllerDialog dialog = new ControllerDialog();
+        JoystickDialog dialog = new JoystickDialog();
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);

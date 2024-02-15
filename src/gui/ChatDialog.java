@@ -1,4 +1,4 @@
-package gui.chat;
+package gui;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -16,6 +16,7 @@ public class ChatDialog extends JDialog {
         setTitle("Super Pac-Man Chat");
         setContentPane(contentPane);
         setModal(true);
+        setResizable(false);
         getRootPane().setDefaultButton(sendButton);
 
         // call onCancel() when cross is clicked
@@ -32,15 +33,11 @@ public class ChatDialog extends JDialog {
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+        contentPane.registerKeyboardAction(e -> onSend(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
         pack();
         setResizable(false);
-    }
-
-    public static void main(String[] args) {
-        var dialog = new ChatDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
     }
 
     private void onSend() {
@@ -51,5 +48,12 @@ public class ChatDialog extends JDialog {
 
     private void onCancel() {
         dispose();
+    }
+
+    public static void main(String[] args) {
+        var dialog = new ChatDialog();
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
     }
 }
