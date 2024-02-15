@@ -1,6 +1,6 @@
 package gui;
 
-import model.game.character.Heading;
+import model.game.Heading;
 import model.game.character.ghost.Ghost;
 import model.game.character.ghost.Inky;
 import model.game.character.pac.person.PacMan;

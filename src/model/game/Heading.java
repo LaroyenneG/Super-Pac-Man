@@ -1,4 +1,4 @@
-package model.game.character;
+package model.game;
 
 public enum Heading {
     UP,

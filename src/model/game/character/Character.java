@@ -1,6 +1,7 @@
 package model.game.character;
 
 import model.game.Entity;
+import model.game.Heading;
 import model.game.food.Food;
 import stdlib.StdRandom;
 
