@@ -324,7 +324,7 @@ public final class GridGenerator {
         var grid = generate(25);
 
         var gridDraftsman = new GridDraftsman(grid.getSquares().length);
-        gridDraftsman.drawGrid(grid);
+        gridDraftsman.draw(grid);
 
         System.out.println(grid);
     }

@@ -92,19 +92,6 @@ public class GridDraftsman {
         return ((gridSize - y) * 1.0 / gridSize - halfHeight);
     }
 
-    public void drawPacDoor(int x, int y, PacDoor pacDoor) {
-
-        StdDraw.setPenColor(DOOR_COLOR);
-
-        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
-    }
-
-    public void drawHauntedDoor(int x, int y, HauntedDoor hauntedDoor) {
-
-        StdDraw.setPenColor(DOOR_COLOR);
-
-        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
-    }
 
     private static List<Point2D.Double> translatePoints(List<Point2D.Double> points, double tx, double ty) {
 
@@ -117,13 +104,6 @@ public class GridDraftsman {
         }
 
         return result;
-    }
-
-    public void drawWall(int x, int y, Wall wall) {
-
-        StdDraw.setPenColor(WALL_COLOR);
-
-        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
     }
 
     private static List<Point2D.Double> rotatePoints(List<Point2D.Double> points, double angle) {
@@ -177,61 +157,112 @@ public class GridDraftsman {
             result.add(new Point2D.Double(x, y));
         }
 
+        return result;
+    }
 
+    private List<Point2D.Double> arcPolygon(double size, double startAngle, double endAngle) {
+
+        var result = new ArrayList<Point2D.Double>();
+
+        var radius = Math.min(squareHalfWidth, squareHalfHeight) * size;
+
+        for (var angle = startAngle; angle <= endAngle; angle += (Math.PI / PACMAN_SHAPE_POINTS)) {
+            if (angle == startAngle) {
+                result.add(new Point2D.Double(0.0, 0.0));
+            }
+
+            var x = Math.cos(angle) * radius;
+            var y = Math.sin(angle) * radius;
+            result.add(new Point2D.Double(x, y));
+
+            if (angle == endAngle) {
+                result.add(new Point2D.Double(0.0, 0.0));
+            }
+        }
 
         return result;
     }
 
+    private List<Point2D.Double> arcPolygon(double size, double mouthAngle) {
 
-    public void drawMelon(Melon melon) {
+        var startAngle = 0.0 + mouthAngle;
+        var endAngle = 2.0 * Math.PI - mouthAngle;
 
-        var position = melon.getPosition();
+        return arcPolygon(size, startAngle, endAngle);
+    }
 
-        StdDraw.setPenColor(Color.GREEN);
+    public double movingTranslationX(Heading heading) {
+        return switch (heading) {
+            case RIGHT -> squareHalfWidth;
+            case LEFT -> -squareHalfWidth;
+            default -> 0.0;
+        };
+    }
 
-        drawPolygon(translatePoints(rotatePoints(arcPolygon(MELON_SIZE, Math.PI / 2.0), Math.PI / 4.0), centerX(position.x) + squareHalfWidth * MELON_SIZE / 2.0, centerY(position.y) + squareHalfHeight * MELON_SIZE / 4.0));
-
-        StdDraw.setPenColor(Color.RED);
-
-        drawPolygon(translatePoints(rotatePoints(arcPolygon(MELON_SIZE * 0.9, Math.PI / 2.0), Math.PI / 4.0), centerX(position.x) + squareHalfWidth * MELON_SIZE / 2.0, centerY(position.y) + squareHalfHeight * MELON_SIZE / 4.0));
+    public double movingTranslationY(Heading heading) {
+        return switch (heading) {
+            case UP -> squareHalfHeight;
+            case DOWN -> -squareHalfHeight;
+            default -> 0.0;
+        };
     }
 
 
-    public void drawStrawberry(Strawberry strawberry) {
+    public void draw(Grid grid) {
 
-        var position = strawberry.getPosition();
+        var squares = grid.getSquares();
 
-        StdDraw.setPenColor(Color.RED);
+        assert squares.length > 0;
+        assert squares.length == gridSize;
+        assert squares[0].length == squares.length;
 
-
-        drawPolygon(translatePoints(rotatePoints(arcPolygon(STRAWBERRY_SIZE, 5.0 * Math.PI / 6.0, 7.0 * Math.PI / 6.0), -Math.PI / 2.0), centerX(position.x), centerY(position.y) - squareHalfHeight * STRAWBERRY_SIZE / 2.0));
-
-        StdDraw.setPenColor(Color.GREEN);
-
-        StdDraw.filledEllipse(centerX(position.x), centerY(position.y) + squareHalfHeight * STRAWBERRY_SIZE / 2.0 + squareHalfHeight * STRAWBERRY_SIZE / 8.0 / 2.0, squareHalfWidth * STRAWBERRY_SIZE / 2.5, squareHalfHeight * STRAWBERRY_SIZE / 8.0);
-    }
-
-    public void drawPeach(Peach peach) {
-
-        var position = peach.getPosition();
-
-        StdDraw.setPenColor(DARK_ORANGE);
-
-        var radius = Math.min(squareHalfWidth, squareHalfHeight) * PEACH_SIZE;
-
-        StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius);
-
-        StdDraw.setPenColor(Color.GREEN);
-        StdDraw.filledEllipse(centerX(position.x) - radius / 2.0, centerY(position.y) + radius, radius * 0.6, radius / 4.0);
+        clear();
+        draw(squares);
+        StdDraw.show();
     }
 
 
-    public void drawSpace(int x, int y, Space space) {
-        StdDraw.setPenColor(SPACE_BORDERS_COLOR);
-        StdDraw.rectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
+    public void draw(Square[][] squares) {
+
+        for (var i = 0; i < squares.length; i++) {
+            for (var j = 0; j < squares.length; j++) {
+                var square = squares[i][j];
+                if (square instanceof Wall) { // change me
+                    draw(j, i, (Wall) square);
+                } else if (square instanceof Space) {
+                    draw(j, i, (Space) square);
+                } else if (square instanceof HauntedDoor) {
+                    draw(j, i, (HauntedDoor) square);
+                } else if (square instanceof PacDoor) {
+                    draw(j, i, (PacDoor) square);
+                }
+            }
+        }
+
+
+        draw(new Star());
+        draw(new SuperPacGum());
+        draw(new PacGum());
+        draw(new Inky());
+        draw(new PacMan(), Color.RED);
+        draw(new Trident());
+        draw(new Lightning());
+        draw(new Orange());
+        draw(new Apple());
+        draw(new Pear());
+        draw(new Cherry());
+        draw(new Melon());
+        draw(new Strawberry());
+        draw(new Peach());
+        draw(new Banana());
     }
 
-    public void drawGhost(Ghost ghost) {
+
+    /*******************************************************************************************************************
+     * Characters
+     *******************************************************************************************************************/
+
+    public void draw(Ghost ghost) {
 
         var scared = ghost.isScared();
 
@@ -297,72 +328,7 @@ public class GridDraftsman {
         }
     }
 
-    private List<Point2D.Double> arcPolygon(double size, double startAngle, double endAngle) {
-
-        var result = new ArrayList<Point2D.Double>();
-
-        var radius = Math.min(squareHalfWidth, squareHalfHeight) * size;
-
-        for (var angle = startAngle; angle <= endAngle; angle += (Math.PI / PACMAN_SHAPE_POINTS)) {
-            if (angle == startAngle) {
-                result.add(new Point2D.Double(0.0, 0.0));
-            }
-
-            var x = Math.cos(angle) * radius;
-            var y = Math.sin(angle) * radius;
-            result.add(new Point2D.Double(x, y));
-
-            if (angle == endAngle) {
-                result.add(new Point2D.Double(0.0, 0.0));
-            }
-        }
-
-        return result;
-    }
-
-    private List<Point2D.Double> arcPolygon(double size, double mouthAngle) {
-
-        var startAngle = 0.0 + mouthAngle;
-        var endAngle = 2.0 * Math.PI - mouthAngle;
-
-        return arcPolygon(size, startAngle, endAngle);
-    }
-
-    public double movingTranslationX(Heading heading) {
-        return switch (heading) {
-            case RIGHT -> squareHalfWidth;
-            case LEFT -> -squareHalfWidth;
-            default -> 0.0;
-        };
-    }
-
-    public double movingTranslationY(Heading heading) {
-        return switch (heading) {
-            case UP -> squareHalfHeight;
-            case DOWN -> -squareHalfHeight;
-            default -> 0.0;
-        };
-    }
-
-    public void drawCherry(Cherry cherry) {
-
-        var position = cherry.getPosition();
-        var radius = Math.min(squareHalfWidth, squareHalfHeight) * CHERRY_SIZE / 2.0;
-        var circlesMargin = radius * 1.5;
-
-        StdDraw.setPenColor(Color.GREEN);
-
-        StdDraw.filledEllipse(centerX(position.x), centerY(position.y) + circlesMargin, radius, radius / 2.0);
-        StdDraw.line(centerX(position.x) - circlesMargin, centerY(position.y) - circlesMargin, centerX(position.x), centerY(position.y) + circlesMargin);
-        StdDraw.line(centerX(position.x) + circlesMargin, centerY(position.y) - circlesMargin, centerX(position.x), centerY(position.y) + circlesMargin);
-
-        StdDraw.setPenColor(Color.RED);
-
-        StdDraw.filledCircle(centerX(position.x) - circlesMargin, centerY(position.y) - circlesMargin, radius);
-        StdDraw.filledCircle(centerX(position.x) + circlesMargin, centerY(position.y) - circlesMargin, radius);
-    }
-
-    public void drawPacPerson(PacPerson pacPerson, Color color) {
+    public void draw(PacPerson pacPerson, Color color) {
 
         StdDraw.setPenColor(color);
 
@@ -382,12 +348,71 @@ public class GridDraftsman {
     }
 
 
-    public void drawFruit(Fruit fruit) {
+    /*******************************************************************************************************************
+     * Fruits
+     *******************************************************************************************************************/
 
+    public void draw(Melon melon) {
+
+        var position = melon.getPosition();
+
+        StdDraw.setPenColor(Color.GREEN);
+
+        drawPolygon(translatePoints(rotatePoints(arcPolygon(MELON_SIZE, Math.PI / 2.0), Math.PI / 4.0), centerX(position.x) + squareHalfWidth * MELON_SIZE / 2.0, centerY(position.y) + squareHalfHeight * MELON_SIZE / 4.0));
+
+        StdDraw.setPenColor(Color.RED);
+
+        drawPolygon(translatePoints(rotatePoints(arcPolygon(MELON_SIZE * 0.9, Math.PI / 2.0), Math.PI / 4.0), centerX(position.x) + squareHalfWidth * MELON_SIZE / 2.0, centerY(position.y) + squareHalfHeight * MELON_SIZE / 4.0));
     }
 
 
-    public void drawBanana(Banana banana) {
+    public void draw(Strawberry strawberry) {
+
+        var position = strawberry.getPosition();
+
+        StdDraw.setPenColor(Color.RED);
+
+
+        drawPolygon(translatePoints(rotatePoints(arcPolygon(STRAWBERRY_SIZE, 5.0 * Math.PI / 6.0, 7.0 * Math.PI / 6.0), -Math.PI / 2.0), centerX(position.x), centerY(position.y) - squareHalfHeight * STRAWBERRY_SIZE / 2.0));
+
+        StdDraw.setPenColor(Color.GREEN);
+
+        StdDraw.filledEllipse(centerX(position.x), centerY(position.y) + squareHalfHeight * STRAWBERRY_SIZE / 2.0 + squareHalfHeight * STRAWBERRY_SIZE / 8.0 / 2.0, squareHalfWidth * STRAWBERRY_SIZE / 2.5, squareHalfHeight * STRAWBERRY_SIZE / 8.0);
+    }
+
+    public void draw(Peach peach) {
+
+        var position = peach.getPosition();
+
+        StdDraw.setPenColor(DARK_ORANGE);
+
+        var radius = Math.min(squareHalfWidth, squareHalfHeight) * PEACH_SIZE;
+
+        StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius);
+
+        StdDraw.setPenColor(Color.GREEN);
+        StdDraw.filledEllipse(centerX(position.x) - radius / 2.0, centerY(position.y) + radius, radius * 0.6, radius / 4.0);
+    }
+
+    public void draw(Cherry cherry) {
+
+        var position = cherry.getPosition();
+        var radius = Math.min(squareHalfWidth, squareHalfHeight) * CHERRY_SIZE / 2.0;
+        var circlesMargin = radius * 1.5;
+
+        StdDraw.setPenColor(Color.GREEN);
+
+        StdDraw.filledEllipse(centerX(position.x), centerY(position.y) + circlesMargin, radius, radius / 2.0);
+        StdDraw.line(centerX(position.x) - circlesMargin, centerY(position.y) - circlesMargin, centerX(position.x), centerY(position.y) + circlesMargin);
+        StdDraw.line(centerX(position.x) + circlesMargin, centerY(position.y) - circlesMargin, centerX(position.x), centerY(position.y) + circlesMargin);
+
+        StdDraw.setPenColor(Color.RED);
+
+        StdDraw.filledCircle(centerX(position.x) - circlesMargin, centerY(position.y) - circlesMargin, radius);
+        StdDraw.filledCircle(centerX(position.x) + circlesMargin, centerY(position.y) - circlesMargin, radius);
+    }
+
+    public void draw(Banana banana) {
 
         var position = banana.getPosition();
 
@@ -397,7 +422,7 @@ public class GridDraftsman {
         StdDraw.filledEllipse(centerX(position.x) - squareHalfWidth * BANANA_SIZE / 4.0, centerY(position.y), squareHalfWidth * BANANA_SIZE / 2.0, squareHalfHeight * BANANA_SIZE / 4.5);
     }
 
-    public void drawOrange(Orange orange) {
+    public void draw(Orange orange) {
 
         var position = orange.getPosition();
 
@@ -412,7 +437,7 @@ public class GridDraftsman {
     }
 
 
-    public void drawApple(Apple apple) {
+    public void draw(Apple apple) {
         StdDraw.setPenColor(Color.RED);
 
         var position = apple.getPosition();
@@ -425,7 +450,7 @@ public class GridDraftsman {
     }
 
 
-    public void drawPear(Pear pear) {
+    public void draw(Pear pear) {
         StdDraw.setPenColor(Color.GREEN);
 
         var position = pear.getPosition();
@@ -438,98 +463,29 @@ public class GridDraftsman {
         StdDraw.filledRectangle(centerX(position.x), centerY(position.y) + radius, radius / 5.0, radius / 4.0);
     }
 
-    public void drawPacGum(PacGum pacGum, double size) {
 
-        StdDraw.setPenColor(Color.ORANGE);
+    /*******************************************************************************************************************
+     * Abilities
+     ******************************************************************************************************************/
 
-        var position = pacGum.getPosition();
+    private void draw(Trident trident) {
 
-        var radius = Math.min(squareHalfWidth, squareHalfHeight) * size;
+        StdDraw.setPenColor(Color.RED);
 
-        StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius);
+        var position = trident.getPosition();
+
+        var halfHeight = squareHalfHeight * TRIDENT_SIZE;
+        var halfWidth = squareHalfWidth * TRIDENT_SIZE / 2.0;
+        var tridentWidth = squareHalfWidth * TRIDENT_SIZE / 10.0;
+        var tridentHeight = squareHalfHeight * TRIDENT_SIZE / 10.0;
+
+        StdDraw.filledRectangle(centerX(position.x), centerY(position.y), tridentWidth, halfHeight);
+        StdDraw.filledRectangle(centerX(position.x), centerY(position.y) + tridentHeight, halfWidth, tridentHeight);
+        StdDraw.filledRectangle(centerX(position.x) - halfWidth, centerY(position.y) + halfHeight / 2.0, tridentWidth, halfHeight / 2.0);
+        StdDraw.filledRectangle(centerX(position.x) + halfWidth, centerY(position.y) + halfHeight / 2.0, tridentWidth, halfHeight / 2.0);
     }
 
-
-    public void drawPacGum(PacGum pacGum) {
-        drawPacGum(pacGum, PAC_GUM_SIZE);
-    }
-
-    public void drawSuperPacGum(SuperPacGum supePacGum) {
-        drawPacGum(supePacGum, SUPER_PAC_GUM_SIZE);
-    }
-
-
-    public void drawStar(Star star) {
-
-        StdDraw.setPenColor(Color.YELLOW);
-
-        var points = new ArrayList<Point2D.Double>();
-
-        var position = star.getPosition();
-
-        var alternate = false;
-        for (var angle = 0.0; angle <= 2.0 * Math.PI; angle += Math.PI / 5.0) {
-            var rayon = Math.min(squareHalfWidth, squareHalfHeight) * (alternate ? STAR_SIZE : STAR_SIZE / 2.0);
-            var x = Math.cos(angle) * rayon;
-            var y = Math.sin(angle) * rayon;
-            points.add(new Point2D.Double(x, y));
-            alternate = !alternate;
-        }
-
-        drawPolygon(translatePoints(points, centerX(position.x), centerY(position.y)));
-    }
-
-
-    public void drawGrid(Grid grid) {
-
-        var squares = grid.getSquares();
-
-        assert squares.length > 0;
-        assert squares.length == gridSize;
-        assert squares[0].length == squares.length;
-
-        clear();
-        drawSquares(squares);
-        StdDraw.show();
-    }
-
-
-    public void drawSquares(Square[][] squares) {
-
-        for (var i = 0; i < squares.length; i++) {
-            for (var j = 0; j < squares.length; j++) {
-                var square = squares[i][j];
-                if (square instanceof Wall) { // change me
-                    drawWall(j, i, (Wall) square);
-                } else if (square instanceof Space) {
-                    drawSpace(j, i, (Space) square);
-                } else if (square instanceof HauntedDoor) {
-                    drawHauntedDoor(j, i, (HauntedDoor) square);
-                } else if (square instanceof PacDoor) {
-                    drawPacDoor(j, i, (PacDoor) square);
-                }
-            }
-        }
-
-
-        drawStar(new Star());
-        drawSuperPacGum(new SuperPacGum());
-        drawPacGum(new PacGum());
-        drawGhost(new Inky());
-        drawPacPerson(new PacMan(), Color.RED);
-        drawTrident(new Trident());
-        drawLightning(new Lightning());
-        drawOrange(new Orange());
-        drawApple(new Apple());
-        drawPear(new Pear());
-        drawCherry(new Cherry());
-        drawMelon(new Melon());
-        drawStrawberry(new Strawberry());
-        drawPeach(new Peach());
-        drawBanana(new Banana());
-    }
-
-    private void drawLightning(Lightning lightning) {
+    private void draw(Lightning lightning) {
 
         StdDraw.setPenColor(Color.YELLOW);
 
@@ -555,21 +511,72 @@ public class GridDraftsman {
         StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 6.0, centerY(position.y) + width - blockSize * 11.0, blockSize, blockSize);
     }
 
+    public void draw(Star star) {
 
-    private void drawTrident(Trident trident) {
+        StdDraw.setPenColor(Color.YELLOW);
 
-        StdDraw.setPenColor(Color.RED);
+        var points = new ArrayList<Point2D.Double>();
 
-        var position = trident.getPosition();
+        var position = star.getPosition();
 
-        var halfHeight = squareHalfHeight * TRIDENT_SIZE;
-        var halfWidth = squareHalfWidth * TRIDENT_SIZE / 2.0;
-        var tridentWidth = squareHalfWidth * TRIDENT_SIZE / 10.0;
-        var tridentHeight = squareHalfHeight * TRIDENT_SIZE / 10.0;
+        var alternate = false;
+        for (var angle = 0.0; angle <= 2.0 * Math.PI; angle += Math.PI / 5.0) {
+            var rayon = Math.min(squareHalfWidth, squareHalfHeight) * (alternate ? STAR_SIZE : STAR_SIZE / 2.0);
+            var x = Math.cos(angle) * rayon;
+            var y = Math.sin(angle) * rayon;
+            points.add(new Point2D.Double(x, y));
+            alternate = !alternate;
+        }
 
-        StdDraw.filledRectangle(centerX(position.x), centerY(position.y), tridentWidth, halfHeight);
-        StdDraw.filledRectangle(centerX(position.x), centerY(position.y) + tridentHeight, halfWidth, tridentHeight);
-        StdDraw.filledRectangle(centerX(position.x) - halfWidth, centerY(position.y) + halfHeight / 2.0, tridentWidth, halfHeight / 2.0);
-        StdDraw.filledRectangle(centerX(position.x) + halfWidth, centerY(position.y) + halfHeight / 2.0, tridentWidth, halfHeight / 2.0);
+        drawPolygon(translatePoints(points, centerX(position.x), centerY(position.y)));
+    }
+
+    public void draw(PacGum pacGum) {
+        draw(pacGum, PAC_GUM_SIZE);
+    }
+
+    public void draw(SuperPacGum supePacGum) {
+        draw(supePacGum, SUPER_PAC_GUM_SIZE);
+    }
+
+    public void draw(PacGum pacGum, double size) {
+
+        StdDraw.setPenColor(Color.ORANGE);
+
+        var position = pacGum.getPosition();
+
+        var radius = Math.min(squareHalfWidth, squareHalfHeight) * size;
+
+        StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius);
+    }
+
+    /*******************************************************************************************************************
+     * Squares
+     *******************************************************************************************************************/
+
+    public void draw(int x, int y, PacDoor pacDoor) {
+
+        StdDraw.setPenColor(DOOR_COLOR);
+
+        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
+    }
+
+    public void draw(int x, int y, HauntedDoor hauntedDoor) {
+
+        StdDraw.setPenColor(DOOR_COLOR);
+
+        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
+    }
+
+    public void draw(int x, int y, Wall wall) {
+
+        StdDraw.setPenColor(WALL_COLOR);
+
+        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
+    }
+
+    public void draw(int x, int y, Space space) {
+        StdDraw.setPenColor(SPACE_BORDERS_COLOR);
+        StdDraw.rectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
     }
 }
