@@ -23,7 +23,6 @@ public final class GameEngine implements Runnable {
 
     @Override
     public void run() {
-
         try {
             var grid = game.getGrid();
             var size = grid.getSize();
@@ -42,9 +41,13 @@ public final class GameEngine implements Runnable {
 
                 var start = System.currentTimeMillis();
 
-                // compute
+                joystickEngine.invoke(game::nextTurn);
 
                 SwingUtilities.invokeLater(() -> gridDraftsman.draw(grid));
+                SwingUtilities.invokeLater(() -> {
+                    // GUI interface
+                });
+
 
                 var end = System.currentTimeMillis();
 

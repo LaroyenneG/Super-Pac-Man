@@ -21,6 +21,10 @@ public final class Game {
         grid = GridGenerator.generate(size);
     }
 
+    public void nextTurn() {
+
+    }
+
     public boolean isGameOver() {
         return false;
     }

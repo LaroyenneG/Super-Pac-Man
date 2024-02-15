@@ -9,8 +9,18 @@ public class JoystickEngine implements KeyListener {
 
     private final Joystick joystick;
 
+    private final Object mutex;
+
+
     public JoystickEngine(Joystick joystick) {
+        mutex = new Object();
         this.joystick = joystick;
+    }
+
+    public void invoke(Runnable runnable) {
+        synchronized (mutex) {
+            runnable.run();
+        }
     }
 
     @Override
@@ -20,21 +30,23 @@ public class JoystickEngine implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                joystick.arrowKeyUpPressed();
-                break;
-            case KeyEvent.VK_DOWN:
-                joystick.arrowKeyDownPressed();
-                break;
-            case KeyEvent.VK_RIGHT:
-                joystick.arrowKeyRightPressed();
-                break;
-            case KeyEvent.VK_LEFT:
-                joystick.arrowKeyLeftPressed();
-                break;
-            default:
-                break;
+        synchronized (mutex) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                    joystick.arrowKeyUpPressed();
+                    break;
+                case KeyEvent.VK_DOWN:
+                    joystick.arrowKeyDownPressed();
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    joystick.arrowKeyRightPressed();
+                    break;
+                case KeyEvent.VK_LEFT:
+                    joystick.arrowKeyLeftPressed();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
