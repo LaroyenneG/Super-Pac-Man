@@ -5,24 +5,35 @@ import model.game.Heading;
 import model.game.entity.Entity;
 import model.game.entity.food.Food;
 
+import java.awt.*;
+
 public abstract class Individual extends Entity {
+    private final double speed;
+    private boolean moving;
+    private Heading heading;
 
-    private final boolean moving;
-    private final Heading heading;
-    private double speed;
-
-
-    protected Individual(double speed) {
+    public Individual(double speed) {
+        this.speed = speed;
         heading = null;
         moving = false;
     }
 
+    public void move(Point position) {
+        this.position = position;
+        this.moving = false;
+    }
 
-    public abstract boolean isHero();
+    public void movable() {
+        this.moving = true;
+    }
 
-    public abstract boolean eats(Individual individual);
+    public void setHeading(Heading heading) {
+        this.heading = heading;
+    }
 
-    public abstract boolean eats(Food food);
+    public double getSpeed() {
+        return speed;
+    }
 
     public Heading getHeading() {
         return heading;
@@ -31,4 +42,10 @@ public abstract class Individual extends Entity {
     public boolean isMoving() {
         return moving;
     }
+
+    public abstract boolean isHero();
+
+    public abstract boolean eats(Individual individual);
+
+    public abstract boolean eats(Food food);
 }
