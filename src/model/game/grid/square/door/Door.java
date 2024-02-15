@@ -1,6 +1,6 @@
 package model.game.grid.square.door;
 
-import model.game.character.Character;
+import model.game.entity.character.Character;
 import model.game.grid.square.Passable;
 import model.game.grid.square.Square;
 

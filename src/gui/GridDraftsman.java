@@ -1,16 +1,16 @@
 package gui;
 
 import model.game.Heading;
-import model.game.character.ghost.Ghost;
-import model.game.character.ghost.Inky;
-import model.game.character.pac.person.PacMan;
-import model.game.character.pac.person.PacPerson;
-import model.game.food.PacGum;
-import model.game.food.ability.Lightning;
-import model.game.food.ability.Star;
-import model.game.food.ability.SuperPacGum;
-import model.game.food.ability.Trident;
-import model.game.food.fruit.*;
+import model.game.entity.character.ghost.Ghost;
+import model.game.entity.character.ghost.Inky;
+import model.game.entity.character.pac.person.PacMan;
+import model.game.entity.character.pac.person.PacPerson;
+import model.game.entity.food.PacGum;
+import model.game.entity.food.ability.Lightning;
+import model.game.entity.food.ability.Star;
+import model.game.entity.food.ability.SuperPacGum;
+import model.game.entity.food.ability.Trident;
+import model.game.entity.food.fruit.*;
 import model.game.grid.Grid;
 import model.game.grid.square.Space;
 import model.game.grid.square.Square;
@@ -227,7 +227,7 @@ public class GridDraftsman {
         for (var i = 0; i < squares.length; i++) {
             for (var j = 0; j < squares.length; j++) {
                 var square = squares[i][j];
-                if (square instanceof Wall) { // change me
+                if (square instanceof Wall) { // todo : change me
                     draw(j, i, (Wall) square);
                 } else if (square instanceof Space) {
                     draw(j, i, (Space) square);
@@ -238,23 +238,6 @@ public class GridDraftsman {
                 }
             }
         }
-
-
-        draw(new Star());
-        draw(new SuperPacGum());
-        draw(new PacGum());
-        draw(new Inky());
-        draw(new PacMan(), Color.RED, 0.5);
-        draw(new Trident());
-        draw(new Lightning());
-        draw(new Orange());
-        draw(new Apple());
-        draw(new Pear());
-        draw(new Cherry());
-        draw(new Melon());
-        draw(new Strawberry());
-        draw(new Peach());
-        draw(new Banana());
     }
 
 
@@ -438,9 +421,11 @@ public class GridDraftsman {
 
 
     public void draw(Apple apple) {
-        StdDraw.setPenColor(Color.RED);
 
         var position = apple.getPosition();
+
+        StdDraw.setPenColor(Color.RED);
+
         var radius = Math.min(squareHalfWidth, squareHalfHeight) * APPLE_SIZE;
 
         StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius);
@@ -451,9 +436,11 @@ public class GridDraftsman {
 
 
     public void draw(Pear pear) {
-        StdDraw.setPenColor(Color.GREEN);
 
         var position = pear.getPosition();
+
+        StdDraw.setPenColor(Color.GREEN);
+
         var radius = Math.min(squareHalfWidth, squareHalfHeight) * PEAR_SIZE;
 
         StdDraw.filledCircle(centerX(position.x), centerY(position.y) - radius / 2.0, radius);
@@ -470,9 +457,9 @@ public class GridDraftsman {
 
     private void draw(Trident trident) {
 
-        StdDraw.setPenColor(Color.RED);
-
         var position = trident.getPosition();
+
+        StdDraw.setPenColor(Color.RED);
 
         var halfHeight = squareHalfHeight * TRIDENT_SIZE;
         var halfWidth = squareHalfWidth * TRIDENT_SIZE / 2.0;
@@ -487,9 +474,9 @@ public class GridDraftsman {
 
     private void draw(Lightning lightning) {
 
-        StdDraw.setPenColor(Color.YELLOW);
-
         var position = lightning.getPosition();
+
+        StdDraw.setPenColor(Color.YELLOW);
 
         var width = Math.min(squareHalfWidth, squareHalfHeight) * LIGHTING_SIZE;
         var blockSize = width / 5.0;
@@ -513,11 +500,11 @@ public class GridDraftsman {
 
     public void draw(Star star) {
 
+        var position = star.getPosition();
+
         StdDraw.setPenColor(Color.YELLOW);
 
         var points = new ArrayList<Point2D.Double>();
-
-        var position = star.getPosition();
 
         var alternate = false;
         for (var angle = 0.0; angle <= 2.0 * Math.PI; angle += Math.PI / 5.0) {
@@ -541,9 +528,9 @@ public class GridDraftsman {
 
     public void draw(PacGum pacGum, double size) {
 
-        StdDraw.setPenColor(Color.ORANGE);
-
         var position = pacGum.getPosition();
+
+        StdDraw.setPenColor(Color.ORANGE);
 
         var radius = Math.min(squareHalfWidth, squareHalfHeight) * size;
 
@@ -557,11 +544,9 @@ public class GridDraftsman {
     public void draw(int x, int y, PacDoor pacDoor) {
 
         StdDraw.setPenColor(DOOR_COLOR);
-
         StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
 
         StdDraw.setPenColor(Color.WHITE);
-
         drawPolygon(
                 translatePoints(
                         rotatePoints(

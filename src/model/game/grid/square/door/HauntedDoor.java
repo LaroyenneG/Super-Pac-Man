@@ -1,6 +1,6 @@
 package model.game.grid.square.door;
 
-import model.game.character.Character;
+import model.game.entity.character.Character;
 
 public final class HauntedDoor extends Door {
 

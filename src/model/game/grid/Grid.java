@@ -1,7 +1,7 @@
 package model.game.grid;
 
-import model.game.character.Character;
-import model.game.food.Food;
+import model.game.entity.character.Character;
+import model.game.entity.food.Food;
 import model.game.grid.square.Passable;
 import model.game.grid.square.Space;
 import model.game.grid.square.Square;

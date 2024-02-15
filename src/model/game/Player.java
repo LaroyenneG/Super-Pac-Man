@@ -1,7 +1,6 @@
 package model.game;
 
-import model.game.character.pac.person.PacPerson;
-import model.game.controller.Joystick;
+import model.game.entity.character.pac.person.PacPerson;
 
 import java.awt.*;
 

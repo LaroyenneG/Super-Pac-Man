@@ -722,6 +722,10 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
         frame.setVisible(true);
     }
 
+    public static void addKeyListener(KeyListener keyListener) {
+        frame.addKeyListener(keyListener);
+    }
+
     // create the menu bar
     private static JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();

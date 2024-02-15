@@ -1,11 +1,11 @@
 package model.game;
 
-import model.game.food.Food;
-import model.game.food.PacGum;
-import model.game.food.ability.Lightning;
-import model.game.food.ability.Star;
-import model.game.food.ability.SuperPacGum;
-import model.game.food.fruit.*;
+import model.game.entity.food.Food;
+import model.game.entity.food.PacGum;
+import model.game.entity.food.ability.Lightning;
+import model.game.entity.food.ability.Star;
+import model.game.entity.food.ability.SuperPacGum;
+import model.game.entity.food.fruit.*;
 import model.game.grid.Grid;
 import model.game.grid.GridGenerator;
 

@@ -1,7 +1,7 @@
 package model.game.grid.square.door;
 
-import model.game.character.Character;
-import model.game.character.pac.person.PacPerson;
+import model.game.entity.character.Character;
+import model.game.entity.character.pac.person.PacPerson;
 
 public final class PacDoor extends Door {
     private boolean open;
