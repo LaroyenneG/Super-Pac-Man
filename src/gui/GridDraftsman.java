@@ -35,7 +35,7 @@ public class GridDraftsman {
     private static final Color DOOR_COLOR = BRUN;
     private static final Color DARK_ORANGE = new Color(255, 140, 0);
     private static final Color GHOST_SCARED_COLOR = Color.BLUE;
-    private static final Color SPACE_BORDERS_COLOR = Color.DARK_GRAY;
+    private static final Color WALL_BORDERS_COLOR = new Color(0, 0, 128);
     private static final double SUPER_PAC_GUM_SIZE = 0.4;
     private static final double PAC_GUM_SIZE = 0.2;
     private static final double STAR_SIZE = 0.6;
@@ -244,7 +244,7 @@ public class GridDraftsman {
         draw(new SuperPacGum());
         draw(new PacGum());
         draw(new Inky());
-        draw(new PacMan(), Color.RED);
+        draw(new PacMan(), Color.RED, 0.5);
         draw(new Trident());
         draw(new Lightning());
         draw(new Orange());
@@ -328,7 +328,7 @@ public class GridDraftsman {
         }
     }
 
-    public void draw(PacPerson pacPerson, Color color) {
+    public void draw(PacPerson pacPerson, Color color, double size) {
 
         StdDraw.setPenColor(color);
 
@@ -340,7 +340,7 @@ public class GridDraftsman {
         drawPolygon(
                 translatePoints(
                         rotatePoints(
-                                arcPolygon(0.5, mouthAngle), HEADING_ANGLE_MAP.get(heading)),
+                                arcPolygon(size, mouthAngle), HEADING_ANGLE_MAP.get(heading)),
                         centerX(position.x) + movingTranslationX(heading),
                         centerY(position.y) + movingTranslationY(heading)
                 ), true
@@ -559,13 +559,39 @@ public class GridDraftsman {
         StdDraw.setPenColor(DOOR_COLOR);
 
         StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
+
+        StdDraw.setPenColor(Color.WHITE);
+
+        drawPolygon(
+                translatePoints(
+                        rotatePoints(
+                                arcPolygon(0.2, Math.PI / 4.0), 0.0),
+                        centerX(x),
+                        centerY(y)
+                ), true
+        );
     }
 
     public void draw(int x, int y, HauntedDoor hauntedDoor) {
 
         StdDraw.setPenColor(DOOR_COLOR);
 
-        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
+        var height = squareHalfHeight / 3.0;
+
+        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, height);
+
+        StdDraw.setPenColor(Color.WHITE);
+
+        var radius = height / 2.0;
+
+        StdDraw.filledCircle(centerX(x), centerY(y), radius);
+        drawPolygon(
+                translatePoints(
+                        ghostFeetShape(radius, radius / 2.0, false),
+                        centerX(x),
+                        centerY(y) - radius / 2.0
+                )
+        );
     }
 
     public void draw(int x, int y, Wall wall) {
@@ -573,10 +599,13 @@ public class GridDraftsman {
         StdDraw.setPenColor(WALL_COLOR);
 
         StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
+
+        StdDraw.setPenColor(WALL_BORDERS_COLOR);
+        StdDraw.rectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
     }
 
     public void draw(int x, int y, Space space) {
-        StdDraw.setPenColor(SPACE_BORDERS_COLOR);
-        StdDraw.rectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
+        StdDraw.setPenColor(Color.BLACK);
+        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
     }
 }
