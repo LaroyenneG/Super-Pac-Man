@@ -21,6 +21,14 @@ public final class Game {
         grid = GridGenerator.generate(size);
     }
 
+    public boolean isGameOver() {
+        return false;
+    }
+
+    public Grid getGrid() {
+        return grid;
+    }
+
     public static Set<Class<? extends Food>> foodsMultiplayer() {
 
         var result = foodsSingle();

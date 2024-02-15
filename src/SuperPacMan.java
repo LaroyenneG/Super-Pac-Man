@@ -1,6 +1,5 @@
-import engine.JoystickEngine;
-import model.game.Joystick;
-import stdlib.StdDraw;
+import engine.GameEngine;
+import model.game.Game;
 import stdlib.StdOut;
 
 public final class SuperPacMan {
@@ -66,6 +65,12 @@ public final class SuperPacMan {
 
     private static void game() {
         StdOut.println("Game mode selected");
+
+        var game = new Game(30);
+
+        var gameEngine = new GameEngine(game);
+
+        gameEngine.start();
     }
 
 
@@ -73,8 +78,6 @@ public final class SuperPacMan {
 
         StdOut.println(LOGO);
         StdOut.println(APPLICATION_TITLE + " v" + VERSION + " started !");
-
-        StdDraw.addKeyListener(new JoystickEngine(new Joystick()));
 
         switch (args.length) {
             case 0:

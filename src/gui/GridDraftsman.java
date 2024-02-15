@@ -2,8 +2,6 @@ package gui;
 
 import model.game.Heading;
 import model.game.entity.character.ghost.Ghost;
-import model.game.entity.character.ghost.Inky;
-import model.game.entity.character.pac.person.PacMan;
 import model.game.entity.character.pac.person.PacPerson;
 import model.game.entity.food.PacGum;
 import model.game.entity.food.ability.Lightning;
@@ -63,6 +61,9 @@ public class GridDraftsman {
         this.gridSize = gridSize;
         squareHalfHeight = 1.0 / gridSize / 2.0;
         squareHalfWidth = 1.0 / gridSize / 2.0;
+    }
+
+    public void init() {
         StdDraw.setTitle(APPLICATION_TITLE);
         StdDraw.setCanvasSize(WIDTH, HEIGHT);
         StdDraw.setScale(0, 1);
@@ -71,6 +72,7 @@ public class GridDraftsman {
         clear();
         StdDraw.show();
     }
+
 
     public void clear() {
         StdDraw.clear(BACKGROUND_COLOR);
@@ -191,7 +193,7 @@ public class GridDraftsman {
         return arcPolygon(size, startAngle, endAngle);
     }
 
-    public double movingTranslationX(Heading heading) {
+    private double movingTranslationX(Heading heading) {
         return switch (heading) {
             case RIGHT -> squareHalfWidth;
             case LEFT -> -squareHalfWidth;
@@ -199,7 +201,7 @@ public class GridDraftsman {
         };
     }
 
-    public double movingTranslationY(Heading heading) {
+    private double movingTranslationY(Heading heading) {
         return switch (heading) {
             case UP -> squareHalfHeight;
             case DOWN -> -squareHalfHeight;
@@ -212,8 +214,8 @@ public class GridDraftsman {
 
         var squares = grid.getSquares();
 
-        assert squares.length > 0;
         assert squares.length == gridSize;
+        assert squares.length > 0;
         assert squares[0].length == squares.length;
 
         clear();
@@ -222,7 +224,7 @@ public class GridDraftsman {
     }
 
 
-    public void draw(Square[][] squares) {
+    private void draw(Square[][] squares) {
 
         for (var i = 0; i < squares.length; i++) {
             for (var j = 0; j < squares.length; j++) {
@@ -247,14 +249,14 @@ public class GridDraftsman {
 
     public void draw(Ghost ghost) {
 
+        var position = ghost.getPosition();
+
         var scared = ghost.isScared();
 
         var color = (scared) ? GHOST_SCARED_COLOR : ghost.getColor();
         var heading = ghost.getHeading();
 
         StdDraw.setPenColor(color);
-
-        var position = ghost.getPosition();
 
         var size = 0.8;
         var halfWidth = squareHalfWidth * size;
@@ -498,7 +500,7 @@ public class GridDraftsman {
         StdDraw.filledRectangle(centerX(position.x) - width + blockSize * 6.0, centerY(position.y) + width - blockSize * 11.0, blockSize, blockSize);
     }
 
-    public void draw(Star star) {
+    private void draw(Star star) {
 
         var position = star.getPosition();
 
@@ -518,15 +520,15 @@ public class GridDraftsman {
         drawPolygon(translatePoints(points, centerX(position.x), centerY(position.y)));
     }
 
-    public void draw(PacGum pacGum) {
+    private void draw(PacGum pacGum) {
         draw(pacGum, PAC_GUM_SIZE);
     }
 
-    public void draw(SuperPacGum supePacGum) {
+    private void draw(SuperPacGum supePacGum) {
         draw(supePacGum, SUPER_PAC_GUM_SIZE);
     }
 
-    public void draw(PacGum pacGum, double size) {
+    private void draw(PacGum pacGum, double size) {
 
         var position = pacGum.getPosition();
 
@@ -541,7 +543,7 @@ public class GridDraftsman {
      * Squares
      *******************************************************************************************************************/
 
-    public void draw(int x, int y, PacDoor pacDoor) {
+    private void draw(int x, int y, PacDoor pacDoor) {
 
         StdDraw.setPenColor(DOOR_COLOR);
         StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
@@ -557,7 +559,7 @@ public class GridDraftsman {
         );
     }
 
-    public void draw(int x, int y, HauntedDoor hauntedDoor) {
+    private void draw(int x, int y, HauntedDoor hauntedDoor) {
 
         StdDraw.setPenColor(DOOR_COLOR);
 
@@ -579,7 +581,7 @@ public class GridDraftsman {
         );
     }
 
-    public void draw(int x, int y, Wall wall) {
+    private void draw(int x, int y, Wall wall) {
 
         StdDraw.setPenColor(WALL_COLOR);
 
@@ -589,7 +591,7 @@ public class GridDraftsman {
         StdDraw.rectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
     }
 
-    public void draw(int x, int y, Space space) {
+    private void draw(int x, int y, Space space) {
         StdDraw.setPenColor(Color.BLACK);
         StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
     }
