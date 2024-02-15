@@ -1,25 +1,22 @@
 package model.game.entity.individual.pac.person;
-import model.game.entity.individual.Individual;
+
 import model.game.entity.food.Food;
-
-
-import java.awt.*;
+import model.game.entity.individual.Individual;
 
 
 public abstract class PacPerson extends Individual {
 
-    public static final Color DEFAULT_COLOR = Color.YELLOW;
-
     public static final int MAX_WEIGHT = 10;
 
-    private final int weight = 0;
+    private final double weight;
 
-    public PacPerson() {
-        super();
+    public PacPerson(double speed, double weight) {
+        super(speed);
+        this.weight = weight;
     }
 
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 

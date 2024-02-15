@@ -198,7 +198,7 @@ public class GridDraftsman {
         return switch (heading) {
             case RIGHT -> squareHalfWidth;
             case LEFT -> -squareHalfWidth;
-            default -> 0.0;
+            case null, default -> 0.0;
         };
     }
 
@@ -206,7 +206,7 @@ public class GridDraftsman {
         return switch (heading) {
             case UP -> squareHalfHeight;
             case DOWN -> -squareHalfHeight;
-            default -> 0.0;
+            case null, default -> 0.0;
         };
     }
 
@@ -325,6 +325,9 @@ public class GridDraftsman {
                 case LEFT:
                     blackEyesOffsetLeftX -= rayon * blackEyesSize;
                     blackEyesOffsetRightX += rayon * blackEyesSize;
+                    break;
+                case null:
+                default:
                     break;
             }
 

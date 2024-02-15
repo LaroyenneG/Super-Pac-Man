@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public final class GameEngine implements Runnable {
 
-    private static final int FREQUENCY = 300;
+    private static final int FREQUENCY = 200;
 
     private final Thread thread;
 
@@ -47,7 +47,6 @@ public final class GameEngine implements Runnable {
                 SwingUtilities.invokeLater(() -> {
                     // GUI interface
                 });
-
 
                 var end = System.currentTimeMillis();
 

@@ -1,20 +1,23 @@
 package model.game.entity.individual.ghost;
 
+import model.game.entity.food.Food;
 import model.game.entity.individual.Individual;
 import model.game.entity.individual.pac.person.PacPerson;
-import model.game.entity.food.Food;
-import stdlib.StdRandom;
 
 import java.awt.*;
 
 public abstract class Ghost extends Individual {
 
+    public static final double SPEED = 0.5;
+
     private final Color color;
-    private boolean scared = StdRandom.bernoulli();
+    private boolean scared;
 
 
     public Ghost(Color color) {
+        super(SPEED);
         this.color = color;
+        scared = false;
     }
 
 

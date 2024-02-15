@@ -4,17 +4,17 @@ package model.game.entity.individual;
 import model.game.Heading;
 import model.game.entity.Entity;
 import model.game.entity.food.Food;
-import stdlib.StdRandom;
 
 public abstract class Individual extends Entity {
 
-    private Heading heading = Heading.values()[StdRandom.uniformInt(Heading.values().length)];
-    private final boolean moving = StdRandom.bernoulli();
+    private final boolean moving;
+    private final Heading heading;
     private double speed;
 
 
-    protected Individual() {
-
+    protected Individual(double speed) {
+        heading = null;
+        moving = false;
     }
 
 
