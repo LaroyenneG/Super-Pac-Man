@@ -1,3 +1,4 @@
+import aud.SoundMachine;
 import engine.GameEngine;
 import model.game.Game;
 import stdlib.StdOut;
@@ -78,6 +79,9 @@ public final class SuperPacMan {
 
         StdOut.println(LOGO);
         StdOut.println(APPLICATION_TITLE + " v" + VERSION + " started !");
+
+        SoundMachine.getInstance().playStart();
+        SoundMachine.getInstance().playDeath();
 
         switch (args.length) {
             case 0:

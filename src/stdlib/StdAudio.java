@@ -419,11 +419,29 @@ public final class StdAudio {
      * @return the array of samples
      */
     public static double[] read(String filename) {
+
+        AudioInputStream fromAudioInputStream = getAudioInputStreamFromFile(filename);
+
+        return read(fromAudioInputStream);
+    }
+
+    public static double[] read(byte[] bytes) {
+
+        AudioInputStream fromAudioInputStream = null;
+        try {
+            fromAudioInputStream = AudioSystem.getAudioInputStream(new ByteArrayInputStream(bytes));
+        } catch (UnsupportedAudioFileException | IOException ioe) {
+            throw new IllegalArgumentException("could not read '" + fromAudioInputStream + "'", ioe);
+        }
+
+        return read(fromAudioInputStream);
+    }
+
+    public static double[] read(AudioInputStream fromAudioInputStream) {
         // 4K buffer (must be a multiple of 2 for mono or 4 for stereo)
         int READ_BUFFER_SIZE = 4096;
 
         // create AudioInputStream from file
-        AudioInputStream fromAudioInputStream = getAudioInputStreamFromFile(filename);
         AudioFormat fromAudioFormat = fromAudioInputStream.getFormat();
 
         // normalize AudioInputStream to 44,100 Hz, 16-bit audio, mono, signed PCM, little endian
@@ -461,7 +479,7 @@ public final class StdAudio {
             fromAudioInputStream.close();
             return queue.toArray();
         } catch (IOException ioe) {
-            throw new IllegalArgumentException("could not read '" + filename + "'", ioe);
+            throw new IllegalArgumentException("could not read '" + fromAudioInputStream + "'", ioe);
         }
     }
 
