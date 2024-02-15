@@ -1,4 +1,4 @@
-package model.game.entity.character.pac.person;
+package model.game.entity.individual.pac.person;
 
 public final class PacDevil extends PacPerson {
     public PacDevil() {

@@ -1,4 +1,4 @@
-package model.game.entity.character.ghost;
+package model.game.entity.individual.ghost;
 
 import java.awt.*;
 

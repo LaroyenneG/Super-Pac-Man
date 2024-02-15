@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public final class GameEngine implements Runnable {
 
-    private static final int FREQUENCY = 100;
+    private static final int FREQUENCY = 300;
 
     private final Thread thread;
 

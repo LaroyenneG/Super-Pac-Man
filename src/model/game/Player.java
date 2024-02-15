@@ -1,6 +1,6 @@
 package model.game;
 
-import model.game.entity.character.pac.person.PacPerson;
+import model.game.entity.individual.pac.person.PacPerson;
 
 import java.awt.*;
 

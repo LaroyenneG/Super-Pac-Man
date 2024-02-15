@@ -16,19 +16,22 @@ public final class Game {
     private final Set<Player> players;
     private final Grid grid;
 
+    private long turn;
+
     public Game(int size) {
+        turn = 0;
         players = new HashSet<>();
         grid = GridGenerator.generate(size);
     }
 
     public void nextTurn() {
-
+        grid.moveIndividuals(turn);
+        turn++;
     }
 
     public boolean isGameOver() {
         return false;
     }
-
     public Grid getGrid() {
         return grid;
     }

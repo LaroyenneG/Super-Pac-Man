@@ -1,6 +1,4 @@
-package model.game.entity.character.pac.person;
-
-import java.awt.*;
+package model.game.entity.individual.pac.person;
 
 public final class BabyPacMan extends PacPerson {
     public BabyPacMan() {

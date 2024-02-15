@@ -1,7 +1,7 @@
 package model.game.entity.food.ability;
 
-import model.game.entity.character.ghost.Ghost;
-import model.game.entity.character.pac.person.PacPerson;
+import model.game.entity.individual.ghost.Ghost;
+import model.game.entity.individual.pac.person.PacPerson;
 
 import java.util.Set;
 

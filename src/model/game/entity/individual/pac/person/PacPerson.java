@@ -1,12 +1,12 @@
-package model.game.entity.character.pac.person;
-import model.game.entity.character.Character;
+package model.game.entity.individual.pac.person;
+import model.game.entity.individual.Individual;
 import model.game.entity.food.Food;
 
 
 import java.awt.*;
 
 
-public abstract class PacPerson extends Character {
+public abstract class PacPerson extends Individual {
 
     public static final Color DEFAULT_COLOR = Color.YELLOW;
 
@@ -29,7 +29,7 @@ public abstract class PacPerson extends Character {
     }
 
     @Override
-    public boolean eats(Character character) {
+    public boolean eats(Individual individual) {
         return false;
     }
 

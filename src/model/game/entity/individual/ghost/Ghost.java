@@ -1,13 +1,13 @@
-package model.game.entity.character.ghost;
+package model.game.entity.individual.ghost;
 
-import model.game.entity.character.Character;
-import model.game.entity.character.pac.person.PacPerson;
+import model.game.entity.individual.Individual;
+import model.game.entity.individual.pac.person.PacPerson;
 import model.game.entity.food.Food;
 import stdlib.StdRandom;
 
 import java.awt.*;
 
-public abstract class Ghost extends Character {
+public abstract class Ghost extends Individual {
 
     private final Color color;
     private boolean scared = StdRandom.bernoulli();
@@ -36,11 +36,11 @@ public abstract class Ghost extends Character {
     }
 
     @Override
-    public final boolean eats(Character character) {
+    public final boolean eats(Individual individual) {
 
-        if(!character.isHero()) return false;
+        if(!individual.isHero()) return false;
 
-        var pacPerson = (PacPerson) character;
+        var pacPerson = (PacPerson) individual;
         /*
         if(scared && pacPerson.) {
 

@@ -1,14 +1,15 @@
 package gui;
 
 import model.game.Heading;
-import model.game.entity.character.ghost.Ghost;
-import model.game.entity.character.pac.person.PacPerson;
+import model.game.entity.Entity;
 import model.game.entity.food.PacGum;
 import model.game.entity.food.ability.Lightning;
 import model.game.entity.food.ability.Star;
 import model.game.entity.food.ability.SuperPacGum;
 import model.game.entity.food.ability.Trident;
 import model.game.entity.food.fruit.*;
+import model.game.entity.individual.ghost.Ghost;
+import model.game.entity.individual.pac.person.PacPerson;
 import model.game.grid.Grid;
 import model.game.grid.square.Space;
 import model.game.grid.square.Square;
@@ -213,6 +214,8 @@ public class GridDraftsman {
     public void draw(Grid grid) {
 
         var squares = grid.getSquares();
+        var foods = grid.getFoods();
+        var individuals = grid.getIndividuals();
 
         assert squares.length == gridSize;
         assert squares.length > 0;
@@ -220,12 +223,29 @@ public class GridDraftsman {
 
         clear();
         draw(squares);
+        for (var food : foods) {
+            draw(food);
+        }
+        for (var individual : individuals) {
+            draw(individual);
+        }
+
         StdDraw.show();
     }
 
+    private void draw(Entity entity) {
+        if (entity instanceof SuperPacGum) {
+            draw((SuperPacGum) entity);
+        } else if (entity instanceof PacGum) {
+            draw((PacGum) entity);
+        } else if (entity instanceof Ghost) {
+            draw((Ghost) entity);
+        }
+    }
+
+
 
     private void draw(Square[][] squares) {
-
         for (var i = 0; i < squares.length; i++) {
             for (var j = 0; j < squares.length; j++) {
                 var square = squares[i][j];

@@ -1,17 +1,17 @@
 package model.game.grid.square.door;
 
-import model.game.entity.character.Character;
-import model.game.entity.character.pac.person.PacPerson;
+import model.game.entity.individual.Individual;
+import model.game.entity.individual.pac.person.PacPerson;
 
 public final class PacDoor extends Door {
     private boolean open;
 
     @Override
-    public boolean authorize(Character character) {
+    public boolean authorize(Individual individual) {
 
-        if (!character.isHero()) return false;
+        if (!individual.isHero()) return false;
 
-        var pacPerson = (PacPerson) character;
+        var pacPerson = (PacPerson) individual;
 
         return !pacPerson.isGiant();
     }
