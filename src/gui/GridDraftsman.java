@@ -33,17 +33,22 @@ public class GridDraftsman {
     private static final Color BACKGROUND_COLOR = Color.BLACK;
     private static final Color WALL_COLOR = Color.BLUE;
     private static final Color DOOR_COLOR = BRUN;
+    private static final Color DARK_ORANGE = new Color(255, 140, 0);
     private static final Color GHOST_SCARED_COLOR = Color.BLUE;
     private static final Color SPACE_BORDERS_COLOR = Color.DARK_GRAY;
     private static final double SUPER_PAC_GUM_SIZE = 0.4;
     private static final double PAC_GUM_SIZE = 0.2;
     private static final double STAR_SIZE = 0.6;
     private static final double ORANGE_SIZE = 0.4;
+    private static final double BANANA_SIZE = 0.6;
     private static final double APPLE_SIZE = 0.4;
     private static final double TRIDENT_SIZE = 0.5;
     private static final double LIGHTING_SIZE = 0.4;
     private static final double PEAR_SIZE = 0.4;
-    private static final double CHERRY_SIZE = 0.3;
+    private static final double MELON_SIZE = 0.4;
+    private static final double CHERRY_SIZE = 0.4;
+    private static final double STRAWBERRY_SIZE = 0.6;
+    private static final double PEACH_SIZE = 0.3;
     private static final int PACMAN_SHAPE_POINTS = 50;
     private static final int GHOSTS_SHAPE_POINTS = 70;
 
@@ -61,7 +66,7 @@ public class GridDraftsman {
         StdDraw.setTitle(APPLICATION_TITLE);
         StdDraw.setCanvasSize(WIDTH, HEIGHT);
         StdDraw.setScale(0, 1);
-        StdDraw.setPenRadius(1.0 / Math.max(WIDTH, HEIGHT));
+        StdDraw.setPenRadius(gridSize / 10.0 / Math.max(WIDTH, HEIGHT));
         StdDraw.enableDoubleBuffering();
         clear();
         StdDraw.show();
@@ -178,6 +183,49 @@ public class GridDraftsman {
     }
 
 
+    public void drawMelon(Melon melon) {
+
+        var position = melon.getPosition();
+
+        StdDraw.setPenColor(Color.GREEN);
+
+        drawPolygon(translatePoints(rotatePoints(arcPolygon(MELON_SIZE, Math.PI / 2.0), Math.PI / 4.0), centerX(position.x) + squareHalfWidth * MELON_SIZE / 2.0, centerY(position.y) + squareHalfHeight * MELON_SIZE / 4.0));
+
+        StdDraw.setPenColor(Color.RED);
+
+        drawPolygon(translatePoints(rotatePoints(arcPolygon(MELON_SIZE * 0.9, Math.PI / 2.0), Math.PI / 4.0), centerX(position.x) + squareHalfWidth * MELON_SIZE / 2.0, centerY(position.y) + squareHalfHeight * MELON_SIZE / 4.0));
+    }
+
+
+    public void drawStrawberry(Strawberry strawberry) {
+
+        var position = strawberry.getPosition();
+
+        StdDraw.setPenColor(Color.RED);
+
+
+        drawPolygon(translatePoints(rotatePoints(arcPolygon(STRAWBERRY_SIZE, 5.0 * Math.PI / 6.0, 7.0 * Math.PI / 6.0), -Math.PI / 2.0), centerX(position.x), centerY(position.y) - squareHalfHeight * STRAWBERRY_SIZE / 2.0));
+
+        StdDraw.setPenColor(Color.GREEN);
+
+        StdDraw.filledEllipse(centerX(position.x), centerY(position.y) + squareHalfHeight * STRAWBERRY_SIZE / 2.0 + squareHalfHeight * STRAWBERRY_SIZE / 8.0 / 2.0, squareHalfWidth * STRAWBERRY_SIZE / 2.5, squareHalfHeight * STRAWBERRY_SIZE / 8.0);
+    }
+
+    public void drawPeach(Peach peach) {
+
+        var position = peach.getPosition();
+
+        StdDraw.setPenColor(DARK_ORANGE);
+
+        var radius = Math.min(squareHalfWidth, squareHalfHeight) * PEACH_SIZE;
+
+        StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius);
+
+        StdDraw.setPenColor(Color.GREEN);
+        StdDraw.filledEllipse(centerX(position.x) - radius / 2.0, centerY(position.y) + radius, radius * 0.6, radius / 4.0);
+    }
+
+
     public void drawSpace(int x, int y, Space space) {
         StdDraw.setPenColor(SPACE_BORDERS_COLOR);
         StdDraw.rectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
@@ -249,14 +297,11 @@ public class GridDraftsman {
         }
     }
 
-    private List<Point2D.Double> pacmanShape(double size, double mouthAngle) {
+    private List<Point2D.Double> arcPolygon(double size, double startAngle, double endAngle) {
 
         var result = new ArrayList<Point2D.Double>();
 
         var radius = Math.min(squareHalfWidth, squareHalfHeight) * size;
-
-        var startAngle = 0.0 + mouthAngle;
-        var endAngle = 2.0 * Math.PI - mouthAngle;
 
         for (var angle = startAngle; angle <= endAngle; angle += (Math.PI / PACMAN_SHAPE_POINTS)) {
             if (angle == startAngle) {
@@ -273,6 +318,14 @@ public class GridDraftsman {
         }
 
         return result;
+    }
+
+    private List<Point2D.Double> arcPolygon(double size, double mouthAngle) {
+
+        var startAngle = 0.0 + mouthAngle;
+        var endAngle = 2.0 * Math.PI - mouthAngle;
+
+        return arcPolygon(size, startAngle, endAngle);
     }
 
     public double movingTranslationX(Heading heading) {
@@ -321,7 +374,7 @@ public class GridDraftsman {
         drawPolygon(
                 translatePoints(
                         rotatePoints(
-                                pacmanShape(0.5, mouthAngle), HEADING_ANGLE_MAP.get(heading)),
+                                arcPolygon(0.5, mouthAngle), HEADING_ANGLE_MAP.get(heading)),
                         centerX(position.x) + movingTranslationX(heading),
                         centerY(position.y) + movingTranslationY(heading)
                 ), true
@@ -335,13 +388,21 @@ public class GridDraftsman {
 
 
     public void drawBanana(Banana banana) {
+
+        var position = banana.getPosition();
+
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.filledEllipse(centerX(position.x) + squareHalfWidth * BANANA_SIZE / 4.0, centerY(position.y), squareHalfWidth * BANANA_SIZE / 2.0, squareHalfHeight * BANANA_SIZE / 5.0);
         StdDraw.setPenColor(Color.YELLOW);
+        StdDraw.filledEllipse(centerX(position.x) - squareHalfWidth * BANANA_SIZE / 4.0, centerY(position.y), squareHalfWidth * BANANA_SIZE / 2.0, squareHalfHeight * BANANA_SIZE / 4.5);
     }
 
     public void drawOrange(Orange orange) {
-        StdDraw.setPenColor(Color.ORANGE);
 
         var position = orange.getPosition();
+
+        StdDraw.setPenColor(DARK_ORANGE);
+
         var radius = Math.min(squareHalfWidth, squareHalfHeight) * ORANGE_SIZE;
 
         StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius);
@@ -462,6 +523,10 @@ public class GridDraftsman {
         drawApple(new Apple());
         drawPear(new Pear());
         drawCherry(new Cherry());
+        drawMelon(new Melon());
+        drawStrawberry(new Strawberry());
+        drawPeach(new Peach());
+        drawBanana(new Banana());
     }
 
     private void drawLightning(Lightning lightning) {

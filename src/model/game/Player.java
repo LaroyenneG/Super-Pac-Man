@@ -1,6 +1,7 @@
 package model.game;
 
 import model.game.character.pac.person.PacPerson;
+import model.game.controller.Joystick;
 
 import java.awt.*;
 
@@ -13,6 +14,8 @@ public final class Player {
     private final Color color;
     private int score;
     private PacPerson avatar;
+
+    private final Joystick joystick = null;
 
 
     public Player(String name, Color color) {
