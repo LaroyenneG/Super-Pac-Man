@@ -43,6 +43,7 @@ public class GridDraftsman {
     private static final double TRIDENT_SIZE = 0.5;
     private static final double LIGHTING_SIZE = 0.4;
     private static final double PEAR_SIZE = 0.4;
+    private static final double CHERRY_SIZE = 0.3;
     private static final int PACMAN_SHAPE_POINTS = 50;
     private static final int GHOSTS_SHAPE_POINTS = 70;
 
@@ -60,6 +61,7 @@ public class GridDraftsman {
         StdDraw.setTitle(APPLICATION_TITLE);
         StdDraw.setCanvasSize(WIDTH, HEIGHT);
         StdDraw.setScale(0, 1);
+        StdDraw.setPenRadius(1.0 / Math.max(WIDTH, HEIGHT));
         StdDraw.enableDoubleBuffering();
         clear();
         StdDraw.show();
@@ -247,13 +249,11 @@ public class GridDraftsman {
         }
     }
 
-    private List<Point2D.Double> pacmanShape(double size, boolean mouthOpen) {
+    private List<Point2D.Double> pacmanShape(double size, double mouthAngle) {
 
         var result = new ArrayList<Point2D.Double>();
 
-        var rayon = Math.min(squareHalfWidth, squareHalfHeight) * size;
-
-        var mouthAngle = (mouthOpen) ? Math.PI / 4.0 : 0.0;
+        var radius = Math.min(squareHalfWidth, squareHalfHeight) * size;
 
         var startAngle = 0.0 + mouthAngle;
         var endAngle = 2.0 * Math.PI - mouthAngle;
@@ -263,8 +263,8 @@ public class GridDraftsman {
                 result.add(new Point2D.Double(0.0, 0.0));
             }
 
-            var x = Math.cos(angle) * rayon;
-            var y = Math.sin(angle) * rayon;
+            var x = Math.cos(angle) * radius;
+            var y = Math.sin(angle) * radius;
             result.add(new Point2D.Double(x, y));
 
             if (angle == endAngle) {
@@ -291,17 +291,37 @@ public class GridDraftsman {
         };
     }
 
+    public void drawCherry(Cherry cherry) {
+
+        var position = cherry.getPosition();
+        var radius = Math.min(squareHalfWidth, squareHalfHeight) * CHERRY_SIZE / 2.0;
+        var circlesMargin = radius * 1.5;
+
+        StdDraw.setPenColor(Color.GREEN);
+
+        StdDraw.filledEllipse(centerX(position.x), centerY(position.y) + circlesMargin, radius, radius / 2.0);
+        StdDraw.line(centerX(position.x) - circlesMargin, centerY(position.y) - circlesMargin, centerX(position.x), centerY(position.y) + circlesMargin);
+        StdDraw.line(centerX(position.x) + circlesMargin, centerY(position.y) - circlesMargin, centerX(position.x), centerY(position.y) + circlesMargin);
+
+        StdDraw.setPenColor(Color.RED);
+
+        StdDraw.filledCircle(centerX(position.x) - circlesMargin, centerY(position.y) - circlesMargin, radius);
+        StdDraw.filledCircle(centerX(position.x) + circlesMargin, centerY(position.y) - circlesMargin, radius);
+    }
+
     public void drawPacPerson(PacPerson pacPerson, Color color) {
 
         StdDraw.setPenColor(color);
 
         var heading = pacPerson.getHeading();
         var position = pacPerson.getPosition();
+        var mouthOpen = !pacPerson.isMoving();
+        var mouthAngle = (mouthOpen) ? Math.PI / 4.0 : 0.0;
 
         drawPolygon(
                 translatePoints(
                         rotatePoints(
-                                pacmanShape(0.5, !pacPerson.isMoving()), HEADING_ANGLE_MAP.get(heading)),
+                                pacmanShape(0.5, mouthAngle), HEADING_ANGLE_MAP.get(heading)),
                         centerX(position.x) + movingTranslationX(heading),
                         centerY(position.y) + movingTranslationY(heading)
                 ), true
@@ -441,6 +461,7 @@ public class GridDraftsman {
         drawOrange(new Orange());
         drawApple(new Apple());
         drawPear(new Pear());
+        drawCherry(new Cherry());
     }
 
     private void drawLightning(Lightning lightning) {
