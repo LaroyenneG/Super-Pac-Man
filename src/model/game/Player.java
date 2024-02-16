@@ -18,7 +18,7 @@ public final class Player {
 
     public Player(String name, Color color) {
         this.joystick = new Joystick();
-        avatar = new JrPacMan();
+        avatar = new JrPacMan(color);
         this.name = name;
         this.color = color;
         score = 0;

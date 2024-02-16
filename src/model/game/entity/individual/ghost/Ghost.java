@@ -10,13 +10,11 @@ public abstract class Ghost extends Individual {
 
     public static final double SPEED = 0.5;
 
-    private final Color color;
     private boolean scared;
 
 
     public Ghost(Color color) {
-        super(SPEED);
-        this.color = color;
+        super(color, SPEED);
         scared = false;
     }
 
@@ -61,9 +59,5 @@ public abstract class Ghost extends Individual {
     @Override
     public String toString() {
         return "^";
-    }
-
-    public Color getColor() {
-        return this.color;
     }
 }

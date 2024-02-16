@@ -8,11 +8,14 @@ import model.game.entity.food.Food;
 import java.awt.*;
 
 public abstract class Individual extends Entity {
+
+    private final Color color;
     private final double speed;
     private boolean moving;
     private Heading heading;
 
-    public Individual(double speed) {
+    public Individual(Color color, double speed) {
+        this.color = color;
         this.speed = speed;
         heading = null;
         moving = false;
@@ -48,4 +51,8 @@ public abstract class Individual extends Entity {
     public abstract boolean eats(Individual individual);
 
     public abstract boolean eats(Food food);
+
+    public Color getColor() {
+        return this.color;
+    }
 }

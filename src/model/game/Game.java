@@ -9,7 +9,6 @@ import model.game.entity.food.fruit.*;
 import model.game.grid.Grid;
 import model.game.grid.GridGenerator;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public final class Game {
@@ -35,6 +34,11 @@ public final class Game {
     public Grid getGrid() {
         return grid;
     }
+
+    public boolean isMultiplayer() {
+        return players.length > 1;
+    }
+
 
     public static Set<Class<? extends Food>> foodsMultiplayer() {
 

@@ -3,6 +3,8 @@ package model.game.entity.individual.pac.person;
 import model.game.entity.food.Food;
 import model.game.entity.individual.Individual;
 
+import java.awt.*;
+
 
 public abstract class PacPerson extends Individual {
 
@@ -10,8 +12,8 @@ public abstract class PacPerson extends Individual {
 
     private final double weight;
 
-    public PacPerson(double speed, double weight) {
-        super(speed);
+    public PacPerson(Color color, double speed, double weight) {
+        super(color, speed);
         this.weight = weight;
     }
 

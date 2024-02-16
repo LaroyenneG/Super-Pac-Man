@@ -10,8 +10,8 @@ import model.game.entity.food.ability.Star;
 import model.game.entity.food.ability.SuperPacGum;
 import model.game.entity.food.ability.Trident;
 import model.game.entity.food.fruit.*;
-import model.game.entity.individual.ghost.Ghost;
-import model.game.entity.individual.pac.person.PacPerson;
+import model.game.entity.individual.ghost.*;
+import model.game.entity.individual.pac.person.*;
 import model.game.grid.Grid;
 import model.game.grid.square.Space;
 import model.game.grid.square.Square;
@@ -22,6 +22,7 @@ import stdlib.StdDraw;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,8 @@ public class GameDraftsman {
 
     private static final Map<Heading, Double> HEADING_ANGLE_MAP = Map.of(Heading.UP, Math.PI / 2.0, Heading.DOWN, -Math.PI / 2.0, Heading.RIGHT, 0.0, Heading.LEFT, Math.PI);
 
+
+    private static final String DRAW_METHOD_NAME = "draw";
 
     private final int gridSize;
     private final double squareHalfHeight;
@@ -215,37 +218,44 @@ public class GameDraftsman {
     
     private double playerX(int id) {
         return switch (id) {
-            case 0 -> 0;
+            case 0 -> 0.90;
+            case 1 -> 0.1;
             default -> 0;
         };
     }
 
     private double playerY(int id) {
-        return 0.0;
+        return switch (id) {
+            case 0 -> 0.015;
+            case 1 -> 0.985;
+            default -> 0;
+        };
     }
 
 
 
     private void draw(Player player, int id) {
+        assert id >= 0 && id <= 2;
 
-        assert id >= 0 && id < 4;
-        
-        StdDraw.setPenColor(Color.WHITE);
-//        StdDraw.setFont(new Font("SansSerif", Font.PLAIN, 50));
-//        StdDraw.text(0.5, 0.5, "Hello : " + player.getName());
+        StdDraw.setPenColor(Color.DARK_GRAY);
+        StdDraw.filledRectangle(playerX(id), playerY(id), 0.1, 0.013);
+        StdDraw.setFont(new Font("SansSerif", Font.BOLD, 12));
+        StdDraw.setPenColor(player.getColor());
+        StdDraw.text(playerX(id), playerY(id), String.format("%s : %d", player.getName(), player.getScore()));
     }
+
 
     public void draw(Game game) {
 
         clear();
 
         var grid = game.getGrid();
-        var players = game.getPlayers();
-
         draw(grid);
 
+        var players = game.getPlayers();
         for (var i = 0; i < players.length; i++) {
-            draw(players[i], i);
+            var player = players[i];
+            draw(player, i);
         }
 
         StdDraw.show();
@@ -254,46 +264,49 @@ public class GameDraftsman {
     private void draw(Grid grid) {
 
         var squares = grid.getSquares();
-        var foods = grid.getFoods();
-        var individuals = grid.getIndividuals();
 
         assert squares.length == gridSize;
         assert squares.length > 0;
         assert squares[0].length == squares.length;
 
         draw(squares);
+
+        var foods = grid.getFoods();
         for (var food : foods) {
             draw(food);
         }
-        for (var individual : individuals) {
-            draw(individual);
+
+        var ghosts = grid.getGhosts();
+        for (var ghost : ghosts) {
+            draw(ghost);
+        }
+
+        var pacPeople = grid.getPacPeople();
+        for (var pacPerson : pacPeople) {
+            draw(pacPerson);
         }
     }
 
     private void draw(Entity entity) {
-        if (entity instanceof SuperPacGum) {
-            draw((SuperPacGum) entity);
-        } else if (entity instanceof PacGum) {
-            draw((PacGum) entity);
-        } else if (entity instanceof Ghost) {
-            draw((Ghost) entity);
+        var entityClass = entity.getClass();
+        try {
+            var draw = GameDraftsman.class.getDeclaredMethod(DRAW_METHOD_NAME, entityClass);
+            draw.invoke(this, entity);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
-
-
 
     private void draw(Square[][] squares) {
         for (var i = 0; i < squares.length; i++) {
             for (var j = 0; j < squares.length; j++) {
                 var square = squares[i][j];
-                if (square instanceof Wall) { // todo : change me
-                    draw(j, i, (Wall) square);
-                } else if (square instanceof Space) {
-                    draw(j, i, (Space) square);
-                } else if (square instanceof HauntedDoor) {
-                    draw(j, i, (HauntedDoor) square);
-                } else if (square instanceof PacDoor) {
-                    draw(j, i, (PacDoor) square);
+                var squareClass = square.getClass();
+                try {
+                    var draw = GameDraftsman.class.getDeclaredMethod(DRAW_METHOD_NAME, int.class, int.class, squareClass);
+                    draw.invoke(this, j, i, square);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -304,7 +317,23 @@ public class GameDraftsman {
      * Characters
      *******************************************************************************************************************/
 
-    public void draw(Ghost ghost) {
+    private void draw(Blinky blinky) {
+        draw((Ghost) blinky);
+    }
+
+    private void draw(Clyde clyde) {
+        draw((Ghost) clyde);
+    }
+
+    private void draw(Inky inky) {
+        draw((Ghost) inky);
+    }
+
+    private void draw(Pinky pinky) {
+        draw((Ghost) pinky);
+    }
+
+    private void draw(Ghost ghost) {
 
         var position = ghost.getPosition();
 
@@ -373,14 +402,14 @@ public class GameDraftsman {
         }
     }
 
-    public void draw(PacPerson pacPerson, Color color, double size) {
-
-        StdDraw.setPenColor(color);
+    private void draw(PacPerson pacPerson, Color color, double size, boolean filled) {
 
         var heading = pacPerson.getHeading();
         var position = pacPerson.getPosition();
         var mouthOpen = !pacPerson.isMoving();
         var mouthAngle = (mouthOpen) ? Math.PI / 4.0 : 0.0;
+
+        StdDraw.setPenColor(color);
 
         drawPolygon(
                 translatePoints(
@@ -388,8 +417,29 @@ public class GameDraftsman {
                                 arcPolygon(size, mouthAngle), HEADING_ANGLE_MAP.get(heading)),
                         centerX(position.x) + movingTranslationX(heading),
                         centerY(position.y) + movingTranslationY(heading)
-                ), true
+                ), filled
         );
+    }
+
+    private void draw(SuperPac superPac) {
+        draw(superPac, superPac.getColor(), superPac.getWeight(), false);
+    }
+
+    private void draw(BabyPacMan babyPacMan) {
+        draw(babyPacMan, babyPacMan.getColor(), babyPacMan.getWeight(), true);
+    }
+
+    private void draw(JrPacMan jrPacMan) {
+        draw(jrPacMan, jrPacMan.getColor(), jrPacMan.getWeight(), true);
+    }
+
+    private void draw(PacMan pacMan) {
+        draw(pacMan, pacMan.getColor(), pacMan.getWeight(), true);
+    }
+
+    private void draw(PacDevil pacDevil) {
+        draw(pacDevil, pacDevil.getColor(), pacDevil.getWeight(), true);
+        draw(pacDevil, Color.RED, pacDevil.getWeight(), false);
     }
 
 
@@ -397,7 +447,7 @@ public class GameDraftsman {
      * Fruits
      *******************************************************************************************************************/
 
-    public void draw(Melon melon) {
+    private void draw(Melon melon) {
 
         var position = melon.getPosition();
 
@@ -411,7 +461,7 @@ public class GameDraftsman {
     }
 
 
-    public void draw(Strawberry strawberry) {
+    private void draw(Strawberry strawberry) {
 
         var position = strawberry.getPosition();
 
@@ -425,7 +475,7 @@ public class GameDraftsman {
         StdDraw.filledEllipse(centerX(position.x), centerY(position.y) + squareHalfHeight * STRAWBERRY_SIZE / 2.0 + squareHalfHeight * STRAWBERRY_SIZE / 8.0 / 2.0, squareHalfWidth * STRAWBERRY_SIZE / 2.5, squareHalfHeight * STRAWBERRY_SIZE / 8.0);
     }
 
-    public void draw(Peach peach) {
+    private void draw(Peach peach) {
 
         var position = peach.getPosition();
 
@@ -439,7 +489,7 @@ public class GameDraftsman {
         StdDraw.filledEllipse(centerX(position.x) - radius / 2.0, centerY(position.y) + radius, radius * 0.6, radius / 4.0);
     }
 
-    public void draw(Cherry cherry) {
+    private void draw(Cherry cherry) {
 
         var position = cherry.getPosition();
         var radius = Math.min(squareHalfWidth, squareHalfHeight) * CHERRY_SIZE / 2.0;
@@ -457,7 +507,7 @@ public class GameDraftsman {
         StdDraw.filledCircle(centerX(position.x) + circlesMargin, centerY(position.y) - circlesMargin, radius);
     }
 
-    public void draw(Banana banana) {
+    private void draw(Banana banana) {
 
         var position = banana.getPosition();
 
@@ -467,7 +517,7 @@ public class GameDraftsman {
         StdDraw.filledEllipse(centerX(position.x) - squareHalfWidth * BANANA_SIZE / 4.0, centerY(position.y), squareHalfWidth * BANANA_SIZE / 2.0, squareHalfHeight * BANANA_SIZE / 4.5);
     }
 
-    public void draw(Orange orange) {
+    private void draw(Orange orange) {
 
         var position = orange.getPosition();
 
@@ -482,7 +532,7 @@ public class GameDraftsman {
     }
 
 
-    public void draw(Apple apple) {
+    private void draw(Apple apple) {
 
         var position = apple.getPosition();
 
@@ -497,7 +547,7 @@ public class GameDraftsman {
     }
 
 
-    public void draw(Pear pear) {
+    private void draw(Pear pear) {
 
         var position = pear.getPosition();
 

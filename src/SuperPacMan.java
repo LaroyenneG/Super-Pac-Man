@@ -3,6 +3,8 @@ import model.game.Game;
 import model.game.Player;
 import stdlib.StdOut;
 
+import java.awt.*;
+
 public final class SuperPacMan {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
     private static final String VERSION = "0.0.0";
@@ -61,7 +63,7 @@ public final class SuperPacMan {
     private static void game() {
         StdOut.println("Game is starting...");
 
-        var game = new Game(GRID_SIZE, new Player(myUsername()));
+        var game = new Game(GRID_SIZE, new Player(myUsername()), new Player("Bot", Color.WHITE));
 
         var gameEngine = new GameEngine(game);
 
