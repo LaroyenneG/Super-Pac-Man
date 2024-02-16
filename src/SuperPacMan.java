@@ -81,6 +81,8 @@ public final class SuperPacMan {
         StdOut.println(APPLICATION_TITLE + " v" + VERSION + " started !");
 
         SoundMachine.getInstance().playStart();
+//        SoundMachine.getInstance().playEatGum();
+//        SoundMachine.getInstance().playEatFruit();
         SoundMachine.getInstance().playDeath();
 
         switch (args.length) {

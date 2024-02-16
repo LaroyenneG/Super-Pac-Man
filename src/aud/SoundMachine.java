@@ -13,13 +13,24 @@ public final class SoundMachine {
     private final double[] eatGum;
     private final double[] eatGhost;
     private final double[] eatSuperGum;
+    private final double[] eatTrident;
+    private final double[] eatStar;
+    private final double[] eatLightning;
+    private final double[] eatFruit;
+
+    private final Object mutex;
 
     private SoundMachine() {
+        mutex = new Object();
         start = loadSound(Sounds.START);
         death = loadSound(Sounds.DEATH);
         eatGum = loadSound(Sounds.EAT_GUM);
         eatGhost = loadSound(Sounds.EAT_GHOST);
         eatSuperGum = loadSound(Sounds.EAT_SUPER_GUM);
+        eatTrident = loadSound(Sounds.DEVIL);
+        eatStar = loadSound(Sounds.EAT_STAR);
+        eatLightning = loadSound(Sounds.EAT_LIGHTNING);
+        eatFruit = loadSound(Sounds.EAT_FRUIT);
     }
 
     private double[] loadSound(String sound) {
@@ -32,8 +43,13 @@ public final class SoundMachine {
     }
 
     private void play(double[] samples, boolean async) {
-
-        var thread = new Thread(() -> StdAudio.play(samples));
+        var thread = new Thread(() -> {
+            for (var sample : samples) {
+                synchronized (mutex) {
+                    StdAudio.play(sample);
+                }
+            }
+        });
         thread.start();
 
         if (!async) {
@@ -57,13 +73,28 @@ public final class SoundMachine {
         play(eatGum, true);
     }
 
-
     public void playEatGhost() {
         play(eatGhost, true);
     }
 
     public void playEatSuperGum() {
         play(eatSuperGum, true);
+    }
+
+    public void playEatTrident() {
+        play(eatTrident, true);
+    }
+
+    public void playEatFruit() {
+        play(eatFruit, true);
+    }
+
+    public void playEatLightning() {
+        play(eatLightning, true);
+    }
+
+    public void playEatStar() {
+        play(eatStar, true);
     }
 
 

@@ -327,6 +327,7 @@ public final class StdAudio {
      * @throws IllegalArgumentException if the sample is {@code Double.NaN}
      */
     public static void play(double sample) {
+
         if (Double.isNaN(sample)) throw new IllegalArgumentException("sample is NaN");
 
         // clip if outside [-1, +1]
