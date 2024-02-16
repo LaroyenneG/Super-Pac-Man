@@ -1,4 +1,4 @@
 package ai;
 
-public class Billy {
+public class Billy extends ArtificialIntelligent {
 }
