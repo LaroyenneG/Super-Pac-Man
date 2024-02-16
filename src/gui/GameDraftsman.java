@@ -1,6 +1,8 @@
 package gui;
 
+import model.game.Game;
 import model.game.Heading;
+import model.game.Player;
 import model.game.entity.Entity;
 import model.game.entity.food.PacGum;
 import model.game.entity.food.ability.Lightning;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GridDraftsman {
+public class GameDraftsman {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
     private static final int HEIGHT = 900;
     private static final int WIDTH = 900;
@@ -58,7 +60,7 @@ public class GridDraftsman {
     private final double squareHalfHeight;
     private final double squareHalfWidth;
 
-    public GridDraftsman(int gridSize) {
+    public GameDraftsman(int gridSize) {
         this.gridSize = gridSize;
         squareHalfHeight = 1.0 / gridSize / 2.0;
         squareHalfWidth = 1.0 / gridSize / 2.0;
@@ -210,8 +212,46 @@ public class GridDraftsman {
         };
     }
 
+    
+    private double playerX(int id) {
+        return switch (id) {
+            case 0 -> 0;
+            default -> 0;
+        };
+    }
 
-    public void draw(Grid grid) {
+    private double playerY(int id) {
+        return 0.0;
+    }
+
+
+
+    private void draw(Player player, int id) {
+
+        assert id >= 0 && id < 4;
+        
+        StdDraw.setPenColor(Color.WHITE);
+//        StdDraw.setFont(new Font("SansSerif", Font.PLAIN, 50));
+//        StdDraw.text(0.5, 0.5, "Hello : " + player.getName());
+    }
+
+    public void draw(Game game) {
+
+        clear();
+
+        var grid = game.getGrid();
+        var players = game.getPlayers();
+
+        draw(grid);
+
+        for (var i = 0; i < players.length; i++) {
+            draw(players[i], i);
+        }
+
+        StdDraw.show();
+    }
+
+    private void draw(Grid grid) {
 
         var squares = grid.getSquares();
         var foods = grid.getFoods();
@@ -221,7 +261,6 @@ public class GridDraftsman {
         assert squares.length > 0;
         assert squares[0].length == squares.length;
 
-        clear();
         draw(squares);
         for (var food : foods) {
             draw(food);
@@ -229,8 +268,6 @@ public class GridDraftsman {
         for (var individual : individuals) {
             draw(individual);
         }
-
-        StdDraw.show();
     }
 
     private void draw(Entity entity) {

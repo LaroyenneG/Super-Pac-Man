@@ -1,8 +1,8 @@
 package engine;
 
-import gui.GridDraftsman;
+import aud.SoundMachine;
+import gui.GameDraftsman;
 import model.game.Game;
-import model.game.Joystick;
 import stdlib.StdDraw;
 
 import javax.swing.*;
@@ -26,8 +26,11 @@ public final class GameEngine implements Runnable {
         try {
             var grid = game.getGrid();
             var size = grid.getSize();
-            var joystick = new Joystick();
-            var gridDraftsman = new GridDraftsman(size);
+            var players = game.getPlayers();
+            assert players.length > 0;
+            var human = players[0];
+            var joystick = human.getJoystick();
+            var gridDraftsman = new GameDraftsman(size);
             var joystickEngine = new JoystickEngine(joystick);
 
             SwingUtilities.invokeLater(() -> {
@@ -35,7 +38,10 @@ public final class GameEngine implements Runnable {
                 StdDraw.addKeyListener(joystickEngine);
             });
 
-            SwingUtilities.invokeLater(() -> gridDraftsman.draw(grid));
+            SwingUtilities.invokeLater(() -> gridDraftsman.draw(game));
+
+            var soundMachine = SoundMachine.getInstance();
+            soundMachine.playStart();
 
             while (!game.isGameOver()) {
 
@@ -43,9 +49,9 @@ public final class GameEngine implements Runnable {
 
                 joystickEngine.invoke(game::nextTurn);
 
-                SwingUtilities.invokeLater(() -> gridDraftsman.draw(grid));
+                SwingUtilities.invokeLater(() -> gridDraftsman.draw(game));
                 SwingUtilities.invokeLater(() -> {
-                    // GUI interface
+                    // Others interfaces
                 });
 
                 var end = System.currentTimeMillis();

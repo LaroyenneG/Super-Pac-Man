@@ -13,14 +13,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class Game {
-    private final Set<Player> players;
+    private final Player[] players;
     private final Grid grid;
 
     private long turn;
 
-    public Game(int size) {
+    public Game(int size, Player... players) {
         turn = 0;
-        players = new HashSet<>();
+        this.players = players;
         grid = GridGenerator.generate(size);
     }
 
@@ -60,5 +60,9 @@ public final class Game {
                 PacGum.class,
                 SuperPacGum.class
         );
+    }
+
+    public Player[] getPlayers() {
+        return players;
     }
 }

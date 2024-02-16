@@ -1,6 +1,5 @@
 package model.game.grid;
 
-import gui.GridDraftsman;
 import model.game.grid.square.Space;
 import model.game.grid.square.Square;
 import model.game.grid.square.Wall;
@@ -288,7 +287,7 @@ public final class GridGenerator {
                     var grid = generate(size);
                     var block = countBlocks(grid.getSquares());
                     var hyperBlocks = countHyperBlocks(grid.getSquares());
-                    var score = block - hyperBlocks;
+                    var score = block - hyperBlocks * 2;
                     gridScoreMap.put(score, grid);
                 });
                 threads.add(thread);
@@ -317,15 +316,5 @@ public final class GridGenerator {
 
 
         return result;
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-
-        var grid = generate(25);
-
-        var gridDraftsman = new GridDraftsman(grid.getSquares().length);
-        gridDraftsman.draw(grid);
-
-        System.out.println(grid);
     }
 }

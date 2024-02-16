@@ -1,14 +1,12 @@
-import aud.SoundMachine;
 import engine.GameEngine;
 import model.game.Game;
+import model.game.Player;
 import stdlib.StdOut;
 
 public final class SuperPacMan {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
-    private static final String MODE_SERVER = "server";
-    private static final String MODE_DRAWINGS = "drawings";
-    private static final String MODE_TESTS = "tests";
     private static final String VERSION = "0.0.0";
+    private static final int GRID_SIZE = 30;
     private static final String LOGO = """
                                     .#@@@@@@&,                \s
                             .@@&,.................#@@(        \s
@@ -35,7 +33,23 @@ public final class SuperPacMan {
                                 %@@@@#,,,,,,(@@@@@            \s
             """;
 
+
     private SuperPacMan() {
+    }
+
+    private static String myUsername() {
+
+        var result = "?";
+
+        var username = System.getProperty("user.name");
+        if (username != null) {
+            username = username.trim().toLowerCase();
+            if (!username.isEmpty()) {
+                result = username.substring(0, Math.min(5, username.length()));
+            }
+        }
+
+        return result;
     }
 
     private static void usage() {
@@ -43,35 +57,17 @@ public final class SuperPacMan {
         System.exit(-1);
     }
 
-    private static void server() {
-        StdOut.println("Server mode is started !");
-    }
-
-    private static void tests() {
-
-    }
-
-
-    private static void client() {
-
-    }
-
-    private static void single() {
-
-    }
-
-    private static void drawings() {
-
-    }
 
     private static void game() {
-        StdOut.println("Game mode selected");
+        StdOut.println("Game is starting...");
 
-        var game = new Game(30);
+        var game = new Game(GRID_SIZE, new Player(myUsername()));
 
         var gameEngine = new GameEngine(game);
 
         gameEngine.start();
+
+        StdOut.println("Game started");
     }
 
 
@@ -80,33 +76,10 @@ public final class SuperPacMan {
         StdOut.println(LOGO);
         StdOut.println(APPLICATION_TITLE + " v" + VERSION + " started !");
 
-        SoundMachine.getInstance().playStart();
-//        SoundMachine.getInstance().playEatGum();
-//        SoundMachine.getInstance().playEatFruit();
-        SoundMachine.getInstance().playDeath();
-
-        switch (args.length) {
-            case 0:
-                game();
-                break;
-            case 1:
-                switch (args[0]) {
-                    case MODE_SERVER:
-                        server();
-                        break;
-                    case MODE_DRAWINGS:
-                        drawings();
-                        break;
-                    case MODE_TESTS:
-                        tests();
-                        break;
-                    default:
-                        usage();
-                }
-                break;
-            default:
-                usage();
-                break;
+        if (args.length == 0) {
+            game();
+        } else {
+            usage();
         }
     }
 }

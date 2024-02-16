@@ -17,6 +17,7 @@ public final class SoundMachine {
     private final double[] eatStar;
     private final double[] eatLightning;
     private final double[] eatFruit;
+    private final double[] bump;
 
     private final Object mutex;
 
@@ -31,6 +32,7 @@ public final class SoundMachine {
         eatStar = loadSound(Sounds.EAT_STAR);
         eatLightning = loadSound(Sounds.EAT_LIGHTNING);
         eatFruit = loadSound(Sounds.EAT_FRUIT);
+        bump = loadSound(Sounds.BUMP);
     }
 
     private double[] loadSound(String sound) {
@@ -95,6 +97,10 @@ public final class SoundMachine {
 
     public void playEatStar() {
         play(eatStar, true);
+    }
+
+    public void playBump() {
+        play(bump, true);
     }
 
 
