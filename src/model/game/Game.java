@@ -5,10 +5,14 @@ import model.game.entity.food.PacGum;
 import model.game.entity.food.ability.Lightning;
 import model.game.entity.food.ability.Star;
 import model.game.entity.food.ability.SuperPacGum;
+import model.game.entity.food.ability.Trident;
 import model.game.entity.food.fruit.*;
+import model.game.entity.individual.ghost.*;
 import model.game.grid.Grid;
 import model.game.grid.GridGenerator;
 
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 public final class Game {
@@ -21,6 +25,7 @@ public final class Game {
         turn = 0;
         this.players = players;
         grid = GridGenerator.generate(size);
+        buildGhosts();
     }
 
     public void nextTurn() {
@@ -39,15 +44,21 @@ public final class Game {
         return players.length > 1;
     }
 
-
     public static Set<Class<? extends Food>> foodsMultiplayer() {
-
         var result = foodsSingle();
-
         result.add(Lightning.class);
         result.add(Star.class);
-
+        result.add(Trident.class);
         return result;
+    }
+
+    public static Set<Class<? extends Ghost>> ghosts() {
+        return Set.of(
+                Blinky.class,
+                Clyde.class,
+                Inky.class,
+                Pinky.class
+        );
     }
 
 
@@ -64,6 +75,22 @@ public final class Game {
                 PacGum.class,
                 SuperPacGum.class
         );
+    }
+
+    public void buildGhosts() {
+        var classes = ghosts();
+        var index = 0;
+        var homePosition = grid.ghostHomePosition();
+        for (var ghostClass : classes) {
+            try {
+                var ghost = ghostClass.getConstructor().newInstance();
+                ghost.move(new Point(homePosition.x - classes.size() / 2 + index++, homePosition.y));
+                grid.addEntity(ghost);
+            } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
+                     IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Player[] getPlayers() {

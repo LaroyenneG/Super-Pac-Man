@@ -6,6 +6,7 @@ import model.game.entity.individual.ghost.Ghost;
 import model.game.entity.individual.pac.person.PacPerson;
 import model.game.grid.square.Square;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,18 @@ public class Grid {
         foods = new HashSet<>();
         ghosts = new HashSet<>();
         pacPeople = new HashSet<>();
+    }
+
+    public void addEntity(Ghost ghost) {
+        ghosts.add(ghost);
+    }
+
+    public void addEntity(PacPerson pacPerson) {
+        pacPeople.add(pacPerson);
+    }
+
+    public void addEntity(Food food) {
+        foods.add(food);
     }
 
 
@@ -43,7 +56,7 @@ public class Grid {
         return squares;
     }
 
-    public int getSize() {
+    public int size() {
         return squares.length;
     }
 
@@ -70,5 +83,11 @@ public class Grid {
 
     public void moveIndividuals(long turn) {
 
+    }
+
+
+    public Point ghostHomePosition() {
+        var gridSize = size();
+        return new Point(gridSize / 2, gridSize / 2 - 1);
     }
 }

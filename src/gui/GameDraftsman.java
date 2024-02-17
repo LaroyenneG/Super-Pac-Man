@@ -338,13 +338,14 @@ public class GameDraftsman {
         var position = ghost.getPosition();
 
         var scared = ghost.isScared();
+        var alive = ghost.isAlive();
 
         var color = (scared) ? GHOST_SCARED_COLOR : ghost.getColor();
         var heading = ghost.getHeading();
 
-        StdDraw.setPenColor(color);
+        StdDraw.setPenColor(alive ? color : Color.GRAY);
 
-        var size = 0.8;
+        var size = (alive) ? 0.8 : 0.3;
         var halfWidth = squareHalfWidth * size;
         var halfHeight = squareHalfHeight * size;
         var rayon = Math.min(halfHeight, halfWidth);
@@ -369,7 +370,7 @@ public class GameDraftsman {
         StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading) + whiteEyesOffsetX, centerY(position.y) + movingTranslationY(heading) + whiteEyesOffsetY, rayon * whiteEyesSize);
         StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading) - whiteEyesOffsetX, centerY(position.y) + movingTranslationY(heading) + whiteEyesOffsetY, rayon * whiteEyesSize);
 
-        if (!scared) {
+        if (!scared && alive) {
             StdDraw.setPenColor(Color.BLACK);
 
             var blackEyesSize = 1.0 / 10.0;
@@ -422,23 +423,23 @@ public class GameDraftsman {
     }
 
     private void draw(SuperPac superPac) {
-        draw(superPac, superPac.getColor(), superPac.getWeight(), false);
+        draw(superPac, (superPac.isAlive()) ? superPac.getColor() : Color.GRAY, superPac.getWeight(), false);
     }
 
     private void draw(BabyPacMan babyPacMan) {
-        draw(babyPacMan, babyPacMan.getColor(), babyPacMan.getWeight(), true);
+        draw(babyPacMan, (babyPacMan.isAlive()) ? babyPacMan.getColor() : Color.GRAY, babyPacMan.getWeight(), true);
     }
 
     private void draw(JrPacMan jrPacMan) {
-        draw(jrPacMan, jrPacMan.getColor(), jrPacMan.getWeight(), true);
+        draw(jrPacMan, (jrPacMan.isAlive()) ? jrPacMan.getColor() : Color.GRAY, jrPacMan.getWeight(), true);
     }
 
     private void draw(PacMan pacMan) {
-        draw(pacMan, pacMan.getColor(), pacMan.getWeight(), true);
+        draw(pacMan, (pacMan.isAlive()) ? pacMan.getColor() : Color.GRAY, pacMan.getWeight(), true);
     }
 
     private void draw(PacDevil pacDevil) {
-        draw(pacDevil, pacDevil.getColor(), pacDevil.getWeight(), true);
+        draw(pacDevil, (pacDevil.isAlive()) ? pacDevil.getColor() : Color.GRAY, pacDevil.getWeight(), true);
         draw(pacDevil, Color.RED, pacDevil.getWeight(), false);
     }
 

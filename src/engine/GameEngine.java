@@ -25,7 +25,7 @@ public final class GameEngine implements Runnable {
     public void run() {
         try {
             var grid = game.getGrid();
-            var size = grid.getSize();
+            var size = grid.size();
             var players = game.getPlayers();
             assert players.length > 0;
             var human = players[0];

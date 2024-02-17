@@ -13,12 +13,14 @@ public abstract class Individual extends Entity {
     private final double speed;
     private boolean moving;
     private Heading heading;
+    private boolean alive;
 
     public Individual(Color color, double speed) {
         this.color = color;
         this.speed = speed;
         heading = null;
         moving = false;
+        alive = true;
     }
 
     public void move(Point position) {
@@ -54,5 +56,13 @@ public abstract class Individual extends Entity {
 
     public Color getColor() {
         return this.color;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 }
