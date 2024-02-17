@@ -14,4 +14,8 @@ public abstract class Entity {
     public Point getPosition() {
         return (Point) position.clone();
     }
+
+    public void setPosition(Point position) {
+        this.position = position;
+    }
 }
