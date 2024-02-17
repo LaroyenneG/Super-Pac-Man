@@ -1,23 +1,24 @@
 package gui;
 
-import model.game.Game;
-import model.game.Heading;
-import model.game.Player;
-import model.game.entity.Entity;
-import model.game.entity.food.PacGum;
-import model.game.entity.food.ability.Lightning;
-import model.game.entity.food.ability.Star;
-import model.game.entity.food.ability.SuperPacGum;
-import model.game.entity.food.ability.Trident;
-import model.game.entity.food.fruit.*;
-import model.game.entity.individual.ghost.*;
-import model.game.entity.individual.pac.person.*;
-import model.game.grid.Grid;
-import model.game.grid.square.Space;
-import model.game.grid.square.Square;
-import model.game.grid.square.Wall;
-import model.game.grid.square.door.HauntedDoor;
-import model.game.grid.square.door.PacDoor;
+import model.Game;
+import model.Heading;
+import model.Player;
+import model.entity.Entity;
+import model.entity.food.PacGum;
+import model.entity.food.ability.Lightning;
+import model.entity.food.ability.Star;
+import model.entity.food.ability.SuperPacGum;
+import model.entity.food.ability.Trident;
+import model.entity.food.fruit.*;
+import model.entity.individual.ghost.*;
+import model.entity.individual.pac.person.*;
+import model.grid.Grid;
+import model.grid.square.Area;
+import model.grid.square.Space;
+import model.grid.square.Square;
+import model.grid.square.Wall;
+import model.grid.square.door.HauntedDoor;
+import model.grid.square.door.PacDoor;
 import stdlib.StdDraw;
 
 import java.awt.*;
@@ -405,17 +406,17 @@ public class GameDraftsman {
 
     private void draw(PacPerson pacPerson, Color color, double size, boolean filled) {
 
-        var heading = pacPerson.getHeading();
         var position = pacPerson.getPosition();
         var mouthOpen = !pacPerson.isMoving();
         var mouthAngle = (mouthOpen) ? Math.PI / 4.0 : 0.0;
+        var heading = pacPerson.getHeading();
 
         StdDraw.setPenColor(color);
 
         drawPolygon(
                 translatePoints(
                         rotatePoints(
-                                arcPolygon(size, mouthAngle), HEADING_ANGLE_MAP.get(heading)),
+                                arcPolygon(size, mouthAngle), (heading != null) ? HEADING_ANGLE_MAP.get(heading) : 0.0),
                         centerX(position.x) + movingTranslationX(heading),
                         centerY(position.y) + movingTranslationY(heading)
                 ), filled
@@ -705,5 +706,12 @@ public class GameDraftsman {
     private void draw(int x, int y, Space space) {
         StdDraw.setPenColor(Color.BLACK);
         StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
+    }
+
+    private void draw(int x, int y, Area area) {
+        StdDraw.setPenColor(Color.BLACK);
+        StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
+        StdDraw.setPenColor(Color.DARK_GRAY);
+        StdDraw.rectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight);
     }
 }

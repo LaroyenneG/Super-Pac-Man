@@ -2,7 +2,7 @@ package engine;
 
 import aud.SoundMachine;
 import gui.GameDraftsman;
-import model.game.Game;
+import model.Game;
 import stdlib.StdDraw;
 
 import javax.swing.*;

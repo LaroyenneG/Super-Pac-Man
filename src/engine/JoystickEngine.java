@@ -1,6 +1,6 @@
 package engine;
 
-import model.game.Joystick;
+import model.Joystick;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

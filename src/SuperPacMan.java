@@ -1,6 +1,6 @@
 import engine.GameEngine;
-import model.game.Game;
-import model.game.Player;
+import model.Game;
+import model.Player;
 import stdlib.StdOut;
 
 import java.awt.*;
