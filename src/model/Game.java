@@ -25,9 +25,7 @@ public final class Game {
 
     private final Player[] players;
     private final Grid grid;
-
     private final Set<Class<? extends Food>> foodClasses;
-
     private long turn;
 
 
@@ -36,10 +34,14 @@ public final class Game {
         this.foodClasses = new HashSet<>();
         grid = GridGenerator.generate(size);
         turn = 0;
-        buildGhosts();
         buildFoodClasses();
+        buildGhosts();
         buildPacPeople();
-        for (var i = 0; i < FOOD_TURN; i++) {
+        buildFoods();
+    }
+
+    private void buildFoods() {
+        for (var i = 0; i < grid.size() * 2; i++) {
             generateNewFood();
         }
     }
@@ -143,7 +145,7 @@ public final class Game {
             }
         }
 
-        foods.sort((o1, o2) -> (int) (o1.getProbability() - o2.getProbability() * Float.MAX_VALUE));
+        foods.sort((o1, o2) -> (int) ((o1.getProbability() - o2.getProbability()) * Float.MAX_VALUE));
 
         var random = StdRandom.uniformDouble();
 

@@ -39,8 +39,8 @@ public class GameDraftsman {
     private static final Color DARK_ORANGE = new Color(255, 140, 0);
     private static final Color GHOST_SCARED_COLOR = Color.BLUE;
     private static final Color WALL_BORDERS_COLOR = new Color(0, 0, 128);
-    private static final double SUPER_PAC_GUM_SIZE = 0.4;
-    private static final double PAC_GUM_SIZE = 0.2;
+    private static final double SUPER_PAC_GUM_SIZE = 0.25;
+    private static final double PAC_GUM_SIZE = 0.15;
     private static final double STAR_SIZE = 0.6;
     private static final double ORANGE_SIZE = 0.4;
     private static final double BANANA_SIZE = 0.6;
