@@ -36,7 +36,6 @@ public class Grid {
         foods.add(food);
     }
 
-
     @Override
     public String toString() {
 
@@ -62,20 +61,16 @@ public class Grid {
     }
 
     public Set<Individual> getIndividuals() {
-
         var result = new HashSet<Individual>();
         result.addAll(ghosts);
         result.addAll(pacPeople);
-
         return result;
     }
 
     public Set<Entity> getEntities() {
-
         var result = new HashSet<Entity>();
         result.addAll(getIndividuals());
         result.addAll(foods);
-
         return result;
     }
 
@@ -129,7 +124,18 @@ public class Grid {
             }
         }
 
-
         return result;
+    }
+
+    public boolean accept(Entity entity, Point position) {
+
+        assert position.x < squares.length;
+        assert position.x >= 0;
+        assert position.y < squares.length;
+        assert position.y >= 0;
+
+        var square = squares[position.y][position.x];
+
+        return square.accept(entity);
     }
 }

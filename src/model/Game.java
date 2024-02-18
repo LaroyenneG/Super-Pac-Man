@@ -128,7 +128,6 @@ public final class Game {
     }
 
     public void generateNewFood() {
-
         var freeSpaces = new ArrayList<>(grid.freeSpaces());
         if (freeSpaces.isEmpty()) {
             return;

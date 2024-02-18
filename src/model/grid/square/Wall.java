@@ -1,7 +1,8 @@
 package model.grid.square;
 
-public final class Wall extends Square {
+import model.entity.Entity;
 
+public final class Wall extends Square {
     @Override
     public String toString() {
         return "+";
@@ -14,6 +15,11 @@ public final class Wall extends Square {
 
     @Override
     public boolean isFree() {
+        return false;
+    }
+
+    @Override
+    public boolean accept(Entity entity) {
         return false;
     }
 }

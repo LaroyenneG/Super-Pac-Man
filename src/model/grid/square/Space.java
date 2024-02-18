@@ -1,5 +1,7 @@
 package model.grid.square;
 
+import model.entity.Entity;
+
 public final class Space extends Passable {
 
     @Override
@@ -15,6 +17,11 @@ public final class Space extends Passable {
 
     @Override
     public boolean isFree() {
+        return true;
+    }
+
+    @Override
+    public boolean accept(Entity entity) {
         return true;
     }
 
