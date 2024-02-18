@@ -12,7 +12,6 @@ public abstract class Ghost extends Individual {
 
     private boolean scared;
 
-
     public Ghost(Color color) {
         super(color);
         scared = false;
@@ -37,11 +36,8 @@ public abstract class Ghost extends Individual {
     }
 
     @Override
-    public final boolean eats(Individual individual) {
+    public final boolean eats(PacPerson pacPerson) {
 
-        if(!individual.isHero()) return false;
-
-        var pacPerson = (PacPerson) individual;
         /*
         if(scared && pacPerson.) {
 
@@ -56,8 +52,14 @@ public abstract class Ghost extends Individual {
         return false;
     }
 
+
     @Override
-    public String toString() {
-        return "^";
+    public boolean eats(Ghost ghost) {
+        return false;
+    }
+
+    @Override
+    public double speed() {
+        return SPEED;
     }
 }

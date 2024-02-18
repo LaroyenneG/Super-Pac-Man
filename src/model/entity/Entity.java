@@ -9,8 +9,9 @@ public abstract class Entity {
         position = new Point(0, 0);
     }
 
+
     public Point getPosition() {
-        return (Point) position.clone();
+        return position;
     }
 
     public void setPosition(Point position) {

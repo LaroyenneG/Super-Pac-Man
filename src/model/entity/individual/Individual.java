@@ -4,6 +4,8 @@ package model.entity.individual;
 import model.Heading;
 import model.entity.Entity;
 import model.entity.food.Food;
+import model.entity.individual.ghost.Ghost;
+import model.entity.individual.pac.person.PacPerson;
 
 import java.awt.*;
 
@@ -12,14 +14,12 @@ public abstract class Individual extends Entity {
     private boolean moving;
     private Heading heading;
     private boolean alive;
-    private double weight;
 
     public Individual(Color color) {
         this.color = color;
         heading = null;
         moving = false;
         alive = true;
-        weight = 0.0;
     }
 
     public void move(Point position) {
@@ -45,9 +45,11 @@ public abstract class Individual extends Entity {
 
     public abstract boolean isHero();
 
-    public abstract boolean eats(Individual individual);
-
     public abstract boolean eats(Food food);
+
+    public abstract boolean eats(Ghost ghost);
+
+    public abstract boolean eats(PacPerson pacPerson);
 
     public Color getColor() {
         return this.color;
@@ -61,7 +63,5 @@ public abstract class Individual extends Entity {
         alive = false;
     }
 
-    public double getWeight() {
-        return weight;
-    }
+    public abstract double speed();
 }

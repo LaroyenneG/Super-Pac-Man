@@ -23,6 +23,7 @@ import model.grid.square.Wall;
 import model.grid.square.door.HauntedDoor;
 import model.grid.square.door.PacDoor;
 import stdlib.StdDraw;
+import stdlib.StdRandom;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -339,6 +340,8 @@ public class GameDraftsman {
 
     private void draw(Ghost ghost) {
 
+        if (!ghost.isHero() && StdRandom.bernoulli()) return;
+
         var position = ghost.getPosition();
 
         var scared = ghost.isScared();
@@ -427,14 +430,23 @@ public class GameDraftsman {
     }
 
     private void draw(SuperPac superPac) {
+
+        if (!superPac.isAlive() && StdRandom.bernoulli()) return;
+
         draw(superPac, (superPac.isAlive()) ? superPac.getColor() : Color.GRAY, superPac.getWeight(), false);
     }
 
     private void draw(PacMan pacMan) {
+
+        if (!pacMan.isAlive() && StdRandom.bernoulli()) return;
+
         draw(pacMan, (pacMan.isAlive()) ? pacMan.getColor() : Color.GRAY, pacMan.getWeight(), true);
     }
 
     private void draw(PacDevil pacDevil) {
+
+        if (!pacDevil.isAlive() && StdRandom.bernoulli()) return;
+
         draw(pacDevil, Color.RED, pacDevil.getWeight(), true);
         draw(pacDevil, (pacDevil.isAlive()) ? pacDevil.getColor() : Color.GRAY, pacDevil.getWeight(), false);
     }
