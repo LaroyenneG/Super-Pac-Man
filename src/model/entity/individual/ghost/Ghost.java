@@ -14,7 +14,7 @@ public abstract class Ghost extends Individual {
 
 
     public Ghost(Color color) {
-        super(color, SPEED);
+        super(color);
         scared = false;
     }
 

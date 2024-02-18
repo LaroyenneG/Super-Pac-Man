@@ -8,19 +8,18 @@ import model.entity.food.Food;
 import java.awt.*;
 
 public abstract class Individual extends Entity {
-
     private final Color color;
-    private final double speed;
     private boolean moving;
     private Heading heading;
     private boolean alive;
+    private double weight;
 
-    public Individual(Color color, double speed) {
+    public Individual(Color color) {
         this.color = color;
-        this.speed = speed;
         heading = null;
         moving = false;
         alive = true;
+        weight = 0.0;
     }
 
     public void move(Point position) {
@@ -34,10 +33,6 @@ public abstract class Individual extends Entity {
 
     public void setHeading(Heading heading) {
         this.heading = heading;
-    }
-
-    public double getSpeed() {
-        return speed;
     }
 
     public Heading getHeading() {
@@ -62,7 +57,11 @@ public abstract class Individual extends Entity {
         return alive;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    public void kill() {
+        alive = false;
+    }
+
+    public double getWeight() {
+        return weight;
     }
 }

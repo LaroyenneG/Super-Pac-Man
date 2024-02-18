@@ -13,7 +13,7 @@ public abstract class PacPerson extends Individual {
     private final double weight;
 
     public PacPerson(Color color, double speed, double weight) {
-        super(color, speed);
+        super(color);
         this.weight = weight;
     }
 

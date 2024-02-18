@@ -11,7 +11,10 @@ import model.entity.food.ability.SuperPacGum;
 import model.entity.food.ability.Trident;
 import model.entity.food.fruit.*;
 import model.entity.individual.ghost.*;
-import model.entity.individual.pac.person.*;
+import model.entity.individual.pac.person.PacDevil;
+import model.entity.individual.pac.person.PacMan;
+import model.entity.individual.pac.person.PacPerson;
+import model.entity.individual.pac.person.SuperPac;
 import model.grid.Grid;
 import model.grid.square.Area;
 import model.grid.square.Space;
@@ -427,21 +430,13 @@ public class GameDraftsman {
         draw(superPac, (superPac.isAlive()) ? superPac.getColor() : Color.GRAY, superPac.getWeight(), false);
     }
 
-    private void draw(BabyPacMan babyPacMan) {
-        draw(babyPacMan, (babyPacMan.isAlive()) ? babyPacMan.getColor() : Color.GRAY, babyPacMan.getWeight(), true);
-    }
-
-    private void draw(JrPacMan jrPacMan) {
-        draw(jrPacMan, (jrPacMan.isAlive()) ? jrPacMan.getColor() : Color.GRAY, jrPacMan.getWeight(), true);
-    }
-
     private void draw(PacMan pacMan) {
         draw(pacMan, (pacMan.isAlive()) ? pacMan.getColor() : Color.GRAY, pacMan.getWeight(), true);
     }
 
     private void draw(PacDevil pacDevil) {
-        draw(pacDevil, (pacDevil.isAlive()) ? pacDevil.getColor() : Color.GRAY, pacDevil.getWeight(), true);
-        draw(pacDevil, Color.RED, pacDevil.getWeight(), false);
+        draw(pacDevil, Color.RED, pacDevil.getWeight(), true);
+        draw(pacDevil, (pacDevil.isAlive()) ? pacDevil.getColor() : Color.GRAY, pacDevil.getWeight(), false);
     }
 
 

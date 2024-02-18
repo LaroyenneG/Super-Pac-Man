@@ -8,7 +8,7 @@ import model.entity.food.ability.SuperPacGum;
 import model.entity.food.ability.Trident;
 import model.entity.food.fruit.*;
 import model.entity.individual.ghost.*;
-import model.entity.individual.pac.person.JrPacMan;
+import model.entity.individual.pac.person.PacMan;
 import model.grid.Grid;
 import model.grid.GridGenerator;
 import stdlib.StdRandom;
@@ -121,9 +121,9 @@ public final class Game {
         var homePosition = grid.pacPeopleHomePosition();
         for (var i = 0; i < players.length; i++) {
             var color = players[i].getColor();
-            var jrPacMan = new JrPacMan(color);
-            jrPacMan.setPosition(new Point(homePosition.x - players.length / 2 + i, homePosition.y));
-            grid.addEntity(jrPacMan);
+            var pacMan = new PacMan(color);
+            pacMan.setPosition(new Point(homePosition.x - players.length / 2 + i, homePosition.y));
+            grid.addEntity(pacMan);
         }
     }
 
