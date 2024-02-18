@@ -1,7 +1,10 @@
 package model.grid.square.door;
 
 import model.entity.Entity;
+import model.entity.food.Food;
 import model.entity.individual.Individual;
+import model.entity.individual.ghost.Ghost;
+import model.entity.individual.pac.person.PacPerson;
 
 public final class HauntedDoor extends Door {
 
@@ -10,8 +13,19 @@ public final class HauntedDoor extends Door {
         return !individual.isHero();
     }
 
+
     @Override
-    public boolean accept(Entity entity) {
+    public boolean accept(PacPerson pacPerson) {
+        return false;
+    }
+
+    @Override
+    public boolean accept(Ghost ghost) {
+        return !ghost.isScared();
+    }
+
+    @Override
+    public boolean accept(Food food) {
         return false;
     }
 }

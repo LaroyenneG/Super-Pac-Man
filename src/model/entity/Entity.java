@@ -9,7 +9,6 @@ public abstract class Entity {
         position = new Point(0, 0);
     }
 
-
     public Point getPosition() {
         return position;
     }

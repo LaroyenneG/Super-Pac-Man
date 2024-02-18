@@ -1,6 +1,9 @@
 package model.grid.square;
 
 import model.entity.Entity;
+import model.entity.food.Food;
+import model.entity.individual.ghost.Ghost;
+import model.entity.individual.pac.person.PacPerson;
 
 public final class Wall extends Square {
     @Override
@@ -19,7 +22,19 @@ public final class Wall extends Square {
     }
 
     @Override
-    public boolean accept(Entity entity) {
+    public boolean accept(PacPerson pacPerson) {
+        return pacPerson.isFlying();
+    }
+
+    @Override
+    public boolean accept(Ghost ghost) {
         return false;
     }
+
+    @Override
+    public boolean accept(Food food) {
+        return false;
+    }
+
+
 }

@@ -12,7 +12,7 @@ public abstract class PacPerson extends Individual {
     public static final double MAX_WEIGHT = 100.0;
     public static final double MIN_WEIGHT = 1.0;
 
-    public static final double MIN_SPEED = 0.5;
+    public static final double MIN_SPEED = 5.0;
     public static final double MAX_SPEED = 10.0;
 
     protected double weight;
@@ -58,15 +58,19 @@ public abstract class PacPerson extends Individual {
     }
 
     public final boolean pushes(PacPerson pacPerson) {
-        return pacPerson.weight < weight;
+        return pacPerson.weight > 0 && pacPerson.weight < weight;
     }
 
     public final boolean isGiant() {
         return weight >= MAX_WEIGHT;
     }
 
+    public final boolean isFlying() {
+        return weight <= 0.0;
+    }
+
     @Override
     public double speed() {
-        return 0;
+        return MAX_SPEED - ((MAX_SPEED - MIN_SPEED) * (weight / MAX_WEIGHT));
     }
 }

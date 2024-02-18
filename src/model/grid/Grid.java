@@ -127,15 +127,34 @@ public class Grid {
         return result;
     }
 
-    public boolean accept(Entity entity, Point position) {
-
+    private Square finSquare(Point position) {
         assert position.x < squares.length;
         assert position.x >= 0;
         assert position.y < squares.length;
         assert position.y >= 0;
 
-        var square = squares[position.y][position.x];
+        return squares[position.y][position.x];
+    }
 
-        return square.accept(entity);
+    public boolean accept(Ghost ghost, Point position) {
+
+        var square = finSquare(position);
+
+        return square.accept(ghost);
+    }
+
+    public boolean accept(Food food, Point position) {
+
+        var square = finSquare(position);
+
+        return square.accept(food);
+    }
+
+
+    public boolean accept(PacPerson pacPerson, Point position) {
+
+        var square = finSquare(position);
+
+        return square.accept(pacPerson);
     }
 }

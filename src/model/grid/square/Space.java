@@ -1,6 +1,9 @@
 package model.grid.square;
 
 import model.entity.Entity;
+import model.entity.food.Food;
+import model.entity.individual.ghost.Ghost;
+import model.entity.individual.pac.person.PacPerson;
 
 public final class Space extends Passable {
 
@@ -21,12 +24,17 @@ public final class Space extends Passable {
     }
 
     @Override
-    public boolean accept(Entity entity) {
+    public boolean accept(PacPerson pacPerson) {
         return true;
     }
 
+    @Override
+    public boolean accept(Ghost ghost) {
+        return true;
+    }
 
-    public boolean isVisited() {
+    @Override
+    public boolean accept(Food food) {
         return true;
     }
 }

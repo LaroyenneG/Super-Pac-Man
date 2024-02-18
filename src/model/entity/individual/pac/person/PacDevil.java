@@ -7,11 +7,9 @@ import java.awt.*;
 
 public final class PacDevil extends PacPerson {
 
-    public static final double WEIGHT = 150.0;
-
     public PacDevil(Color color) {
         super(color);
-        weight = WEIGHT;
+        weight = MAX_WEIGHT;
     }
 
     @Override
@@ -26,6 +24,6 @@ public final class PacDevil extends PacPerson {
 
     @Override
     public boolean eats(PacPerson pacPerson) {
-        return weight > pacPerson.getWeight();
+        return weight > pacPerson.weight;
     }
 }
