@@ -136,6 +136,7 @@ public final class Game {
                     case MOVE:
                         if (grid.accept(pacPerson, targetPosition)) {
                             pacPerson.move();
+                            grid.eats(pacPerson, player);
                         }
                         motionState = MotionState.HEADING;
                         break;
@@ -200,7 +201,7 @@ public final class Game {
     public void generateNewFood() {
 
         var foodsAlreadyPresent = grid.getFoods();
-        if (foodsAlreadyPresent.size() > grid.size() * 4.0) return;
+        if (foodsAlreadyPresent.size() > grid.size() * 10.0) return;
 
         var position = new Point(StdRandom.uniformInt(grid.size()), StdRandom.uniformInt(grid.size()));
 

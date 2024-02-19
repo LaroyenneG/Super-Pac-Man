@@ -1,5 +1,7 @@
 package model.grid;
 
+import aud.SoundMachine;
+import model.Player;
 import model.entity.Entity;
 import model.entity.food.Food;
 import model.entity.individual.Individual;
@@ -141,5 +143,19 @@ public class Grid {
         var square = finSquare(position);
 
         return square.accept(pacPerson);
+    }
+
+    public void eats(PacPerson pacPerson, Player player) {
+        for(var food : foods) {
+            if(Objects.equals(food.getPosition(), pacPerson.getPosition())) {
+                if(pacPerson.eats(food)) {
+                    foods.remove(food);
+                    var points = food.getPoints();
+                    player.addScore(points);
+                    SoundMachine.getInstance().playEatGum();
+                    break;
+                }
+            }
+        }
     }
 }

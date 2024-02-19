@@ -53,6 +53,7 @@ public final class GameEngine implements Runnable {
 
                 var end = System.currentTimeMillis();
 
+                System.out.println(FREQUENCY - (end - start));
                 Thread.sleep(FREQUENCY - (end - start));
             }
         } catch (InterruptedException e) {
