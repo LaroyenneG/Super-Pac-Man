@@ -85,7 +85,7 @@ public class Grid {
         return pacPeople;
     }
 
-    public PacPerson finPacPerson(Color color) {
+    public PacPerson findPacPerson(Color color) {
 
         PacPerson result = null;
 
@@ -116,16 +116,15 @@ public class Grid {
     }
 
     private Square finSquare(Point position) {
-        assert position.x < squares.length;
-        assert position.x >= 0;
-        assert position.y < squares.length;
-        assert position.y >= 0;
+        if (position.y < 0 || position.y >= squares.length) return null;
+        if (position.x < 0 || position.x >= squares[position.y].length) return null;
         return squares[position.y][position.x];
     }
 
     public boolean accept(Ghost ghost, Point position) {
 
         var square = finSquare(position);
+        if (square == null) return false;
 
         return square.accept(ghost);
     }
@@ -133,6 +132,7 @@ public class Grid {
     public boolean accept(Food food, Point position) {
 
         var square = finSquare(position);
+        if (square == null) return false;
 
         return square.accept(food);
     }
@@ -141,6 +141,7 @@ public class Grid {
     public boolean accept(PacPerson pacPerson, Point position) {
 
         var square = finSquare(position);
+        if (square == null) return false;
 
         return square.accept(pacPerson);
     }

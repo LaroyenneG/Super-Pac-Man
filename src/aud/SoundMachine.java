@@ -6,6 +6,25 @@ import java.util.Base64;
 
 public final class SoundMachine {
 
+    private static class SoundThread extends Thread {
+
+        private final double[] samples;
+
+        public SoundThread(double[] samples) {
+            this.samples = samples;
+        }
+
+        @Override
+        public void run() {
+            for (var sample : samples) {
+                if(isInterrupted()) {
+                    break;
+                }
+                StdAudio.play(sample);
+            }
+        }
+    }
+
     private static final SoundMachine INSTANCE = new SoundMachine();
 
     private final double[] start;
@@ -21,7 +40,13 @@ public final class SoundMachine {
 
     private final Object mutex;
 
+    private Thread thread;
+    private int priority;
+
+
     private SoundMachine() {
+        priority = -1;
+        thread = null;
         mutex = new Object();
         start = loadSound(Sounds.START);
         death = loadSound(Sounds.DEATH);
@@ -44,63 +69,82 @@ public final class SoundMachine {
         return StdAudio.read(bytes);
     }
 
-    private void play(double[] samples, boolean async) {
-        var thread = new Thread(() -> {
-            for (var sample : samples) {
-                synchronized (mutex) {
-                    StdAudio.play(sample);
-                }
-            }
-        });
-        thread.start();
+    private void play(int priority, double[] samples, boolean async) {
 
         if (!async) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            StdAudio.play(samples);
+            return;
+        }
+
+        synchronized (mutex) {
+            if (this.priority >= priority) {
+                return;
             }
+
+            if (thread != null) {
+                thread.interrupt();
+            }
+
+            this.priority = priority;
+
+            thread = new Thread(() -> {
+                for (var sample : samples) {
+                    if (thread.isInterrupted()) {
+                        System.out.println("interrupted");
+                        break;
+                    }
+                    StdAudio.play(sample);
+                }
+
+                synchronized (mutex) {
+                    thread = null;
+                    this.priority = -1;
+                }
+            });
+
+            thread.start();
         }
     }
 
     public void playStart() {
-        play(start, false);
+        play(0, start, false);
     }
 
     public void playDeath() {
-        play(death, true);
+        play(10, death, true);
     }
 
     public void playEatGum() {
-        play(eatGum, true);
+        play(1, eatGum, true);
+        System.out.println("Eat gum");
     }
 
     public void playEatGhost() {
-        play(eatGhost, true);
+        play(5, eatGhost, true);
     }
 
     public void playEatSuperGum() {
-        play(eatSuperGum, true);
+        play(2, eatSuperGum, true);
     }
 
     public void playEatTrident() {
-        play(eatTrident, true);
+        play(6, eatTrident, true);
     }
 
     public void playEatFruit() {
-        play(eatFruit, true);
+        play(3, eatFruit, true);
     }
 
     public void playEatLightning() {
-        play(eatLightning, true);
+        play(4, eatLightning, true);
     }
 
     public void playEatStar() {
-        play(eatStar, true);
+        play(5, eatStar, true);
     }
 
     public void playBump() {
-        play(bump, true);
+        play(1, bump, true);
     }
 
 

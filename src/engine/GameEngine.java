@@ -8,8 +8,7 @@ import stdlib.StdDraw;
 import javax.swing.*;
 
 public final class GameEngine implements Runnable {
-
-    private static final int FREQUENCY = 100;
+    private static final int FREQUENCY = 50;
 
     private final Thread thread;
 
@@ -54,7 +53,7 @@ public final class GameEngine implements Runnable {
                 var end = System.currentTimeMillis();
 
                 System.out.println(FREQUENCY - (end - start));
-                Thread.sleep(FREQUENCY - (end - start));
+                Thread.sleep(Math.max(FREQUENCY - (end - start), 0));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

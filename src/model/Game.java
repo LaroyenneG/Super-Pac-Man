@@ -1,5 +1,6 @@
 package model;
 
+import ai.Compute;
 import model.entity.food.Food;
 import model.entity.food.PacGum;
 import model.entity.food.ability.Lightning;
@@ -101,7 +102,7 @@ public final class Game {
         turn++;
     }
 
-    private boolean individualCanbeMoved(Individual individual) {
+    private boolean individualCanBeMoved(Individual individual) {
         return Math.round(turn % Math.round(computeSpeedRateTurn(individual))) == 0;
     }
 
@@ -112,12 +113,12 @@ public final class Game {
 
         for (var player : playerCopy) {
             var color = player.getColor();
-            var pacPerson = grid.finPacPerson(color);
+            var pacPerson = grid.findPacPerson(color);
             var targetPosition = pacPerson.targetPosition();
             var joystick = player.getJoystick();
             var heading = joystick.getPosition();
 
-            if (individualCanbeMoved(pacPerson)) {
+            if (individualCanBeMoved(pacPerson)) {
                 var motionState = individualMotionStateMap.getOrDefault(pacPerson, MotionState.HEADING);
                 switch (motionState) {
                     case HEADING:
@@ -150,23 +151,35 @@ public final class Game {
     private void controlGhosts() {
 
         var ghosts = grid.getGhosts();
-        var threads = new HashSet<Thread>();
 
         for (var ghost : ghosts) {
-            if (individualCanbeMoved(ghost)) {
-                var thread = new Thread(() -> {
-                    // TODO: complete me
-                });
-                threads.add(thread);
-                thread.start();
-            }
-        }
+            if (individualCanBeMoved(ghost)) {
+                var targetPosition = ghost.targetPosition();
+                var heading = Compute.ghostHeading(ghost, grid);
+                var motionState = individualMotionStateMap.getOrDefault(ghost, MotionState.HEADING);
+                switch (motionState) {
+                    case HEADING:
+                        ghost.setHeading(heading);
+                        ghost.setMoving(false);
+                        motionState = MotionState.TRANSITION;
+                        break;
+                    case TRANSITION:
+                        if (grid.accept(ghost, targetPosition)) {
+                            ghost.setMoving(true);
+                            motionState = MotionState.MOVE;
+                        } else {
+                            motionState = MotionState.HEADING;
+                        }
+                        break;
+                    case MOVE:
+                        if (grid.accept(ghost, targetPosition)) {
+                            ghost.move();
+                        }
+                        motionState = MotionState.HEADING;
+                        break;
+                }
 
-        for (var thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                individualMotionStateMap.put(ghost, motionState);
             }
         }
     }
