@@ -1,6 +1,7 @@
 package model;
 
 import ai.Compute;
+import aud.SoundMachine;
 import model.entity.food.Food;
 import model.entity.food.PacGum;
 import model.entity.food.ability.Lightning;
@@ -178,8 +179,19 @@ public final class Game {
                         motionState = MotionState.HEADING;
                         break;
                 }
-
                 individualMotionStateMap.put(ghost, motionState);
+            }
+
+
+            for (var pacPerson : grid.getPacPeople()) {
+                if (pacPerson.isGiant()) {
+                    continue;
+                }
+
+                if (Objects.equals(pacPerson.getPosition(), ghost.getPosition())) {
+                    pacPerson.kill();
+                    SoundMachine.getInstance().playDeath();
+                }
             }
         }
     }

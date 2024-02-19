@@ -50,7 +50,7 @@ public final class Compute {
 
             while (grid.accept(ghost, authorizedPosition) && !found) {
                 for (var pacPerson : pacPeople) {
-                    if (pacPerson.isGiant()) {
+                    if (pacPerson.isGiant() || !pacPerson.isAlive()) {
                         continue;
                     }
 
