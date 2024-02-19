@@ -15,14 +15,12 @@ import stdlib.StdRandom;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public final class Game {
-
-    private static final int FOOD_TURN = 10;
-
     private final Player[] players;
     private final Grid grid;
     private final Set<Class<? extends Food>> foodClasses;
@@ -41,7 +39,7 @@ public final class Game {
     }
 
     private void buildFoods() {
-        for (var i = 0; i < grid.size() * 2; i++) {
+        for (var i = 0; i < Math.pow(grid.size(), 2); i++) {
             generateNewFood();
         }
     }
@@ -94,12 +92,31 @@ public final class Game {
     }
 
     public void nextTurn() {
+        controlPacPeople();
+        controlGhosts();
         grid.moveIndividuals(turn);
-        if (turn % FOOD_TURN == 0) {
-            generateNewFood();
-        }
+        generateNewFood();
         turn++;
     }
+
+    private void controlPacPeople() {
+
+        var playerCopy = players.clone();
+        StdRandom.shuffle(playerCopy);
+
+        for (var player : playerCopy) {
+            var color = player.getColor();
+            var joystick = player.getJoystick();
+            var heading = joystick.getPosition();
+            var pacPerson = grid.finPacPerson(color);
+            pacPerson.setHeading(heading);
+        }
+    }
+
+    private void controlGhosts() {
+
+    }
+
 
     public void buildGhosts() {
         var classes = ghosts();
@@ -128,35 +145,41 @@ public final class Game {
     }
 
     public void generateNewFood() {
-        var freeSpaces = new ArrayList<>(grid.freeSpaces());
-        if (freeSpaces.isEmpty()) {
-            return;
-        }
-        var freeSpace = freeSpaces.get(StdRandom.uniformInt(freeSpaces.size()));
 
-        var foods = new ArrayList<Food>();
+        var position = new Point(StdRandom.uniformInt(grid.size()), StdRandom.uniformInt(grid.size()));
+
+        var index = 0;
+        var foods = new Food[foodClasses.size()];
         for (var foodClass : foodClasses) {
             try {
-                foods.add(foodClass.getConstructor().newInstance());
+                foods[index++] = (foodClass.getConstructor().newInstance());
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException e) {
                 e.printStackTrace();
             }
         }
 
-        foods.sort((o1, o2) -> (int) ((o1.getProbability() - o2.getProbability()) * Float.MAX_VALUE));
+        StdRandom.shuffle(foods);
 
         var random = StdRandom.uniformDouble();
-
-        for (var food : foods) {
+        Food randomFood = null;
+        for (var food : Arrays.stream(foods).sorted((o1, o2) -> (int) ((o1.getProbability() - o2.getProbability()) * Float.MAX_VALUE)).toList()) {
             var probability = food.getProbability();
             if (probability > random) {
-                if (food.isUnique()) {
-                    foodClasses.remove(food.getClass());
-                }
-                food.setPosition(freeSpace);
-                grid.addEntity(food);
+                randomFood = food;
                 break;
+            }
+        }
+
+        if (randomFood != null) {
+            var existingEntity = grid.getEntities();
+            if (grid.accept(randomFood, position) &&
+                    existingEntity.stream().noneMatch(food -> Objects.equals(food.getPosition(), position))) {
+                if (randomFood.isUnique()) {
+                    foodClasses.remove(randomFood.getClass());
+                }
+                randomFood.setPosition(position);
+                grid.addEntity(randomFood);
             }
         }
     }

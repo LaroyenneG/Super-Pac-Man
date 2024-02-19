@@ -50,9 +50,6 @@ public final class GameEngine implements Runnable {
                 joystickEngine.invoke(game::nextTurn);
 
                 SwingUtilities.invokeLater(() -> gridDraftsman.draw(game));
-                SwingUtilities.invokeLater(() -> {
-                    // Others interfaces
-                });
 
                 var end = System.currentTimeMillis();
 

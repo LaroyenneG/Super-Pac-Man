@@ -22,8 +22,9 @@ public abstract class Individual extends Entity {
         alive = true;
     }
 
-    public void move(Point position) {
-        this.position = position;
+    public void move(int x, int y) {
+        assert x == 0 || y == 0;
+        this.position = new Point(this.position.x + x, this.position.y + y);
         this.moving = false;
     }
 
@@ -64,4 +65,23 @@ public abstract class Individual extends Entity {
     }
 
     public abstract double speed();
+
+    public void move() {
+        switch (heading) {
+            case UP -> {
+                move(0, -1);
+            }
+            case DOWN -> {
+                move(0, 1);
+            }
+            case RIGHT -> {
+                move(1, 0);
+            }
+            case LEFT -> {
+                move(-1, 0);
+            }
+            case null, default -> {
+            }
+        }
+    }
 }

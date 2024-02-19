@@ -9,8 +9,8 @@ import java.awt.*;
 
 public abstract class PacPerson extends Individual {
 
-    public static final double MAX_WEIGHT = 100.0;
-    public static final double MIN_WEIGHT = 1.0;
+    public static final double MAX_WEIGHT = 30.0;
+    public static final double MIN_WEIGHT = 10.0;
 
     public static final double MIN_SPEED = 5.0;
     public static final double MAX_SPEED = 10.0;
@@ -71,6 +71,6 @@ public abstract class PacPerson extends Individual {
 
     @Override
     public double speed() {
-        return MAX_SPEED - ((MAX_SPEED - MIN_SPEED) * (weight / MAX_WEIGHT));
+        return Math.max(MAX_SPEED - ((MAX_SPEED - MIN_SPEED) * (weight / MAX_WEIGHT)), MIN_SPEED);
     }
 }

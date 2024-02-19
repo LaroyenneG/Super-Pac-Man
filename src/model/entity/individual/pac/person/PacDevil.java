@@ -7,9 +7,11 @@ import java.awt.*;
 
 public final class PacDevil extends PacPerson {
 
+    public static final double DEVIL_WEIGHT = 100.0;
+
     public PacDevil(Color color) {
         super(color);
-        weight = MAX_WEIGHT;
+        weight = DEVIL_WEIGHT;
     }
 
     @Override

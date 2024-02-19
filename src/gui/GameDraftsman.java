@@ -204,7 +204,8 @@ public class GameDraftsman {
         return arcPolygon(size, startAngle, endAngle);
     }
 
-    private double movingTranslationX(Heading heading) {
+    private double movingTranslationX(Heading heading, boolean moving) {
+        if (!moving) return 0.0;
         return switch (heading) {
             case RIGHT -> squareHalfWidth;
             case LEFT -> -squareHalfWidth;
@@ -212,7 +213,8 @@ public class GameDraftsman {
         };
     }
 
-    private double movingTranslationY(Heading heading) {
+    private double movingTranslationY(Heading heading, boolean moving) {
+        if (!moving) return 0.0;
         return switch (heading) {
             case UP -> squareHalfHeight;
             case DOWN -> -squareHalfHeight;
@@ -346,7 +348,7 @@ public class GameDraftsman {
 
         var scared = ghost.isScared();
         var alive = ghost.isAlive();
-
+        var moving = ghost.isMoving();
         var color = (scared) ? GHOST_SCARED_COLOR : ghost.getColor();
         var heading = ghost.getHeading();
 
@@ -355,15 +357,15 @@ public class GameDraftsman {
         var size = (alive) ? 0.8 : 0.3;
         var halfWidth = squareHalfWidth * size;
         var halfHeight = squareHalfHeight * size;
-        var rayon = Math.min(halfHeight, halfWidth);
+        var radius = Math.min(halfHeight, halfWidth);
 
-        StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading),
-                centerY(position.y) + movingTranslationY(heading), rayon);
+        StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading, moving),
+                centerY(position.y) + movingTranslationY(heading, moving), radius);
         drawPolygon(
                 translatePoints(
                         ghostFeetShape(halfWidth, halfHeight / 2.0, ghost.isMoving()),
-                        centerX(position.x) + movingTranslationX(heading),
-                        centerY(position.y) + movingTranslationY(heading) - halfHeight / 2.0
+                        centerX(position.x) + movingTranslationX(heading, moving),
+                        centerY(position.y) + movingTranslationY(heading, moving) - halfHeight / 2.0
                 )
         );
 
@@ -374,8 +376,8 @@ public class GameDraftsman {
         var whiteEyesOffsetY = squareHalfHeight / 3.5;
         var whiteEyesOffsetX = squareHalfWidth / 4.0;
 
-        StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading) + whiteEyesOffsetX, centerY(position.y) + movingTranslationY(heading) + whiteEyesOffsetY, rayon * whiteEyesSize);
-        StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading) - whiteEyesOffsetX, centerY(position.y) + movingTranslationY(heading) + whiteEyesOffsetY, rayon * whiteEyesSize);
+        StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading, moving) + whiteEyesOffsetX, centerY(position.y) + movingTranslationY(heading, moving) + whiteEyesOffsetY, radius * whiteEyesSize);
+        StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading, moving) - whiteEyesOffsetX, centerY(position.y) + movingTranslationY(heading, moving) + whiteEyesOffsetY, radius * whiteEyesSize);
 
         if (!scared && alive) {
             StdDraw.setPenColor(Color.BLACK);
@@ -387,34 +389,34 @@ public class GameDraftsman {
 
             switch (heading) {
                 case UP:
-                    blackEyesOffsetY += rayon * blackEyesSize;
+                    blackEyesOffsetY += radius * blackEyesSize;
                     break;
                 case DOWN:
-                    blackEyesOffsetY -= rayon * blackEyesSize;
+                    blackEyesOffsetY -= radius * blackEyesSize;
                     break;
                 case RIGHT:
-                    blackEyesOffsetLeftX += rayon * blackEyesSize;
-                    blackEyesOffsetRightX -= rayon * blackEyesSize;
+                    blackEyesOffsetLeftX += radius * blackEyesSize;
+                    blackEyesOffsetRightX -= radius * blackEyesSize;
                     break;
                 case LEFT:
-                    blackEyesOffsetLeftX -= rayon * blackEyesSize;
-                    blackEyesOffsetRightX += rayon * blackEyesSize;
+                    blackEyesOffsetLeftX -= radius * blackEyesSize;
+                    blackEyesOffsetRightX += radius * blackEyesSize;
                     break;
                 case null:
                 default:
                     break;
             }
 
-            StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading) + blackEyesOffsetLeftX, centerY(position.y) + movingTranslationY(heading) + blackEyesOffsetY, rayon * blackEyesSize);
-            StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading) - blackEyesOffsetRightX, centerY(position.y) + movingTranslationY(heading) + blackEyesOffsetY, rayon * blackEyesSize);
+            StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading, moving) + blackEyesOffsetLeftX, centerY(position.y) + movingTranslationY(heading, moving) + blackEyesOffsetY, radius * blackEyesSize);
+            StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading, moving) - blackEyesOffsetRightX, centerY(position.y) + movingTranslationY(heading, moving) + blackEyesOffsetY, radius * blackEyesSize);
         }
     }
 
     private void draw(PacPerson pacPerson, Color color, double size, boolean filled) {
 
         var position = pacPerson.getPosition();
-        var mouthOpen = !pacPerson.isMoving();
-        var mouthAngle = (mouthOpen) ? Math.PI / 4.0 : 0.0;
+        var moving = pacPerson.isMoving();
+        var mouthAngle = (!moving) ? Math.PI / 4.0 : 0.0;
         var heading = pacPerson.getHeading();
 
         StdDraw.setPenColor(color);
@@ -423,8 +425,8 @@ public class GameDraftsman {
                 translatePoints(
                         rotatePoints(
                                 arcPolygon(size, mouthAngle), (heading != null) ? HEADING_ANGLE_MAP.get(heading) : 0.0),
-                        centerX(position.x) + movingTranslationX(heading),
-                        centerY(position.y) + movingTranslationY(heading)
+                        centerX(position.x) + movingTranslationX(heading, moving),
+                        centerY(position.y) + movingTranslationY(heading, moving)
                 ), filled
         );
     }
@@ -433,14 +435,14 @@ public class GameDraftsman {
 
         if (!superPac.isAlive() && StdRandom.bernoulli()) return;
 
-        draw(superPac, (superPac.isAlive()) ? superPac.getColor() : Color.GRAY, superPac.getWeight(), false);
+        draw(superPac, (superPac.isAlive()) ? superPac.getColor() : Color.GRAY, superPac.getWeight() / PacPerson.MAX_WEIGHT, false);
     }
 
     private void draw(PacMan pacMan) {
 
         if (!pacMan.isAlive() && StdRandom.bernoulli()) return;
 
-        draw(pacMan, (pacMan.isAlive()) ? pacMan.getColor() : Color.GRAY, pacMan.getWeight(), true);
+        draw(pacMan, (pacMan.isAlive()) ? pacMan.getColor() : Color.GRAY, pacMan.getWeight() / PacPerson.MAX_WEIGHT, true);
     }
 
     private void draw(PacDevil pacDevil) {
@@ -448,7 +450,7 @@ public class GameDraftsman {
         if (!pacDevil.isAlive() && StdRandom.bernoulli()) return;
 
         draw(pacDevil, Color.RED, pacDevil.getWeight(), true);
-        draw(pacDevil, (pacDevil.isAlive()) ? pacDevil.getColor() : Color.GRAY, pacDevil.getWeight(), false);
+        draw(pacDevil, (pacDevil.isAlive()) ? pacDevil.getColor() : Color.GRAY, 1.5, false);
     }
 
 

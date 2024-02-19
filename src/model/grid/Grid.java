@@ -9,6 +9,7 @@ import model.grid.square.Square;
 
 import java.awt.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Grid {
@@ -82,11 +83,38 @@ public class Grid {
         return pacPeople;
     }
 
+    public PacPerson finPacPerson(Color color) {
+
+        PacPerson result = null;
+
+        for (var pacPerson : pacPeople) {
+            var pacPersonColor = pacPerson.getColor();
+            if (Objects.equals(pacPersonColor, color)) {
+                result = pacPerson;
+                break;
+            }
+        }
+
+        return result;
+    }
+
     public Set<Food> getFoods() {
         return foods;
     }
 
+
     public void moveIndividuals(long turn) {
+        movePacPeople(turn);
+        moveGhosts(turn);
+    }
+
+    private void movePacPeople(long turn) {
+        for (var pacPerson : pacPeople) {
+            pacPerson.move();
+        }
+    }
+
+    private void moveGhosts(long turn) {
 
     }
 
@@ -100,39 +128,11 @@ public class Grid {
         return new Point(gridSize / 2, gridSize / 2 + 1);
     }
 
-    public Set<Point> freeSpaces() {
-
-        var result = new HashSet<Point>();
-
-        var entities = getEntities();
-        for (var i = 0; i < squares.length; i++) {
-            for (var j = 0; j < squares[i].length; j++) {
-                var available = false;
-                if (squares[i][j].isFree()) {
-                    available = true;
-                    for (var entity : entities) {
-                        var position = entity.getPosition();
-                        if (position.y == i && position.x == j) {
-                            available = false;
-                            break;
-                        }
-                    }
-                }
-                if (available) {
-                    result.add(new Point(j, i));
-                }
-            }
-        }
-
-        return result;
-    }
-
     private Square finSquare(Point position) {
         assert position.x < squares.length;
         assert position.x >= 0;
         assert position.y < squares.length;
         assert position.y >= 0;
-
         return squares[position.y][position.x];
     }
 
