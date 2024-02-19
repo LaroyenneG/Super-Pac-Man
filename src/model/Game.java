@@ -7,6 +7,7 @@ import model.entity.food.ability.Star;
 import model.entity.food.ability.SuperPacGum;
 import model.entity.food.ability.Trident;
 import model.entity.food.fruit.*;
+import model.entity.individual.Individual;
 import model.entity.individual.ghost.*;
 import model.entity.individual.pac.person.PacMan;
 import model.grid.Grid;
@@ -15,21 +16,23 @@ import stdlib.StdRandom;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public final class Game {
+
+
     private final Player[] players;
     private final Grid grid;
     private final Set<Class<? extends Food>> foodClasses;
     private long turn;
 
+    private final Map<Individual, MotionState> individualMotionStateMap;
+
 
     public Game(int size, Player... players) {
         this.players = players;
-        this.foodClasses = new HashSet<>();
+        individualMotionStateMap = new HashMap<>();
+        foodClasses = new HashSet<>();
         grid = GridGenerator.generate(size);
         turn = 0;
         buildFoodClasses();
@@ -94,9 +97,12 @@ public final class Game {
     public void nextTurn() {
         controlPacPeople();
         controlGhosts();
-        grid.moveIndividuals(turn);
         generateNewFood();
         turn++;
+    }
+
+    private boolean individualCanbeMoved(Individual individual) {
+        return Math.round(turn % Math.round(computeSpeedRateTurn(individual))) == 0;
     }
 
     private void controlPacPeople() {
@@ -106,15 +112,62 @@ public final class Game {
 
         for (var player : playerCopy) {
             var color = player.getColor();
+            var pacPerson = grid.finPacPerson(color);
+            var targetPosition = pacPerson.targetPosition();
             var joystick = player.getJoystick();
             var heading = joystick.getPosition();
-            var pacPerson = grid.finPacPerson(color);
-            pacPerson.setHeading(heading);
+
+            if (individualCanbeMoved(pacPerson)) {
+                var motionState = individualMotionStateMap.getOrDefault(pacPerson, MotionState.HEADING);
+                switch (motionState) {
+                    case HEADING:
+                        pacPerson.setHeading(heading);
+                        pacPerson.setMoving(false);
+                        motionState = MotionState.TRANSITION;
+                        break;
+                    case TRANSITION:
+                        if (grid.accept(pacPerson, targetPosition)) {
+                            pacPerson.setMoving(true);
+                            motionState = MotionState.MOVE;
+                        } else {
+                            motionState = MotionState.HEADING;
+                        }
+                        break;
+                    case MOVE:
+                        if (grid.accept(pacPerson, targetPosition)) {
+                            pacPerson.move();
+                        }
+                        motionState = MotionState.HEADING;
+                        break;
+                }
+
+                individualMotionStateMap.put(pacPerson, motionState);
+            }
         }
     }
 
     private void controlGhosts() {
 
+        var ghosts = grid.getGhosts();
+        var threads = new HashSet<Thread>();
+
+        for (var ghost : ghosts) {
+            if (individualCanbeMoved(ghost)) {
+                var thread = new Thread(() -> {
+                    // TODO: complete me
+                });
+                threads.add(thread);
+                thread.start();
+            }
+        }
+
+        for (var thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -145,6 +198,9 @@ public final class Game {
     }
 
     public void generateNewFood() {
+
+        var foodsAlreadyPresent = grid.getFoods();
+        if (foodsAlreadyPresent.size() > grid.size() * 4.0) return;
 
         var position = new Point(StdRandom.uniformInt(grid.size()), StdRandom.uniformInt(grid.size()));
 
@@ -186,5 +242,11 @@ public final class Game {
 
     public Player[] getPlayers() {
         return players;
+    }
+
+    public static final double MAX_SPEED = 50.0;
+
+    private static double computeSpeedRateTurn(Individual individual) {
+        return Math.max((1.0 + (1.0 - individual.speed() / MAX_SPEED) * 3.0), 1.0);
     }
 }

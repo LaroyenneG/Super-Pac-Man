@@ -8,7 +8,7 @@ import java.awt.*;
 
 public abstract class Ghost extends Individual {
 
-    public static final double SPEED = 0.5;
+    public static final double SPEED = 30.0;
 
     private boolean scared;
 

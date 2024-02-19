@@ -12,8 +12,8 @@ public abstract class PacPerson extends Individual {
     public static final double MAX_WEIGHT = 30.0;
     public static final double MIN_WEIGHT = 10.0;
 
-    public static final double MIN_SPEED = 5.0;
-    public static final double MAX_SPEED = 10.0;
+    public static final double MIN_SPEED = 15.0;
+    public static final double MAX_SPEED = 50.0;
 
     protected double weight;
 

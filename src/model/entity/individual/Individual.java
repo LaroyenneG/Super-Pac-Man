@@ -22,14 +22,12 @@ public abstract class Individual extends Entity {
         alive = true;
     }
 
-    public void move(int x, int y) {
-        assert x == 0 || y == 0;
-        this.position = new Point(this.position.x + x, this.position.y + y);
-        this.moving = false;
+    public void move(Point position) {
+        this.position = position;
     }
 
-    public void movable() {
-        this.moving = true;
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
     public void setHeading(Heading heading) {
@@ -64,24 +62,22 @@ public abstract class Individual extends Entity {
         alive = false;
     }
 
+    public Point targetPosition() {
+        return switch (heading) {
+            case UP -> new Point(position.x, position.y - 1);
+            case DOWN -> new Point(position.x, position.y + 1);
+            case RIGHT -> new Point(position.x + 1, position.y);
+            case LEFT -> new Point(position.x - 1, position.y);
+            case null, default -> position;
+        };
+    }
+
+
     public abstract double speed();
 
     public void move() {
-        switch (heading) {
-            case UP -> {
-                move(0, -1);
-            }
-            case DOWN -> {
-                move(0, 1);
-            }
-            case RIGHT -> {
-                move(1, 0);
-            }
-            case LEFT -> {
-                move(-1, 0);
-            }
-            case null, default -> {
-            }
-        }
+        var position = targetPosition();
+        move(position);
+        moving = false;
     }
 }

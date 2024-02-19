@@ -103,21 +103,6 @@ public class Grid {
     }
 
 
-    public void moveIndividuals(long turn) {
-        movePacPeople(turn);
-        moveGhosts(turn);
-    }
-
-    private void movePacPeople(long turn) {
-        for (var pacPerson : pacPeople) {
-            pacPerson.move();
-        }
-    }
-
-    private void moveGhosts(long turn) {
-
-    }
-
     public Point ghostHomePosition() {
         var gridSize = size();
         return new Point(gridSize / 2, gridSize / 2 - 1);
