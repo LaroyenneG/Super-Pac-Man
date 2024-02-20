@@ -1,13 +1,9 @@
 package model.entity.food.ability;
 
 import model.entity.food.Food;
-import model.entity.individual.ghost.Ghost;
 import model.entity.individual.pac.person.PacDevil;
 import model.entity.individual.pac.person.PacPerson;
-import model.grid.Grid;
-import model.grid.GridControl;
-
-import java.util.Set;
+import model.grid.GridAbilityInterface;
 
 public final class Trident extends Food implements Ability {
 
@@ -20,7 +16,7 @@ public final class Trident extends Food implements Ability {
     }
 
     @Override
-    public void apply(PacPerson owner, GridControl grid) {
+    public void apply(PacPerson owner, GridAbilityInterface grid) {
         grid.evolve(new PacDevil(owner));
     }
 }

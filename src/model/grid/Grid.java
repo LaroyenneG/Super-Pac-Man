@@ -7,6 +7,7 @@ import model.entity.food.Food;
 import model.entity.food.ability.Ability;
 import model.entity.individual.Individual;
 import model.entity.individual.ghost.Ghost;
+import model.entity.individual.pac.person.PacMan;
 import model.entity.individual.pac.person.PacPerson;
 import model.grid.square.Square;
 
@@ -15,7 +16,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Grid implements GridControl {
+public class Grid implements GridAbilityInterface {
     private final Set<PacPerson> pacPeople;
     private final Set<Ghost> ghosts;
     private final Set<Food> foods;
@@ -170,6 +171,20 @@ public class Grid implements GridControl {
         if (from != null) {
             pacPeople.remove(from);
             pacPeople.add(pacPerson);
+        }
+    }
+
+    @Override
+    public void scareOffGhosts() {
+        for(var ghost : ghosts) {
+            ghost.scareOff();
+        }
+    }
+
+    @Override
+    public void miniaturizePacPeople() {
+        for(var pacPerson : pacPeople) {
+            evolve(new PacMan(pacPerson));
         }
     }
 }

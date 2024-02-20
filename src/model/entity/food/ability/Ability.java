@@ -1,17 +1,13 @@
 package model.entity.food.ability;
 
-import model.entity.individual.ghost.Ghost;
 import model.entity.individual.pac.person.PacPerson;
-import model.grid.Grid;
-import model.grid.GridControl;
-
-import java.util.Set;
+import model.grid.GridAbilityInterface;
 
 public interface Ability {
 
     double DEFAULT_DURATION = 5.0;
 
-    void apply(PacPerson owner, GridControl grid);
+    void apply(PacPerson owner, GridAbilityInterface grid);
 
 
     default double duration() {
