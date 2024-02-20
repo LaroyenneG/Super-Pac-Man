@@ -16,6 +16,6 @@ public final class Lightning extends Food implements Ability {
 
     @Override
     public void apply(PacPerson owner, GameAbilityInterface game) {
-
+        game.miniaturizePacPeople();
     }
 }

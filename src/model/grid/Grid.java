@@ -41,6 +41,10 @@ public class Grid  {
         foods.add(food);
     }
 
+    public void removeEntity(PacPerson pacPerson) {
+        pacPeople.remove(pacPerson);
+    }
+
     @Override
     public String toString() {
 

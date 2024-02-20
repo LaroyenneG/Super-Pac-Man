@@ -90,4 +90,9 @@ public abstract class Individual extends Entity {
         move(position);
         moving = false;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(color.hashCode());
+    }
 }

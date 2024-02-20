@@ -13,7 +13,7 @@ public abstract class Entity {
     }
 
     public Entity(Point position) {
-        this.position = new Point(position);
+        this.position = position;
     }
 
     public Entity(Entity entity) {

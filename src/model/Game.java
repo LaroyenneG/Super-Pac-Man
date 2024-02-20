@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public final class Game implements GameAbilityInterface {
+
     private final Player[] players;
     private final Grid grid;
     private final Set<Class<? extends Food>> foodClasses;
@@ -313,12 +314,21 @@ public final class Game implements GameAbilityInterface {
 
         var color = pacPerson.getColor();
 
-//        var pacPeople = grid.getPacPeople();
-//
-//        var from = grid.findPacPerson(color);
-//        if (from != null) {
-//            grid.addEntity(pacPerson);
-//        }
+        var from = grid.findPacPerson(color);
+        if (from != null) {
+            grid.addEntity(pacPerson);
+            grid.removeEntity(from);
+
+            var taskId = ScheduledTask.EVOLVE_TASK_PREFIX + pacPerson;
+            var now = System.currentTimeMillis();
+            var scheduledTask = new ScheduledTask(taskId, now + ScheduledTask.TASK_DEFAULT_DURATION, () -> {
+                grid.addEntity(from);
+                grid.removeEntity(pacPerson);
+            });
+
+            cancelScheduledTask(taskId);
+            scheduledTasks.add(scheduledTask);
+        }
     }
 
     @Override
@@ -330,13 +340,14 @@ public final class Game implements GameAbilityInterface {
             ghost.scareOff();
         }
 
-        var scheduledTask = new ScheduledTask("scare-off-ghost", System.currentTimeMillis() + 10000, () -> {
+        var now = System.currentTimeMillis();
+        var scheduledTask = new ScheduledTask(ScheduledTask.SCARE_OFF_GHOSTS_TASK, now + ScheduledTask.TASK_DEFAULT_DURATION, () -> {
             for (var ghost : ghosts) {
                 ghost.reassure();
             }
         });
 
-        scheduledTasks.remove(scheduledTask);
+        cancelScheduledTask(ScheduledTask.SCARE_OFF_GHOSTS_TASK);
         scheduledTasks.add(scheduledTask);
     }
 
@@ -346,7 +357,21 @@ public final class Game implements GameAbilityInterface {
         var pacPeople = grid.getPacPeople();
 
         for (var pacPerson : pacPeople) {
+            cancelScheduledTask(ScheduledTask.EVOLVE_TASK_PREFIX + pacPerson);
             evolve(new PacMan(pacPerson));
         }
+    }
+
+    private void cancelScheduledTask(String id) {
+
+        var canceledTasks = new HashSet<ScheduledTask>();
+
+        for (var scheduledTask : scheduledTasks) {
+            if (Objects.equals(scheduledTask.id(), id)) {
+                canceledTasks.add(scheduledTask);
+            }
+        }
+
+        scheduledTasks.removeAll(canceledTasks);
     }
 }
