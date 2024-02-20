@@ -1,6 +1,5 @@
 package model.grid.square.door;
 
-import model.entity.Entity;
 import model.entity.food.Food;
 import model.entity.individual.Individual;
 import model.entity.individual.ghost.Ghost;
@@ -21,7 +20,7 @@ public final class PacDoor extends Door {
 
     @Override
     public boolean accept(PacPerson pacPerson) {
-        return !pacPerson.isGiant() && !pacPerson.isFlying();
+        return !pacPerson.isGiant() && !pacPerson.canFly();
     }
 
     @Override

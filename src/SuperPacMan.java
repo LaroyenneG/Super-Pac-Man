@@ -63,7 +63,7 @@ public final class SuperPacMan {
     private static void game() {
         StdOut.println("Game is starting...");
 
-        var game = new Game(GRID_SIZE, new Player(myUsername()) /*, new Player("Bot", Color.WHITE)*/);
+        var game = new Game(GRID_SIZE, new Player(myUsername()) , new Player("Bot", Color.PINK));
 
         var gameEngine = new GameEngine(game);
 

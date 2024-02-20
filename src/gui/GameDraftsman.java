@@ -435,14 +435,14 @@ public class GameDraftsman {
 
         if (!superPac.isAlive() && StdRandom.bernoulli()) return;
 
-        draw(superPac, (superPac.isAlive()) ? superPac.getColor() : Color.GRAY, superPac.getWeight() / PacPerson.MAX_WEIGHT, false);
+        draw(superPac, (superPac.isAlive()) ? superPac.getColor() : Color.GRAY, 0.5, false);
     }
 
     private void draw(PacMan pacMan) {
 
         if (!pacMan.isAlive() && StdRandom.bernoulli()) return;
 
-        draw(pacMan, (pacMan.isAlive()) ? pacMan.getColor() : Color.GRAY, pacMan.getWeight() / PacPerson.MAX_WEIGHT, true);
+        draw(pacMan, (pacMan.isAlive()) ? pacMan.getColor() : Color.GRAY, pacMan.getWeight() / 30.0, true);
     }
 
     private void draw(PacDevil pacDevil) {

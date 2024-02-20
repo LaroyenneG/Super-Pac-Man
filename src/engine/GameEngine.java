@@ -52,8 +52,9 @@ public final class GameEngine implements Runnable {
 
                 var end = System.currentTimeMillis();
 
-                System.out.println(FREQUENCY - (end - start));
-                Thread.sleep(Math.max(FREQUENCY - (end - start), 0));
+                var waitingTime = Math.max(FREQUENCY - (end - start), 0);
+                System.out.println((end - start) * 100.0 / FREQUENCY);
+                Thread.sleep(waitingTime);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

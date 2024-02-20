@@ -1,6 +1,5 @@
 package model.entity.individual.pac.person;
 
-import model.Heading;
 import model.entity.food.Food;
 import model.entity.individual.Individual;
 import model.entity.individual.ghost.Ghost;
@@ -71,7 +70,7 @@ public abstract class PacPerson extends Individual {
         return weight >= MAX_WEIGHT;
     }
 
-    public final boolean isFlying() {
+    public final boolean canFly() {
         return weight <= 0.0;
     }
 

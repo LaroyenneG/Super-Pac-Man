@@ -10,4 +10,6 @@ public interface GridControl {
     public void evolve(PacPerson pacPerson);
 
     public Set<Ghost> getGhosts();
+
+    // scare off ghost
 }

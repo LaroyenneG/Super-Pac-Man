@@ -1,6 +1,5 @@
 package model.grid.square;
 
-import model.entity.Entity;
 import model.entity.food.Food;
 import model.entity.individual.ghost.Ghost;
 import model.entity.individual.pac.person.PacPerson;
@@ -23,7 +22,7 @@ public final class Wall extends Square {
 
     @Override
     public boolean accept(PacPerson pacPerson) {
-        return pacPerson.isFlying();
+        return pacPerson.canFly();
     }
 
     @Override

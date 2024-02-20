@@ -1,5 +1,7 @@
 package model.entity.individual.pac.person;
 
+import model.entity.food.Food;
+
 import java.awt.*;
 
 public final class SuperPac extends PacPerson {
@@ -14,5 +16,10 @@ public final class SuperPac extends PacPerson {
     public SuperPac(PacPerson pacPerson) {
         super(pacPerson);
         weight = SUPER_WEIGHT;
+    }
+
+    @Override
+    public boolean eats(Food food) {
+        return true;
     }
 }
