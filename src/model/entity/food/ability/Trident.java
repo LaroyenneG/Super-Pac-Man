@@ -2,12 +2,14 @@ package model.entity.food.ability;
 
 import model.entity.food.Food;
 import model.entity.individual.ghost.Ghost;
+import model.entity.individual.pac.person.PacDevil;
 import model.entity.individual.pac.person.PacPerson;
+import model.grid.Grid;
+import model.grid.GridControl;
 
 import java.util.Set;
 
 public final class Trident extends Food implements Ability {
-
 
     public static final int POINTS = 0;
     public static final double PROBABILITY = 1.0 / 666.0;
@@ -18,7 +20,7 @@ public final class Trident extends Food implements Ability {
     }
 
     @Override
-    public void apply(PacPerson owner, Set<Ghost> ghosts, Set<PacPerson> others) {
-
+    public void apply(PacPerson owner, GridControl grid) {
+        grid.evolve(new PacDevil(owner));
     }
 }

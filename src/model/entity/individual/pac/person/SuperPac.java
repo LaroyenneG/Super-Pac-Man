@@ -10,4 +10,9 @@ public final class SuperPac extends PacPerson {
         super(color);
         weight = SUPER_WEIGHT;
     }
+
+    public SuperPac(PacPerson pacPerson) {
+        super(pacPerson);
+        weight = SUPER_WEIGHT;
+    }
 }

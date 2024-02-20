@@ -3,11 +3,23 @@ package model.entity;
 import java.awt.*;
 
 public abstract class Entity {
+
+    public static final Point DEFAULT_POSITION = new Point(0, 0);
+
     protected Point position;
 
     public Entity() {
-        position = new Point(0, 0);
+        this(DEFAULT_POSITION);
     }
+
+    public Entity(Point position) {
+        this.position = new Point(position);
+    }
+
+    public Entity(Entity entity) {
+        this(entity.position);
+    }
+
 
     public Point getPosition() {
         return position;

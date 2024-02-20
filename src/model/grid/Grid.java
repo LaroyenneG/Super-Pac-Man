@@ -4,6 +4,7 @@ import aud.SoundMachine;
 import model.Player;
 import model.entity.Entity;
 import model.entity.food.Food;
+import model.entity.food.ability.Ability;
 import model.entity.individual.Individual;
 import model.entity.individual.ghost.Ghost;
 import model.entity.individual.pac.person.PacPerson;
@@ -14,7 +15,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Grid {
+public class Grid implements GridControl {
     private final Set<PacPerson> pacPeople;
     private final Set<Ghost> ghosts;
     private final Set<Food> foods;
@@ -154,9 +155,21 @@ public class Grid {
                     var points = food.getPoints();
                     player.addScore(points);
                     SoundMachine.getInstance().playEatGum();
+                    if(food instanceof Ability ability) {
+                        ability.apply(pacPerson, this);
+                    }
                     break;
                 }
             }
+        }
+    }
+
+    @Override
+    public void evolve(PacPerson pacPerson) {
+        var from = findPacPerson(pacPerson.getColor());
+        if (from != null) {
+            pacPeople.remove(from);
+            pacPeople.add(pacPerson);
         }
     }
 }

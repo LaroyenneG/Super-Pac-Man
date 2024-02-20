@@ -10,16 +10,26 @@ import model.entity.individual.pac.person.PacPerson;
 import java.awt.*;
 
 public abstract class Individual extends Entity {
-    private final Color color;
-    private boolean moving;
-    private Heading heading;
-    private boolean alive;
+
+    protected final Color color;
+    protected boolean moving;
+    protected Heading heading;
+    protected boolean alive;
 
     public Individual(Color color) {
+        super();
         this.color = color;
-        heading = null;
-        moving = false;
-        alive = true;
+        this.heading = null;
+        this.moving = false;
+        this.alive = true;
+    }
+
+    public Individual(Individual individual) {
+        super(individual);
+        this.color = individual.color;
+        this.heading = individual.heading;
+        this.moving = individual.moving;
+        this.alive = individual.alive;
     }
 
     public void move(Point position) {

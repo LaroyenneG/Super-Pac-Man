@@ -1,5 +1,6 @@
 package model.entity.individual.pac.person;
 
+import model.Heading;
 import model.entity.food.Food;
 import model.entity.individual.Individual;
 import model.entity.individual.ghost.Ghost;
@@ -20,6 +21,11 @@ public abstract class PacPerson extends Individual {
     public PacPerson(Color color) {
         super(color);
         this.weight = MIN_WEIGHT;
+    }
+
+    public PacPerson(PacPerson pacPerson) {
+        super(pacPerson);
+        this.weight = pacPerson.weight;
     }
 
     public void grow(double weight) {

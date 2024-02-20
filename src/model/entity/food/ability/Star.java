@@ -2,7 +2,11 @@ package model.entity.food.ability;
 
 import model.entity.food.Food;
 import model.entity.individual.ghost.Ghost;
+import model.entity.individual.pac.person.PacDevil;
 import model.entity.individual.pac.person.PacPerson;
+import model.entity.individual.pac.person.SuperPac;
+import model.grid.Grid;
+import model.grid.GridControl;
 
 import java.util.Set;
 
@@ -18,7 +22,7 @@ public final class Star extends Food implements Ability {
     }
 
     @Override
-    public void apply(PacPerson owner, Set<Ghost> ghosts, Set<PacPerson> others) {
-
+    public void apply(PacPerson owner, GridControl grid) {
+        grid.evolve(new SuperPac(owner));
     }
 }

@@ -1,10 +1,10 @@
 package model.entity.food.ability;
 
+import model.entity.food.Food;
 import model.entity.food.PacGum;
-import model.entity.individual.ghost.Ghost;
 import model.entity.individual.pac.person.PacPerson;
-
-import java.util.Set;
+import model.grid.Grid;
+import model.grid.GridControl;
 
 public final class SuperPacGum extends PacGum implements Ability {
 
@@ -15,7 +15,8 @@ public final class SuperPacGum extends PacGum implements Ability {
     }
 
     @Override
-    public void apply(PacPerson owner, Set<Ghost> ghosts, Set<PacPerson> others) {
+    public void apply(PacPerson owner, GridControl grid) {
+        var ghosts = grid.getGhosts();
         for (var ghost : ghosts) {
             ghost.scareOff();
         }

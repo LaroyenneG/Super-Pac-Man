@@ -6,11 +6,15 @@ import model.entity.individual.ghost.Ghost;
 import java.awt.*;
 
 public final class PacDevil extends PacPerson {
-
     public static final double DEVIL_WEIGHT = 100.0;
 
     public PacDevil(Color color) {
         super(color);
+        weight = DEVIL_WEIGHT;
+    }
+
+    public PacDevil(PacPerson pacPerson) {
+        super(pacPerson);
         weight = DEVIL_WEIGHT;
     }
 
