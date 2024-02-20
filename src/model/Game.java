@@ -67,7 +67,17 @@ public final class Game {
     }
 
     public boolean isGameOver() {
-        return false;
+
+        var result = true;
+
+        for (var pacPeople : grid.getPacPeople()) {
+            if (pacPeople.isAlive()) {
+                result = false;
+                break;
+            }
+        }
+
+        return result;
     }
     public Grid getGrid() {
         return grid;

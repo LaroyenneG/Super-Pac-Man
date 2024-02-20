@@ -116,7 +116,6 @@ public final class SoundMachine {
 
     public void playEatGum() {
         play(1, eatGum, true);
-        System.out.println("Eat gum");
     }
 
     public void playEatGhost() {

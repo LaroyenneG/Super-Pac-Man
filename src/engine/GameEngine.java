@@ -22,6 +22,9 @@ public final class GameEngine implements Runnable {
 
     @Override
     public void run() {
+
+        var maxLatency = 0.0;
+
         try {
             var grid = game.getGrid();
             var size = grid.size();
@@ -53,9 +56,12 @@ public final class GameEngine implements Runnable {
                 var end = System.currentTimeMillis();
 
                 var waitingTime = Math.max(FREQUENCY - (end - start), 0);
-                System.out.println((end - start) * 100.0 / FREQUENCY);
+                maxLatency = Math.max((end - start) * 100.0 / FREQUENCY, maxLatency);
                 Thread.sleep(waitingTime);
             }
+
+            System.out.println("Max latency : " + maxLatency + "%");
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
