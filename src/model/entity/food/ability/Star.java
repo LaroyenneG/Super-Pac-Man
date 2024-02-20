@@ -3,7 +3,7 @@ package model.entity.food.ability;
 import model.entity.food.Food;
 import model.entity.individual.pac.person.PacPerson;
 import model.entity.individual.pac.person.SuperPac;
-import model.grid.GridAbilityInterface;
+import model.GameAbilityInterface;
 
 public final class Star extends Food implements Ability {
 
@@ -17,7 +17,7 @@ public final class Star extends Food implements Ability {
     }
 
     @Override
-    public void apply(PacPerson owner, GridAbilityInterface grid) {
-        grid.evolve(new SuperPac(owner));
+    public void apply(PacPerson owner, GameAbilityInterface game) {
+        game.evolve(new SuperPac(owner));
     }
 }

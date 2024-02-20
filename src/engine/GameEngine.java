@@ -8,7 +8,7 @@ import stdlib.StdDraw;
 import javax.swing.*;
 
 public final class GameEngine implements Runnable {
-    private static final int FREQUENCY = 50;
+    public static final int FREQUENCY = 50;
 
     private final Thread thread;
 

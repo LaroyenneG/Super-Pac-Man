@@ -60,6 +60,6 @@ public abstract class Ghost extends Individual {
 
     @Override
     public double speed() {
-        return SPEED;
+        return (scared) ? SPEED * 1.5 : SPEED;
     }
 }

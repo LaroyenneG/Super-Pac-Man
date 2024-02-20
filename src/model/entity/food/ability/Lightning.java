@@ -2,7 +2,7 @@ package model.entity.food.ability;
 
 import model.entity.food.Food;
 import model.entity.individual.pac.person.PacPerson;
-import model.grid.GridAbilityInterface;
+import model.GameAbilityInterface;
 
 public final class Lightning extends Food implements Ability {
 
@@ -15,7 +15,7 @@ public final class Lightning extends Food implements Ability {
     }
 
     @Override
-    public void apply(PacPerson owner, GridAbilityInterface grid) {
+    public void apply(PacPerson owner, GameAbilityInterface game) {
 
     }
 }

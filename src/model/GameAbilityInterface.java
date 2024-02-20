@@ -1,8 +1,8 @@
-package model.grid;
+package model;
 
 import model.entity.individual.pac.person.PacPerson;
 
-public interface GridAbilityInterface {
+public interface GameAbilityInterface {
 
     public void evolve(PacPerson pacPerson);
 

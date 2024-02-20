@@ -12,6 +12,7 @@ import model.entity.food.fruit.*;
 import model.entity.individual.Individual;
 import model.entity.individual.ghost.*;
 import model.entity.individual.pac.person.PacMan;
+import model.entity.individual.pac.person.PacPerson;
 import model.grid.Grid;
 import model.grid.GridGenerator;
 import stdlib.StdRandom;
@@ -20,9 +21,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public final class Game {
-
-
+public final class Game implements GameAbilityInterface {
     private final Player[] players;
     private final Grid grid;
     private final Set<Class<? extends Food>> foodClasses;
@@ -30,10 +29,13 @@ public final class Game {
 
     private final Map<Individual, MotionState> individualMotionStateMap;
 
+    private final Set<ScheduledTask> scheduledTasks;
+
 
     public Game(int size, Player... players) {
         this.players = players;
         individualMotionStateMap = new HashMap<>();
+        scheduledTasks = new HashSet<>();
         foodClasses = new HashSet<>();
         grid = GridGenerator.generate(size);
         turn = 0;
@@ -70,8 +72,9 @@ public final class Game {
 
         var result = true;
 
-        for (var pacPeople : grid.getPacPeople()) {
-            if (pacPeople.isAlive()) {
+        var pacPeople = grid.getPacPeople();
+        for (var pacPerson : pacPeople) {
+            if (pacPerson.isAlive()) {
                 result = false;
                 break;
             }
@@ -107,10 +110,29 @@ public final class Game {
     }
 
     public void nextTurn() {
+        executeScheduledTasks();
         controlPacPeople();
         controlGhosts();
         generateNewFood();
         turn++;
+    }
+
+    private void executeScheduledTasks() {
+
+        var executedTasks = new HashSet<ScheduledTask>();
+
+        var currentTime = System.currentTimeMillis();
+
+        for (var scheduledTask : scheduledTasks) {
+            var moment = scheduledTask.moment();
+            if (moment <= currentTime) {
+                var task = scheduledTask.task();
+                task.run();
+                executedTasks.add(scheduledTask);
+            }
+        }
+
+        scheduledTasks.removeAll(executedTasks);
     }
 
     private boolean individualCanBeMoved(Individual individual) {
@@ -148,7 +170,7 @@ public final class Game {
                     case MOVE:
                         if (grid.accept(pacPerson, targetPosition)) {
                             pacPerson.move();
-                            grid.eats(pacPerson, player);
+                            grid.eats(this, pacPerson, player);
                         }
                         motionState = MotionState.HEADING;
                         break;
@@ -284,5 +306,47 @@ public final class Game {
 
     private static double computeSpeedRateTurn(Individual individual) {
         return Math.max((1.0 + (1.0 - individual.speed() / MAX_SPEED) * 3.0), 1.0);
+    }
+
+    @Override
+    public void evolve(PacPerson pacPerson) {
+
+        var color = pacPerson.getColor();
+
+//        var pacPeople = grid.getPacPeople();
+//
+//        var from = grid.findPacPerson(color);
+//        if (from != null) {
+//            grid.addEntity(pacPerson);
+//        }
+    }
+
+    @Override
+    public void scareOffGhosts() {
+
+        var ghosts = grid.getGhosts();
+
+        for (var ghost : ghosts) {
+            ghost.scareOff();
+        }
+
+        var scheduledTask = new ScheduledTask("scare-off-ghost", System.currentTimeMillis() + 10000, () -> {
+            for (var ghost : ghosts) {
+                ghost.reassure();
+            }
+        });
+
+        scheduledTasks.remove(scheduledTask);
+        scheduledTasks.add(scheduledTask);
+    }
+
+    @Override
+    public void miniaturizePacPeople() {
+
+        var pacPeople = grid.getPacPeople();
+
+        for (var pacPerson : pacPeople) {
+            evolve(new PacMan(pacPerson));
+        }
     }
 }

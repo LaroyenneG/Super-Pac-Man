@@ -67,7 +67,7 @@ public abstract class PacPerson extends Individual {
     }
 
     public final boolean isGiant() {
-        return weight >= MAX_WEIGHT;
+        return weight > MAX_WEIGHT;
     }
 
     public final boolean canFly() {

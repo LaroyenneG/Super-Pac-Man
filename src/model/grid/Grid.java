@@ -1,13 +1,13 @@
 package model.grid;
 
 import aud.SoundMachine;
+import model.GameAbilityInterface;
 import model.Player;
 import model.entity.Entity;
 import model.entity.food.Food;
 import model.entity.food.ability.Ability;
 import model.entity.individual.Individual;
 import model.entity.individual.ghost.Ghost;
-import model.entity.individual.pac.person.PacMan;
 import model.entity.individual.pac.person.PacPerson;
 import model.grid.square.Square;
 
@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Grid implements GridAbilityInterface {
+public class Grid  {
     private final Set<PacPerson> pacPeople;
     private final Set<Ghost> ghosts;
     private final Set<Food> foods;
@@ -148,7 +148,7 @@ public class Grid implements GridAbilityInterface {
         return square.accept(pacPerson);
     }
 
-    public void eats(PacPerson pacPerson, Player player) {
+    public void eats(GameAbilityInterface game, PacPerson pacPerson, Player player) {
         for(var food : foods) {
             if(Objects.equals(food.getPosition(), pacPerson.getPosition())) {
                 if(pacPerson.eats(food)) {
@@ -157,34 +157,11 @@ public class Grid implements GridAbilityInterface {
                     player.addScore(points);
                     SoundMachine.getInstance().playEatGum();
                     if(food instanceof Ability ability) {
-                        ability.apply(pacPerson, this);
+                        ability.apply(pacPerson, game);
                     }
                     break;
                 }
             }
-        }
-    }
-
-    @Override
-    public void evolve(PacPerson pacPerson) {
-        var from = findPacPerson(pacPerson.getColor());
-        if (from != null) {
-            pacPeople.remove(from);
-            pacPeople.add(pacPerson);
-        }
-    }
-
-    @Override
-    public void scareOffGhosts() {
-        for(var ghost : ghosts) {
-            ghost.scareOff();
-        }
-    }
-
-    @Override
-    public void miniaturizePacPeople() {
-        for(var pacPerson : pacPeople) {
-            evolve(new PacMan(pacPerson));
         }
     }
 }
