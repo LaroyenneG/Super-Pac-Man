@@ -321,7 +321,8 @@ public final class Game implements GameAbilityInterface {
 
             var taskId = ScheduledTask.EVOLVE_TASK_PREFIX + pacPerson;
             var now = System.currentTimeMillis();
-            var scheduledTask = new ScheduledTask(taskId, now + ScheduledTask.TASK_DEFAULT_DURATION, () -> {
+            var scheduledTask = new ScheduledTask(taskId,
+                    now + ScheduledTask.TASK_DEFAULT_DURATION, () -> {
                 grid.addEntity(from);
                 grid.removeEntity(pacPerson);
             });
@@ -341,7 +342,8 @@ public final class Game implements GameAbilityInterface {
         }
 
         var now = System.currentTimeMillis();
-        var scheduledTask = new ScheduledTask(ScheduledTask.SCARE_OFF_GHOSTS_TASK, now + ScheduledTask.TASK_DEFAULT_DURATION, () -> {
+        var scheduledTask = new ScheduledTask(ScheduledTask.SCARE_OFF_GHOSTS_TASK,
+                now + ScheduledTask.TASK_DEFAULT_DURATION, () -> {
             for (var ghost : ghosts) {
                 ghost.reassure();
             }
@@ -357,7 +359,6 @@ public final class Game implements GameAbilityInterface {
         var pacPeople = grid.getPacPeople();
 
         var toEvolves = new HashSet<PacPerson>();
-
         for (var pacPerson : pacPeople) {
             cancelScheduledTask(ScheduledTask.EVOLVE_TASK_PREFIX + pacPerson);
             toEvolves.add(new PacMan(pacPerson));
