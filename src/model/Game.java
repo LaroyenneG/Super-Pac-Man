@@ -1,6 +1,6 @@
 package model;
 
-import ai.Compute;
+import helper.Helper;
 import aud.SoundMachine;
 import model.entity.food.Food;
 import model.entity.food.PacGum;
@@ -189,7 +189,7 @@ public final class Game implements GameAbilityInterface {
         for (var ghost : ghosts) {
             if (individualCanBeMoved(ghost)) {
                 var targetPosition = ghost.targetPosition();
-                var heading = Compute.ghostHeading(ghost, grid);
+                var heading = Helper.ghostHeading(ghost, grid);
                 var motionState = individualMotionStateMap.getOrDefault(ghost, MotionState.HEADING);
                 switch (motionState) {
                     case HEADING:

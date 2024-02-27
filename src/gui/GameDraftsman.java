@@ -451,7 +451,7 @@ public class GameDraftsman {
 
         // TODO: change weight
 
-        draw(pacDevil, (pacDevil.isAlive()) ? Color.RED : Color.GRAY, 1.3, true);
+        draw(pacDevil, (pacDevil.isAlive()) ? Color.RED : Color.GRAY, 1.4, true);
         draw(pacDevil, (pacDevil.isAlive()) ? pacDevil.getColor() : Color.GRAY, 1.5, false);
     }
 

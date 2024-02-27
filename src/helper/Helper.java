@@ -1,4 +1,4 @@
-package ai;
+package helper;
 
 import model.Heading;
 import model.entity.individual.ghost.Ghost;
@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
-public final class Compute {
+public final class Helper {
 
-    private Compute() {
+    private Helper() {
 
     }
 
