@@ -37,6 +37,8 @@ public class GameDraftsman {
     private static final int HEIGHT = 900;
     private static final int WIDTH = 900;
     private static final Color BRUN = new Color(158, 115, 51);
+    private static final Color DARK_BRUN = new Color(112, 72, 15);
+    private static final Color WHITE_GRAY = new Color(199, 199, 199);
     private static final Color BACKGROUND_COLOR = Color.BLACK;
     private static final Color WALL_COLOR = Color.BLUE;
     private static final Color DOOR_COLOR = BRUN;
@@ -47,7 +49,7 @@ public class GameDraftsman {
     private static final double PAC_GUM_SIZE = 0.15;
     private static final double STAR_SIZE = 0.6;
     private static final double ORANGE_SIZE = 0.4;
-    private static final double BANANA_SIZE = 0.6;
+    private static final double COCONUT_SIZE = 0.5;
     private static final double APPLE_SIZE = 0.4;
     private static final double TRIDENT_SIZE = 0.5;
     private static final double LIGHTING_SIZE = 0.4;
@@ -520,14 +522,20 @@ public class GameDraftsman {
         StdDraw.filledCircle(centerX(position.x) + circlesMargin, centerY(position.y) - circlesMargin, radius);
     }
 
-    private void draw(Banana banana) {
+    private void draw(Coconut coconut) {
 
-        var position = banana.getPosition();
+        var position = coconut.getPosition();
 
+        var radius = Math.min(squareHalfWidth, squareHalfHeight) * COCONUT_SIZE;
+
+        StdDraw.setPenColor(Color.DARK_GRAY);
+        StdDraw.circle(centerX(position.x), centerY(position.y), radius);
+        StdDraw.setPenColor(DARK_BRUN);
+        StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius);
+        StdDraw.setPenColor(WHITE_GRAY);
+        StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius * 0.8);
         StdDraw.setPenColor(Color.WHITE);
-        StdDraw.filledEllipse(centerX(position.x) + squareHalfWidth * BANANA_SIZE / 4.0, centerY(position.y), squareHalfWidth * BANANA_SIZE / 2.0, squareHalfHeight * BANANA_SIZE / 5.0);
-        StdDraw.setPenColor(Color.YELLOW);
-        StdDraw.filledEllipse(centerX(position.x) - squareHalfWidth * BANANA_SIZE / 4.0, centerY(position.y), squareHalfWidth * BANANA_SIZE / 2.0, squareHalfHeight * BANANA_SIZE / 4.5);
+        StdDraw.filledCircle(centerX(position.x), centerY(position.y), radius * 0.5);
     }
 
     private void draw(Orange orange) {

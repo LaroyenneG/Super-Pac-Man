@@ -1,7 +1,7 @@
 package model;
 
-import helper.Helper;
 import aud.SoundMachine;
+import helper.Helper;
 import model.entity.food.Food;
 import model.entity.food.PacGum;
 import model.entity.food.ability.Lightning;
@@ -98,7 +98,7 @@ public final class Game implements GameAbilityInterface {
     public static Set<Class<? extends Food>> foodsSingle() {
         return Set.of(
                 Apple.class,
-                Banana.class,
+                Coconut.class,
                 Cherry.class,
                 Melon.class,
                 Orange.class,
