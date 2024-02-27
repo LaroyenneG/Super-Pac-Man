@@ -1,6 +1,6 @@
 package engine;
 
-import model.Joystick;
+import model.Game;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -8,26 +8,20 @@ import java.awt.event.KeyListener;
 public class JoystickEngine implements KeyListener {
 
     private final int[] keyEvents;
-    private final Joystick joystick;
-    private final Object mutex;
+    private final Game game;
+    private final int player;
 
-
-    public JoystickEngine(Joystick joystick, int... keyEvents) {
+    public JoystickEngine(int player, Game game, int... keyEvents) {
         assert keyEvents.length == 4;
         this.keyEvents = keyEvents;
-        mutex = new Object();
-        this.joystick = joystick;
+        this.game = game;
+        this.player = player;
     }
 
-    public JoystickEngine(Joystick joystick) {
-        this(joystick, KeyEvent.VK_UP, KeyEvent.VK_RIGHT, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT);
+    public JoystickEngine(int player, Game game) {
+        this(player, game, KeyEvent.VK_UP, KeyEvent.VK_RIGHT, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT);
     }
 
-    public void invoke(Runnable runnable) {
-        synchronized (mutex) {
-            runnable.run();
-        }
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -42,9 +36,12 @@ public class JoystickEngine implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        var keyCode = e.getKeyCode();
-        
-        synchronized (mutex) {
+        synchronized (game) {
+            var players = game.getPlayers();
+            assert players.length > player;
+            var joystick = players[player].getJoystick();
+
+            var keyCode = e.getKeyCode();
             if (keyEvents[0] == keyCode) {
                 joystick.arrowKeyUpPressed();
             } else if (keyEvents[1] == keyCode) {

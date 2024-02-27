@@ -356,9 +356,15 @@ public final class Game implements GameAbilityInterface {
 
         var pacPeople = grid.getPacPeople();
 
+        var toEvolves = new HashSet<PacPerson>();
+
         for (var pacPerson : pacPeople) {
             cancelScheduledTask(ScheduledTask.EVOLVE_TASK_PREFIX + pacPerson);
-            evolve(new PacMan(pacPerson));
+            toEvolves.add(new PacMan(pacPerson));
+        }
+
+        for (var toEvolve : toEvolves) {
+            evolve(toEvolve);
         }
     }
 

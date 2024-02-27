@@ -14,7 +14,6 @@ public final class GameEngine implements Runnable {
 
     private final Game game;
 
-
     public GameEngine(Game game) {
         thread = new Thread(this);
         this.game = game;
@@ -28,30 +27,36 @@ public final class GameEngine implements Runnable {
         try {
             var grid = game.getGrid();
             var size = grid.size();
-            var players = game.getPlayers();
-            assert players.length > 0;
-            var human = players[0];
-            var joystick = human.getJoystick();
             var gridDraftsman = new GameDraftsman(size);
-            var joystickEngine = new JoystickEngine(joystick);
+            var joystickEngine = new JoystickEngine(0, game);
 
             SwingUtilities.invokeLater(() -> {
                 gridDraftsman.init();
-                StdDraw.addKeyListener(joystickEngine);
+                synchronized (game) {
+                    StdDraw.addKeyListener(joystickEngine);
+                    gridDraftsman.draw(game);
+                }
             });
-
-            SwingUtilities.invokeLater(() -> gridDraftsman.draw(game));
 
             var soundMachine = SoundMachine.getInstance();
             soundMachine.playStart();
 
-            while (!game.isGameOver()) {
+            var gameOver = false;
+
+            while (!gameOver) {
 
                 var start = System.currentTimeMillis();
 
-                joystickEngine.invoke(game::nextTurn);
+                synchronized (game) {
+                    game.nextTurn();
+                    gameOver = game.isGameOver();
+                }
 
-                SwingUtilities.invokeLater(() -> gridDraftsman.draw(game));
+                SwingUtilities.invokeLater(() -> {
+                    synchronized (game) {
+                        gridDraftsman.draw(game);
+                    }
+                });
 
                 var end = System.currentTimeMillis();
 
@@ -60,7 +65,7 @@ public final class GameEngine implements Runnable {
                 Thread.sleep(waitingTime);
             }
 
-            System.out.println("Max latency : " + maxLatency + "%");
+            System.out.println("Max latency recorded : " + maxLatency + "%");
 
         } catch (InterruptedException e) {
             e.printStackTrace();

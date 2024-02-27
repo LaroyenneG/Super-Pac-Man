@@ -35,6 +35,7 @@ public abstract class Individual extends Entity {
 
     public void move(Point position) {
         this.position = position;
+        moving = false;
     }
 
     public void setMoving(boolean moving) {

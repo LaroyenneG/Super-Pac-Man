@@ -449,7 +449,9 @@ public class GameDraftsman {
 
         if (!pacDevil.isAlive() && StdRandom.bernoulli()) return;
 
-        draw(pacDevil, Color.RED, pacDevil.getWeight(), true);
+        // TODO: change weight
+
+        draw(pacDevil, (pacDevil.isAlive()) ? Color.RED : Color.GRAY, 1.3, true);
         draw(pacDevil, (pacDevil.isAlive()) ? pacDevil.getColor() : Color.GRAY, 1.5, false);
     }
 
