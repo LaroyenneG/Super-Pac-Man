@@ -8,6 +8,7 @@ import model.entity.individual.ghost.Ghost;
 import model.entity.individual.pac.person.PacPerson;
 
 import java.awt.*;
+import java.util.Objects;
 
 public abstract class Individual extends Entity {
 
@@ -54,6 +55,13 @@ public abstract class Individual extends Entity {
 
     public abstract boolean isHero();
 
+    public boolean eats(Entity entity) {
+
+        var position = entity.getPosition();
+
+        return Objects.equals(this.position, position);
+    }
+
     public abstract boolean eats(Food food);
 
     public abstract boolean eats(Ghost ghost);
@@ -88,7 +96,6 @@ public abstract class Individual extends Entity {
     public void move() {
         var position = targetPosition();
         move(position);
-        moving = false;
     }
 
     @Override
