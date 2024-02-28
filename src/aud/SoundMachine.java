@@ -6,24 +6,6 @@ import java.util.Base64;
 
 public final class SoundMachine {
 
-    private static class SoundThread extends Thread {
-
-        private final double[] samples;
-
-        public SoundThread(double[] samples) {
-            this.samples = samples;
-        }
-
-        @Override
-        public void run() {
-            for (var sample : samples) {
-                if(isInterrupted()) {
-                    break;
-                }
-                StdAudio.play(sample);
-            }
-        }
-    }
 
     private static final SoundMachine INSTANCE = new SoundMachine();
 
@@ -40,14 +22,12 @@ public final class SoundMachine {
 
     private final Object mutex;
 
-    private Thread thread;
-    private int priority;
+    private SoundThread soundThread;
 
 
     private SoundMachine() {
-        priority = -1;
-        thread = null;
         mutex = new Object();
+        soundThread = null;
         start = loadSound(Sounds.START);
         death = loadSound(Sounds.DEATH);
         eatGum = loadSound(Sounds.EAT_GUM);
@@ -76,33 +56,21 @@ public final class SoundMachine {
             return;
         }
 
+        var nextSound = new SoundThread(priority, samples);
+
         synchronized (mutex) {
-            if (this.priority >= priority) {
-                return;
-            }
-
-            if (thread != null) {
-                thread.interrupt();
-            }
-
-            this.priority = priority;
-
-            thread = new Thread(() -> {
-                for (var sample : samples) {
-                    if (thread.isInterrupted()) {
-                        System.out.println("interrupted");
-                        break;
-                    }
-                    StdAudio.play(sample);
+            if (soundThread == null) {
+                soundThread = nextSound;
+                soundThread.play();
+            } else {
+                var currentPriority = soundThread.getPriority();
+                var newPriority = nextSound.getPriority();
+                if (currentPriority <= newPriority || soundThread.isFinish()) {
+                    soundThread.cancel();
+                    soundThread = nextSound;
+                    soundThread.play();
                 }
-
-                synchronized (mutex) {
-                    thread = null;
-                    this.priority = -1;
-                }
-            });
-
-            thread.start();
+            }
         }
     }
 
