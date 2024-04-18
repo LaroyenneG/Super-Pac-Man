@@ -34,8 +34,8 @@ import java.util.Map;
 
 public class GameDraftsman {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
-    private static final int HEIGHT = 900;
-    private static final int WIDTH = 900;
+    private static final int HEIGHT = 1000;
+    private static final int WIDTH = 1000;
     private static final Color BRUN = new Color(158, 115, 51);
     private static final Color DARK_BRUN = new Color(112, 72, 15);
     private static final Color WHITE_GRAY = new Color(199, 199, 199);

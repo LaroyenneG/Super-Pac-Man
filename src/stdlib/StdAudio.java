@@ -326,7 +326,7 @@ public final class StdAudio {
      * @param sample the sample to play
      * @throws IllegalArgumentException if the sample is {@code Double.NaN}
      */
-    public static void play(double sample) {
+    public synchronized static void play(double sample) {
 
         if (Double.isNaN(sample)) throw new IllegalArgumentException("sample is NaN");
 
