@@ -3,9 +3,7 @@ import model.Game;
 import model.Player;
 import stdlib.StdOut;
 
-import java.awt.*;
-
-public final class SuperPacMan {
+public final class Main {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
     private static final String VERSION = "0.0.0";
     private static final int GRID_SIZE = 30;
@@ -36,7 +34,7 @@ public final class SuperPacMan {
             """;
 
 
-    private SuperPacMan() {
+    private Main() {
     }
 
     private static String myUsername() {
@@ -55,7 +53,7 @@ public final class SuperPacMan {
     }
 
     private static void usage() {
-        System.err.println("Invalid usage : java " + SuperPacMan.class.getSimpleName());
+        System.err.println("Invalid usage : java " + Main.class.getSimpleName());
         System.exit(-1);
     }
 
@@ -63,7 +61,7 @@ public final class SuperPacMan {
     private static void game() {
         StdOut.println("Game is starting...");
 
-        var game = new Game(GRID_SIZE, new Player(myUsername()) , new Player("Bot", Color.PINK));
+        var game = new Game(GRID_SIZE, new Player(myUsername()));
 
         var gameEngine = new GameEngine(game);
 
