@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Grid  {
+public class Grid {
     private final Set<PacPerson> pacPeople;
     private final Set<Ghost> ghosts;
     private final Set<Food> foods;
@@ -153,14 +153,14 @@ public class Grid  {
     }
 
     public void eats(GameAbilityInterface game, PacPerson pacPerson, Player player) {
-        for(var food : foods) {
-            if(Objects.equals(food.getPosition(), pacPerson.getPosition())) {
-                if(pacPerson.eats(food)) {
+        for (var food : foods) {
+            if (Objects.equals(food.getPosition(), pacPerson.getPosition())) {
+                if (pacPerson.eats(food)) {
                     foods.remove(food);
                     var points = food.getPoints();
                     player.addScore(points);
                     SoundMachine.getInstance().playEatGum();
-                    if(food instanceof Ability ability) {
+                    if (food instanceof Ability ability) {
                         ability.apply(pacPerson, game);
                     }
                     break;

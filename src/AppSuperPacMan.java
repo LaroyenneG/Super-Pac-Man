@@ -3,7 +3,8 @@ import model.Game;
 import model.Player;
 import stdlib.StdOut;
 
-public final class Main {
+public final class AppSuperPacMan {
+
     public static final String APPLICATION_TITLE = "Super Pac-Man";
     private static final String VERSION = "0.0.0";
     private static final int GRID_SIZE = 30;
@@ -34,7 +35,7 @@ public final class Main {
             """;
 
 
-    private Main() {
+    private AppSuperPacMan() {
     }
 
     private static String myUsername() {
@@ -53,7 +54,7 @@ public final class Main {
     }
 
     private static void usage() {
-        System.err.println("Invalid usage : java " + Main.class.getSimpleName());
+        System.err.println("Invalid usage : java " + AppSuperPacMan.class.getSimpleName());
         System.exit(-1);
     }
 

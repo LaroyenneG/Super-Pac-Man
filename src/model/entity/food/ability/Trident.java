@@ -1,9 +1,9 @@
 package model.entity.food.ability;
 
+import model.GameAbilityInterface;
 import model.entity.food.Food;
 import model.entity.individual.pac.person.PacDevil;
 import model.entity.individual.pac.person.PacPerson;
-import model.GameAbilityInterface;
 
 public final class Trident extends Food implements Ability {
 

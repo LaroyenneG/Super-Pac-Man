@@ -1,8 +1,8 @@
 package model.entity.food.ability;
 
+import model.GameAbilityInterface;
 import model.entity.food.PacGum;
 import model.entity.individual.pac.person.PacPerson;
-import model.GameAbilityInterface;
 
 public final class SuperPacGum extends PacGum implements Ability {
 

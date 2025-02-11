@@ -1,9 +1,9 @@
 package model.entity.food.ability;
 
+import model.GameAbilityInterface;
 import model.entity.food.Food;
 import model.entity.individual.pac.person.PacPerson;
 import model.entity.individual.pac.person.SuperPac;
-import model.GameAbilityInterface;
 
 public final class Star extends Food implements Ability {
 

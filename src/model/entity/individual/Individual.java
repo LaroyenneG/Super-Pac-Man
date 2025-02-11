@@ -38,20 +38,20 @@ public abstract class Individual extends Entity {
         moving = false;
     }
 
-    public void setMoving(boolean moving) {
-        this.moving = moving;
+    public Heading getHeading() {
+        return heading;
     }
 
     public void setHeading(Heading heading) {
         this.heading = heading;
     }
 
-    public Heading getHeading() {
-        return heading;
-    }
-
     public boolean isMoving() {
         return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
     public abstract boolean isHero();

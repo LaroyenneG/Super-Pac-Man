@@ -34,8 +34,8 @@ import java.util.Map;
 
 public class GameDraftsman {
     public static final String APPLICATION_TITLE = "Super Pac-Man";
-    private static final int HEIGHT = 1000;
-    private static final int WIDTH = 1000;
+    private static final int HEIGHT = 900;
+    private static final int WIDTH = 900;
     private static final Color BRUN = new Color(158, 115, 51);
     private static final Color DARK_BRUN = new Color(112, 72, 15);
     private static final Color WHITE_GRAY = new Color(199, 199, 199);
@@ -63,7 +63,6 @@ public class GameDraftsman {
 
     private static final Map<Heading, Double> HEADING_ANGLE_MAP = Map.of(Heading.UP, Math.PI / 2.0, Heading.DOWN, -Math.PI / 2.0, Heading.RIGHT, 0.0, Heading.LEFT, Math.PI);
 
-
     private static final String DRAW_METHOD_NAME = "draw";
 
     private final int gridSize;
@@ -75,38 +74,6 @@ public class GameDraftsman {
         squareHalfHeight = 1.0 / gridSize / 2.0;
         squareHalfWidth = 1.0 / gridSize / 2.0;
     }
-
-    public void init() {
-        StdDraw.setTitle(APPLICATION_TITLE);
-        StdDraw.setCanvasSize(WIDTH, HEIGHT);
-        StdDraw.setScale(0, 1);
-        StdDraw.setPenRadius(gridSize / 10.0 / Math.max(WIDTH, HEIGHT));
-        StdDraw.enableDoubleBuffering();
-        clear();
-        StdDraw.show();
-    }
-
-
-    public void clear() {
-        StdDraw.clear(BACKGROUND_COLOR);
-    }
-
-    private double centerX(int x) {
-        return centerX(x, squareHalfWidth);
-    }
-
-    private double centerX(int x, double halfWidth) {
-        return x * 1.0 / gridSize + halfWidth;
-    }
-
-    private double centerY(int y) {
-        return centerY(y, squareHalfHeight);
-    }
-
-    private double centerY(int y, double halfHeight) {
-        return ((gridSize - y) * 1.0 / gridSize - halfHeight);
-    }
-
 
     private static List<Point2D.Double> translatePoints(List<Point2D.Double> points, double tx, double ty) {
 
@@ -175,6 +142,36 @@ public class GameDraftsman {
         return result;
     }
 
+    public void init() {
+        StdDraw.setTitle(APPLICATION_TITLE);
+        StdDraw.setCanvasSize(WIDTH, HEIGHT);
+        StdDraw.setScale(0, 1);
+        StdDraw.setPenRadius(gridSize / 10.0 / Math.max(WIDTH, HEIGHT));
+        StdDraw.enableDoubleBuffering();
+        clear();
+        StdDraw.show();
+    }
+
+    public void clear() {
+        StdDraw.clear(BACKGROUND_COLOR);
+    }
+
+    private double centerX(int x) {
+        return centerX(x, squareHalfWidth);
+    }
+
+    private double centerX(int x, double halfWidth) {
+        return x * 1.0 / gridSize + halfWidth;
+    }
+
+    private double centerY(int y) {
+        return centerY(y, squareHalfHeight);
+    }
+
+    private double centerY(int y, double halfHeight) {
+        return ((gridSize - y) * 1.0 / gridSize - halfHeight);
+    }
+
     private List<Point2D.Double> arcPolygon(double size, double startAngle, double endAngle) {
 
         var result = new ArrayList<Point2D.Double>();
@@ -224,7 +221,7 @@ public class GameDraftsman {
         };
     }
 
-    
+
     private double playerX(int id) {
         return switch (id) {
             case 0 -> 0.90;
@@ -240,7 +237,6 @@ public class GameDraftsman {
             default -> 0;
         };
     }
-
 
 
     private void draw(Player player, int id) {
@@ -361,15 +357,8 @@ public class GameDraftsman {
         var halfHeight = squareHalfHeight * size;
         var radius = Math.min(halfHeight, halfWidth);
 
-        StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading, moving),
-                centerY(position.y) + movingTranslationY(heading, moving), radius);
-        drawPolygon(
-                translatePoints(
-                        ghostFeetShape(halfWidth, halfHeight / 2.0, ghost.isMoving()),
-                        centerX(position.x) + movingTranslationX(heading, moving),
-                        centerY(position.y) + movingTranslationY(heading, moving) - halfHeight / 2.0
-                )
-        );
+        StdDraw.filledCircle(centerX(position.x) + movingTranslationX(heading, moving), centerY(position.y) + movingTranslationY(heading, moving), radius);
+        drawPolygon(translatePoints(ghostFeetShape(halfWidth, halfHeight / 2.0, ghost.isMoving()), centerX(position.x) + movingTranslationX(heading, moving), centerY(position.y) + movingTranslationY(heading, moving) - halfHeight / 2.0));
 
 
         StdDraw.setPenColor(Color.WHITE);
@@ -423,14 +412,7 @@ public class GameDraftsman {
 
         StdDraw.setPenColor(color);
 
-        drawPolygon(
-                translatePoints(
-                        rotatePoints(
-                                arcPolygon(size, mouthAngle), (heading != null) ? HEADING_ANGLE_MAP.get(heading) : 0.0),
-                        centerX(position.x) + movingTranslationX(heading, moving),
-                        centerY(position.y) + movingTranslationY(heading, moving)
-                ), filled
-        );
+        drawPolygon(translatePoints(rotatePoints(arcPolygon(size, mouthAngle), (heading != null) ? HEADING_ANGLE_MAP.get(heading) : 0.0), centerX(position.x) + movingTranslationX(heading, moving), centerY(position.y) + movingTranslationY(heading, moving)), filled);
     }
 
     private void draw(SuperPac superPac) {
@@ -680,14 +662,7 @@ public class GameDraftsman {
         StdDraw.filledRectangle(centerX(x), centerY(y), squareHalfWidth, squareHalfHeight / 3.0);
 
         StdDraw.setPenColor(Color.WHITE);
-        drawPolygon(
-                translatePoints(
-                        rotatePoints(
-                                arcPolygon(0.2, Math.PI / 4.0), 0.0),
-                        centerX(x),
-                        centerY(y)
-                ), true
-        );
+        drawPolygon(translatePoints(rotatePoints(arcPolygon(0.2, Math.PI / 4.0), 0.0), centerX(x), centerY(y)), true);
     }
 
     private void draw(int x, int y, HauntedDoor hauntedDoor) {
@@ -703,13 +678,7 @@ public class GameDraftsman {
         var radius = height / 2.0;
 
         StdDraw.filledCircle(centerX(x), centerY(y), radius);
-        drawPolygon(
-                translatePoints(
-                        ghostFeetShape(radius, radius / 2.0, false),
-                        centerX(x),
-                        centerY(y) - radius / 2.0
-                )
-        );
+        drawPolygon(translatePoints(ghostFeetShape(radius, radius / 2.0, false), centerX(x), centerY(y) - radius / 2.0));
     }
 
     private void draw(int x, int y, Wall wall) {

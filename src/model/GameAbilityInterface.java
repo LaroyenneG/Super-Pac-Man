@@ -4,9 +4,9 @@ import model.entity.individual.pac.person.PacPerson;
 
 public interface GameAbilityInterface {
 
-    public void evolve(PacPerson pacPerson);
+    void evolve(PacPerson pacPerson);
 
-    public void scareOffGhosts();
+    void scareOffGhosts();
 
-    public void miniaturizePacPeople() ;
+    void miniaturizePacPeople();
 }

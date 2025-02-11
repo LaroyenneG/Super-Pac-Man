@@ -40,6 +40,10 @@ public final class SoundMachine {
         bump = loadSound(Sounds.BUMP);
     }
 
+    public static SoundMachine getInstance() {
+        return INSTANCE;
+    }
+
     private double[] loadSound(String sound) {
 
         var decoder = Base64.getDecoder();
@@ -112,10 +116,5 @@ public final class SoundMachine {
 
     public void playBump() {
         play(1, bump, true);
-    }
-
-
-    public static SoundMachine getInstance() {
-        return INSTANCE;
     }
 }

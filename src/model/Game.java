@@ -23,15 +23,14 @@ import java.util.*;
 
 public final class Game implements GameAbilityInterface {
 
+    public static final double MAX_SPEED = 50.0;
     private final Player[] players;
     private final Grid grid;
     private final Set<Class<? extends Food>> foodClasses;
-    private long turn;
-
     private final Map<Individual, MotionState> individualMotionStateMap;
 
     private final Set<ScheduledTask> scheduledTasks;
-
+    private long turn;
 
     public Game(int size, Player... players) {
         this.players = players;
@@ -44,12 +43,6 @@ public final class Game implements GameAbilityInterface {
         buildGhosts();
         buildPacPeople();
         buildFoods();
-    }
-
-    private void buildFoods() {
-        for (var i = 0; i < Math.pow(grid.size(), 2); i++) {
-            generateNewFood();
-        }
     }
 
     public static Set<Class<? extends Ghost>> ghosts() {
@@ -69,6 +62,31 @@ public final class Game implements GameAbilityInterface {
         return result;
     }
 
+    public static Set<Class<? extends Food>> foodsSingle() {
+        return Set.of(
+                Apple.class,
+                Coconut.class,
+                Cherry.class,
+                Melon.class,
+                Orange.class,
+                Peach.class,
+                Pear.class,
+                Strawberry.class,
+                PacGum.class,
+                SuperPacGum.class
+        );
+    }
+
+    private static double computeSpeedRateTurn(Individual individual) {
+        return Math.max((1.0 + (1.0 - individual.speed() / MAX_SPEED) * 3.0), 1.0);
+    }
+
+    private void buildFoods() {
+        for (var i = 0; i < Math.pow(grid.size(), 2); i++) {
+            generateNewFood();
+        }
+    }
+
     public boolean isGameOver() {
 
         var result = true;
@@ -83,6 +101,7 @@ public final class Game implements GameAbilityInterface {
 
         return result;
     }
+
     public Grid getGrid() {
         return grid;
     }
@@ -93,21 +112,6 @@ public final class Game implements GameAbilityInterface {
 
     private void buildFoodClasses() {
         foodClasses.addAll((isMultiplayer()) ? foodsMultiplayer() : foodsSingle());
-    }
-
-    public static Set<Class<? extends Food>> foodsSingle() {
-        return Set.of(
-                Apple.class,
-                Coconut.class,
-                Cherry.class,
-                Melon.class,
-                Orange.class,
-                Peach.class,
-                Pear.class,
-                Strawberry.class,
-                PacGum.class,
-                SuperPacGum.class
-        );
     }
 
     public void nextTurn() {
@@ -229,7 +233,6 @@ public final class Game implements GameAbilityInterface {
         }
     }
 
-
     public void buildGhosts() {
         var classes = ghosts();
         var index = 0;
@@ -301,12 +304,6 @@ public final class Game implements GameAbilityInterface {
 
     public Player[] getPlayers() {
         return players;
-    }
-
-    public static final double MAX_SPEED = 50.0;
-
-    private static double computeSpeedRateTurn(Individual individual) {
-        return Math.max((1.0 + (1.0 - individual.speed() / MAX_SPEED) * 3.0), 1.0);
     }
 
     @Override

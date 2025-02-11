@@ -1,6 +1,5 @@
 package model.grid.square.door;
 
-import model.entity.Entity;
 import model.entity.food.Food;
 import model.entity.individual.Individual;
 import model.entity.individual.ghost.Ghost;
